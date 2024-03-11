@@ -26,16 +26,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-06-21 01:14+0000\n"
-"PO-Revision-Date: 2023-09-25 10:36-0300\n"
-"Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
+"POT-Creation-Date: 2024-01-21 13:44+0000\n"
+"PO-Revision-Date: 2024-03-08 11:13-0300\n"
+"Last-Translator: Leônidas Araújo <leorusvellt@hotmail.com>\n"
 "Language-Team: Brazilian Portuguese <https://br.gnome.org/traducao>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
-"X-Generator: Gtranslator 45.alpha0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.3.1\n"
 "X-Project-Style: gnome\n"
 "X-DL-Team: pt_BR\n"
 "X-DL-Module: evince\n"
@@ -129,51 +129,51 @@ msgid "Adds support for reading PDF Documents"
 msgstr "Adiciona suporte para leitura de documentos PDF"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:731 backend/pdf/ev-poppler.c:737
+#: backend/pdf/ev-poppler.c:726 backend/pdf/ev-poppler.c:732
 #: properties/ev-properties-view.c:429
 msgid "Yes"
 msgstr "Sim"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:734 backend/pdf/ev-poppler.c:737
+#: backend/pdf/ev-poppler.c:729 backend/pdf/ev-poppler.c:732
 #: properties/ev-properties-view.c:431
 msgid "No"
 msgstr "Não"
 
-#: backend/pdf/ev-poppler.c:879
+#: backend/pdf/ev-poppler.c:868
 msgid "Type 1"
 msgstr "Tipo 1"
 
-#: backend/pdf/ev-poppler.c:881
+#: backend/pdf/ev-poppler.c:870
 msgid "Type 1C"
 msgstr "Tipo 1C"
 
-#: backend/pdf/ev-poppler.c:883
+#: backend/pdf/ev-poppler.c:872
 msgid "Type 3"
 msgstr "Tipo 3"
 
-#: backend/pdf/ev-poppler.c:885
+#: backend/pdf/ev-poppler.c:874
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:887
+#: backend/pdf/ev-poppler.c:876
 msgid "Type 1 (CID)"
 msgstr "Tipo 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:889
+#: backend/pdf/ev-poppler.c:878
 msgid "Type 1C (CID)"
 msgstr "Tipo 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:891
+#: backend/pdf/ev-poppler.c:880
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:893
+#: backend/pdf/ev-poppler.c:882
 msgid "Unknown font type"
 msgstr "Tipo de fonte desconhecida"
 
 #  Standard 14 fonts: vide PDF no en.wikipedia.org
-#: backend/pdf/ev-poppler.c:937
+#: backend/pdf/ev-poppler.c:926
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -185,11 +185,11 @@ msgstr ""
 "renderização pode ficar incorreta."
 
 #  Standard [14 fonts]: vide PDF no en.wikipedia.org
-#: backend/pdf/ev-poppler.c:942
+#: backend/pdf/ev-poppler.c:931
 msgid "All fonts are either standard or embedded."
 msgstr "Todas as fontes fazem parte do padrão ou são embutidas."
 
-#: backend/pdf/ev-poppler.c:972
+#: backend/pdf/ev-poppler.c:961
 msgid "No name"
 msgstr "Sem nome"
 
@@ -203,20 +203,20 @@ msgstr "Sem nome"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:981 libview/ev-print-operation.c:2691
+#: backend/pdf/ev-poppler.c:970 libview/ev-print-operation.c:2691
 #: properties/ev-properties-view.c:230
 msgid "None"
 msgstr "Nenhum"
 
-#: backend/pdf/ev-poppler.c:989
+#: backend/pdf/ev-poppler.c:978
 msgid "Embedded subset"
 msgstr "Subconjunto embutido"
 
-#: backend/pdf/ev-poppler.c:991
+#: backend/pdf/ev-poppler.c:980
 msgid "Embedded"
 msgstr "Embutido"
 
-#: backend/pdf/ev-poppler.c:993
+#: backend/pdf/ev-poppler.c:982
 msgid "Not embedded"
 msgstr "Não-embutido"
 
@@ -225,7 +225,7 @@ msgstr "Não-embutido"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1000
+#: backend/pdf/ev-poppler.c:989
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Uma das 14 fontes padrão)"
 
@@ -234,7 +234,7 @@ msgstr " (Uma das 14 fontes padrão)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1007
+#: backend/pdf/ev-poppler.c:996
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Não é uma das 14 fontes padrão)"
 
@@ -248,7 +248,7 @@ msgstr " (Não é uma das 14 fontes padrão)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1026
+#: backend/pdf/ev-poppler.c:1015
 #, c-format
 msgid ""
 "%s%s\n"
@@ -272,7 +272,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1044
+#: backend/pdf/ev-poppler.c:1033
 #, c-format
 msgid ""
 "%s%s\n"
@@ -325,8 +325,9 @@ msgid "Adds support for reading XPS documents"
 msgstr "Adiciona suporte para leitura de documentos XPS"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.metainfo.xml.in:23
-#: shell/ev-window-title.c:131 shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Visualizador de documentos"
 
@@ -431,6 +432,40 @@ msgstr ""
 "Mostra a primeira página (página ímpar) à esquerda (ao exibir duas páginas "
 "lado a lado)"
 
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr "Visualizador de documentos para formatos populares de documentos"
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+"Um visualizador de documentos para o ambiente GNOME. Com ele você pode "
+"visualizar, pesquisar ou anotar documento de vários formatos."
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"O Evince oferece suporte aos seguintes formatos de documentos: PDF, PS, EPS, "
+"XPS, DjVu, TIFF, DVI (com SyncTeX) e arquivos de revistas em quadrinhos "
+"(CBR, CBT, CBZ, CB7)."
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr "Uma interface limpa e simples"
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr "Destaque e anotação avançada"
+
+#. developer_name tag deprecated with Appstream 1.0
+#: data/org.gnome.Evince.metainfo.xml.in:49
+msgid "The GNOME Project"
+msgstr "O Projeto GNOME"
+
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
 msgstr "Visualizar impressão"
@@ -500,7 +535,7 @@ msgstr "de %d"
 
 #: libmisc/ev-page-action-widget.c:201 shell/ev-history.c:454
 #: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:954
-#: shell/ev-window.c:5155
+#: shell/ev-window.c:5159
 #, c-format
 msgid "Page %s"
 msgstr "Página %s"
@@ -519,13 +554,13 @@ msgstr "_Somente palavras inteiras"
 
 #: libmisc/ev-search-box.c:331
 msgid "C_ase Sensitive"
-msgstr "_Diferenciar maiúsc./minúsc."
+msgstr "Diferenci_ar maiúsculas de minúsculas."
 
 #: libmisc/ev-search-box.c:600
 msgid "Find previous occurrence of the search string"
 msgstr "Localiza a ocorrência anterior da expressão pesquisada"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "Localiza a próxima ocorrência da expressão pesquisada"
 
@@ -690,51 +725,51 @@ msgstr "Rolar visualização para baixo"
 msgid "Document View"
 msgstr "Visualização do documento"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2138
 msgid "Go to first page"
 msgstr "Vai para a primeira página"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2140
 msgid "Go to previous page"
 msgstr "Vai para a página anterior"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2142
 msgid "Go to next page"
 msgstr "Vai para a próxima página"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2144
 msgid "Go to last page"
 msgstr "Vai para a última página"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2146
 msgid "Go to page"
 msgstr "Vai para a página"
 
-#: libview/ev-view.c:2123
+#: libview/ev-view.c:2148
 msgid "Find"
 msgstr "Localizar"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2176
 #, c-format
 msgid "Go to page %s"
 msgstr "Vai para a página %s"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2182
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Vai para %s no arquivo “%s”"
 
-#: libview/ev-view.c:2160
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Vai para o arquivo “%s”"
 
-#: libview/ev-view.c:2168
+#: libview/ev-view.c:2193
 #, c-format
 msgid "Launch %s"
 msgstr "Inicia %s"
 
-#: libview/ev-view.c:2175
+#: libview/ev-view.c:2200
 msgid "Reset form"
 msgstr "Redefinir formulário"
 
@@ -742,38 +777,9 @@ msgstr "Redefinir formulário"
 msgid "Jump to page:"
 msgstr "Pular para a página:"
 
-#: libview/ev-view-presentation.c:1009
+#: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Fim da apresentação. Pressione Esc ou clique para sair."
-
-#: org.gnome.Evince.metainfo.xml.in:24
-msgid "Document viewer for popular document formats"
-msgstr "Visualizador de documentos para formatos populares de documentos"
-
-#: org.gnome.Evince.metainfo.xml.in:26
-msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
-msgstr ""
-"Um visualizador de documentos para o ambiente GNOME. Com ele você pode "
-"visualizar, pesquisar ou anotar documento de vários formatos."
-
-#: org.gnome.Evince.metainfo.xml.in:27
-msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
-msgstr ""
-"O Evince oferece suporte aos seguintes formatos de documentos: PDF, PS, EPS, "
-"XPS, DjVu, TIFF, DVI (com SyncTeX) e arquivos de revistas em quadrinhos "
-"(CBR, CBT, CBZ, CB7)."
-
-#: org.gnome.Evince.metainfo.xml.in:35
-msgid "A clear, simple UI"
-msgstr "Uma interface limpa e simples"
-
-#: org.gnome.Evince.metainfo.xml.in:39
-msgid "Advanced highlighting and annotation"
-msgstr "Destaque e anotação avançada"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
@@ -951,7 +957,7 @@ msgstr "%.0f × %.0f mm"
 #: properties/ev-properties-view.c:315
 #, c-format
 msgid "%.2f × %.2f inch"
-msgstr "%.2f × %.2f pol."
+msgstr "%.2f × %.2f pol"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
@@ -1384,7 +1390,7 @@ msgstr "Senha necessária"
 
 #: shell/ev-password-view.c:238 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2877 shell/ev-window.c:3174 shell/ev-window.c:4059
-#: shell/ev-window.c:6983 shell/ev-window.c:7209
+#: shell/ev-window.c:6987 shell/ev-window.c:7213
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -1459,7 +1465,7 @@ msgstr "Página %d"
 msgid "No Comment"
 msgstr "Nenhum comentário"
 
-#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7592
+#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7596
 msgid "Annotations"
 msgstr "Anotações"
 
@@ -1479,15 +1485,15 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Substituir"
 
-#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7616
+#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7620
 msgid "Attachments"
 msgstr "Anexos"
 
-#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7600
+#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7604
 msgid "Bookmarks"
 msgstr "Marcadores"
 
-#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7628
+#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7632
 msgid "Layers"
 msgstr "Camadas"
 
@@ -1495,11 +1501,11 @@ msgstr "Camadas"
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7580
+#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7584
 msgid "Outline"
 msgstr "Tópicos"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7563
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7567
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
@@ -1605,7 +1611,7 @@ msgstr "Enviando a imagem (%d%%)"
 msgid "Save As…"
 msgstr "Salvar como…"
 
-#: shell/ev-window.c:3173 shell/ev-window.c:6982 shell/ev-window.c:7208
+#: shell/ev-window.c:3173 shell/ev-window.c:6986 shell/ev-window.c:7212
 msgid "_Save"
 msgstr "_Salvar"
 
@@ -1702,8 +1708,9 @@ msgid "Close _after Printing"
 msgstr "Fechar _depois de imprimir"
 
 #: shell/ev-window.c:4229
-msgid "© 1996–2022 The Evince document viewer authors"
-msgstr "© 1996–2022 Os autores de visualizador de documentos Evince"
+#| msgid "© 1996–2022 The Evince document viewer authors"
+msgid "© 1996–2023 The Evince document viewer authors"
+msgstr "© 1996–2023 Os autores do visualizador de documentos Evince"
 
 #: shell/ev-window.c:4232
 msgid "Evince is a simple document viewer for GNOME"
@@ -1729,27 +1736,28 @@ msgstr ""
 "Enrico Nicoletto <liverig@gmail.com>\n"
 "Fábio Nogueira <fnogueira@gnome.org>\n"
 "Bruno Lopes da Silva <brunolopesbldsb@gmail.com>\n"
-"Ricardo Silva Veloso <ricvelozo@gmail.com>"
+"Ricardo Silva Veloso <ricvelozo@gmail.com>\n"
+"Leônidas Araújo <leorusvellt@hotmail.com>"
 
-#: shell/ev-window.c:4713
+#: shell/ev-window.c:4717
 msgid "Running in presentation mode"
 msgstr "Executando em modo de apresentação"
 
-#: shell/ev-window.c:5700
+#: shell/ev-window.c:5704
 msgid "The attachment could not be saved."
 msgstr "Não foi possível salvar o anexo."
 
 #  Título da caixa de diálogo
-#: shell/ev-window.c:6022
+#: shell/ev-window.c:6026
 msgid "Enable caret navigation?"
 msgstr "Habilitar navegação do cursor?"
 
 #  Concorre com _Não
-#: shell/ev-window.c:6023
+#: shell/ev-window.c:6027
 msgid "_Enable"
 msgstr "_Habilitar"
 
-#: shell/ev-window.c:6026
+#: shell/ev-window.c:6030
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1760,38 +1768,38 @@ msgstr ""
 "navegar por um texto e selecioná-lo usando o seu teclado. Você deseja "
 "habilitar a navegação com cursor?"
 
-#: shell/ev-window.c:6031
+#: shell/ev-window.c:6035
 msgid "Don’t show this message again"
 msgstr "Não mostrar esta mensagem novamente"
 
-#: shell/ev-window.c:6620
+#: shell/ev-window.c:6624
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
 msgstr ""
 "Alerta de segurança: este documento foi impedido de abrir o arquivo “%s”"
 
-#: shell/ev-window.c:6685
+#: shell/ev-window.c:6689
 msgid "Unable to open external link"
 msgstr "Não foi possível abrir o link externo"
 
-#: shell/ev-window.c:6911
+#: shell/ev-window.c:6915
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Não foi possível encontrar um formato apropriado para salvar a imagem"
 
-#: shell/ev-window.c:6943
+#: shell/ev-window.c:6947
 msgid "The image could not be saved."
 msgstr "Não foi possível salvar a imagem."
 
-#: shell/ev-window.c:6979
+#: shell/ev-window.c:6983
 msgid "Save Image"
 msgstr "Salvar imagem"
 
-#: shell/ev-window.c:7137
+#: shell/ev-window.c:7141
 msgid "Unable to open attachment"
 msgstr "Não foi possível abrir o anexo"
 
-#: shell/ev-window.c:7205
+#: shell/ev-window.c:7209
 msgid "Save Attachment"
 msgstr "Salvar anexo"
 
