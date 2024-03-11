@@ -28,25 +28,24 @@ i18n.merge_file(
 if enable_dbus
   service_conf = configuration_data()
   service_conf.set('libexecdir', ev_libexecdir)
+  service_conf.set('app_id', ev_namespace)
 
-  # The D-Bus interface names are in lowercase, which does not match
-  # the application name nor the namespace. However, we keep it in
-  # lowercase for backward compatibility.
-  services = [[ev_namespace.to_lower() + '.Daemon.service', dbus_service_dir]]
-
-  if install_systemd_user_unit_dir
-    services += [[ev_namespace + '.service', systemd_user_unit_dir]]
-  endif
-
-  foreach service: services
-    configure_file(
-      input: service[0] + '.in',
-      output: service[0],
+  configure_file(
+      input: 'org.gnome.evince.Daemon.service.in',
+      output: '@0@.Daemon.service'.format(ev_namespace),
       configuration: service_conf,
       install: true,
-      install_dir: service[1],
+      install_dir: dbus_service_dir,
     )
-  endforeach
+
+  if install_systemd_user_unit_dir
+    configure_file(
+      input: 'org.gnome.Evince.service.in',
+      output: '@0@.service'.format(ev_namespace),
+      configuration: service_conf,
+      install: true,
+      install_dir: systemd_user_unit_dir,
+    )  endif
 endif
 
 # GSettings schema

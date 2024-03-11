@@ -182,10 +182,10 @@ if ev_platform == 'gnome'
     # Check for dbus service dir
     dbus_service_dir = dependency('dbus-1').get_variable(pkgconfig: 'session_bus_services_dir', pkgconfig_define: ['datadir', ev_datadir])
 
-    dbus_app_path = '/@0@/Evince'.format(ev_app_id.replace('.', '/'))
-    dbus_app_interface = '@0@.Application'.format(ev_app_id)
-    dbus_evince_daemon = '@0@.Daemon'.format(ev_app_id)
-    dbus_evince_daemon_path = '/@0@/Daemon'.format(ev_app_id.replace('.', '/'))
+    dbus_app_path = '/@0@/Evince'.format(ev_namespace.replace('.', '/'))
+    dbus_app_interface = '@0@.Application'.format(ev_namespace)
+    dbus_evince_daemon = '@0@.Daemon'.format(ev_namespace)
+    dbus_evince_daemon_path = '/@0@/Daemon'.format(ev_namespace.replace('.', '/'))
 
     config_h.set_quoted('APPLICATION_DBUS_OBJECT_PATH', dbus_app_path)
     config_h.set_quoted('APPLICATION_DBUS_INTERFACE', dbus_app_interface)
