@@ -1,0 +1,2089 @@
+# Kabyle translation for evince.
+# Copyright (C) 2024 evince's COPYRIGHT HOLDER
+# This file is distributed under the same license as the evince package.
+# Rachida SACI <rgebbid@gmail.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: evince main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
+"POT-Creation-Date: 2024-03-20 15:17+0000\n"
+"PO-Revision-Date: 2024-03-24 12:52+0100\n"
+"Last-Translator: sa\n"
+"Language-Team: Kabyle <kab@li.org>\n"
+"Language: kab\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
+msgid "File is corrupted"
+msgstr "Afaylu yerreẓ"
+
+#: backend/comics/comics-document.c:251
+msgid "Archive is encrypted"
+msgstr ""
+
+#: backend/comics/comics-document.c:256
+msgid "No supported images in archive"
+msgstr ""
+
+#: backend/comics/comics-document.c:266
+msgid "No files in archive"
+msgstr "Ulac ifuyla deg teṛcivt"
+
+#: backend/comics/comics-document.c:315
+#, c-format
+msgid "Not a comic book MIME type: %s"
+msgstr ""
+
+#: backend/comics/comics-document.c:322
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
+msgstr ""
+
+#: backend/comics/comics-document.c:362
+msgid "Can not get local path for archive"
+msgstr ""
+
+#: backend/comics/comicsdocument.evince-backend.desktop.in.in:4
+#: backend/comics/evince-comicsdocument.metainfo.xml.in.in:5
+msgid "Comic Books"
+msgstr ""
+
+#: backend/comics/evince-comicsdocument.metainfo.xml.in.in:6
+msgid "Adds support for reading comic books"
+msgstr ""
+
+#: backend/djvu/djvu-document.c:179
+msgid "DjVu document has incorrect format"
+msgstr ""
+
+#: backend/djvu/djvu-document.c:266
+msgid ""
+"The document is composed of several files. One or more of these files cannot "
+"be accessed."
+msgstr ""
+"Isemli yeddes s waṭas n yifuyla. Yiwen neɣ ugar n yifuyla-a ulac anekcum ɣer-"
+"sen."
+
+#: backend/djvu/djvudocument.evince-backend.desktop.in.in:4
+#: backend/djvu/evince-djvudocument.metainfo.xml.in.in:5
+msgid "DjVu Documents"
+msgstr ""
+
+#: backend/djvu/evince-djvudocument.metainfo.xml.in.in:6
+msgid "Adds support for reading DjVu documents"
+msgstr ""
+
+#: backend/dvi/dvi-document.c:110
+msgid "DVI document has incorrect format"
+msgstr ""
+
+#: backend/dvi/dvidocument.evince-backend.desktop.in.in:4
+#: backend/dvi/evince-dvidocument.metainfo.xml.in.in:5
+msgid "DVI Documents"
+msgstr ""
+
+#: backend/dvi/evince-dvidocument.metainfo.xml.in.in:6
+msgid "Adds support for reading DVI documents"
+msgstr ""
+
+#: backend/pdf/evince-pdfdocument.metainfo.xml.in.in:5
+#: backend/pdf/pdfdocument.evince-backend.desktop.in.in:5
+msgid "PDF Documents"
+msgstr ""
+
+#: backend/pdf/evince-pdfdocument.metainfo.xml.in.in:6
+msgid "Adds support for reading PDF Documents"
+msgstr ""
+
+#. translators: this is the document security state
+#: backend/pdf/ev-poppler.c:726 backend/pdf/ev-poppler.c:732
+#: properties/ev-properties-view.c:429
+msgid "Yes"
+msgstr "Ih"
+
+#. translators: this is the document security state
+#: backend/pdf/ev-poppler.c:729 backend/pdf/ev-poppler.c:732
+#: properties/ev-properties-view.c:431
+msgid "No"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:868
+msgid "Type 1"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:870
+msgid "Type 1C"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:872
+msgid "Type 3"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:874
+msgid "TrueType"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:876
+msgid "Type 1 (CID)"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:878
+msgid "Type 1C (CID)"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:880
+msgid "TrueType (CID)"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:882
+msgid "Unknown font type"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:926
+msgid ""
+"This document contains non-embedded fonts that are not from the PDF Standard "
+"14 fonts. If the substitute fonts selected by fontconfig are not the same as "
+"the fonts used to create the PDF, the rendering may not be correct."
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:931
+msgid "All fonts are either standard or embedded."
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:961
+msgid "No name"
+msgstr ""
+
+#. translators: When a font type does not have
+#. encoding information or it is unknown.  Example:
+#. Encoding: None
+#.
+#. translators: Value for 'Page Scaling:' to not scale the document pages on printing
+#. translators: This is used when a document property does
+#. not have a value.  Examples:
+#. Author: None
+#. Keywords: None
+#.
+#: backend/pdf/ev-poppler.c:970 libview/ev-print-operation.c:2691
+#: properties/ev-properties-view.c:230
+msgid "None"
+msgstr "Ula yiwen"
+
+#: backend/pdf/ev-poppler.c:978
+msgid "Embedded subset"
+msgstr ""
+
+#: backend/pdf/ev-poppler.c:980
+msgid "Embedded"
+msgstr "Usliɣ"
+
+#: backend/pdf/ev-poppler.c:982
+msgid "Not embedded"
+msgstr ""
+
+#. Translators: string starting with a space
+#. * because it is directly appended to the font
+#. * type. Example:
+#. * "Type 1 (One of the Standard 14 Fonts)"
+#.
+#: backend/pdf/ev-poppler.c:989
+msgid " (One of the Standard 14 Fonts)"
+msgstr ""
+
+#. Translators: string starting with a space
+#. * because it is directly appended to the font
+#. * type. Example:
+#. * "TrueType (Not one of the Standard 14 Fonts)"
+#.
+#: backend/pdf/ev-poppler.c:996
+msgid " (Not one of the Standard 14 Fonts)"
+msgstr ""
+
+#. Translators: string is a concatenation of previous
+#. * translated strings to indicate the fonts properties
+#. * in a PDF document.
+#. *
+#. * Example:
+#. * Type 1 (One of the standard 14 Fonts)
+#. * Not embedded
+#. * Substituting with TeXGyreTermes-Regular
+#. * (/usr/share/textmf/.../texgyretermes-regular.otf)
+#.
+#: backend/pdf/ev-poppler.c:1015
+#, c-format
+msgid ""
+"%s%s\n"
+"Encoding: %s\n"
+"%s\n"
+"Substituting with <b>%s</b>\n"
+"(%s)"
+msgstr ""
+
+#. Translators: string is a concatenation of previous
+#. * translated strings to indicate the fonts properties
+#. * in a PDF document.
+#. *
+#. * Example:
+#. * TrueType (CID)
+#. * Encoding: Custom
+#. * Embedded subset
+#.
+#: backend/pdf/ev-poppler.c:1033
+#, c-format
+msgid ""
+"%s%s\n"
+"Encoding: %s\n"
+"%s"
+msgstr ""
+
+#: backend/ps/evince-psdocument.metainfo.xml.in.in:5
+#: backend/ps/psdocument.evince-backend.desktop.in.in:5
+msgid "PostScript Documents"
+msgstr ""
+
+#: backend/ps/evince-psdocument.metainfo.xml.in.in:6
+msgid "Adds support for reading PostScript documents"
+msgstr ""
+
+#: backend/ps/ev-spectre.c:98
+#, c-format
+msgid "Failed to load document “%s”"
+msgstr ""
+
+#: backend/ps/ev-spectre.c:131
+#, c-format
+msgid "Failed to save document “%s”"
+msgstr ""
+
+#: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:5
+#: backend/tiff/tiffdocument.evince-backend.desktop.in.in:4
+msgid "TIFF Documents"
+msgstr ""
+
+#: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:6
+msgid "Adds support for reading TIFF documents"
+msgstr ""
+
+#: backend/tiff/tiff-document.c:124
+msgid "Invalid document"
+msgstr ""
+
+#: backend/xps/evince-xpsdocument.metainfo.xml.in.in:5
+#: backend/xps/xpsdocument.evince-backend.desktop.in.in:5
+msgid "XPS Documents"
+msgstr ""
+
+#: backend/xps/evince-xpsdocument.metainfo.xml.in.in:6
+msgid "Adds support for reading XPS documents"
+msgstr ""
+
+#. Manually set name and icon
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
+msgid "Document Viewer"
+msgstr ""
+
+#: data/org.gnome.Evince.desktop.in.in:4
+msgid "View multi-page documents"
+msgstr "Sken isemli s isebtaren iggten"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.Evince.desktop.in.in:6
+msgid ""
+"pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
+msgstr ""
+
+#: data/org.gnome.Evince.desktop.in.in:19
+msgid "New Window"
+msgstr "Asfaylu amaynut"
+
+#: data/org.gnome.Evince.gschema.xml:14
+msgid "Override document restrictions"
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:15
+msgid "Override document restrictions, like restriction to copy or to print."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:19
+msgid "Automatically reload the document"
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:20
+msgid "The document is automatically reloaded on file change."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:24
+msgid "The URI of the directory last used to open or save a document"
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:28
+msgid "The URI of the directory last used to save a picture"
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:32
+msgid "Page cache size in MiB"
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:33
+msgid ""
+"The maximum size that will be used to cache rendered pages, limits maximum "
+"zoom level."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:37
+msgid ""
+"Show a dialog to confirm that the user wants to activate the caret "
+"navigation."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:41
+msgid "Allow links to change the zoom level."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:49
+msgid "Check spelling when writing annotation notes or filling text forms."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:53
+msgid "Show a side bar next to the document to help navigate the document."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:63
+msgid "Set the default zoom level to display a document."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:70
+msgid ""
+"Display the document as a continuous stream of pages instead of page at a "
+"time."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:74
+msgid "Show two pages side by side."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:78
+msgid ""
+"Show the first page (odd page) on the left (when displaying two pages side "
+"by side)"
+msgstr ""
+
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr ""
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr ""
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr ""
+
+#. developer_name tag deprecated with Appstream 1.0
+#: data/org.gnome.Evince.metainfo.xml.in:50
+msgid "The GNOME Project"
+msgstr "Asenfar n GNOME"
+
+#: data/org.gnome.Evince-previewer.desktop.in.in:3
+msgid "Print Preview"
+msgstr "Taskant n usiggez"
+
+#: data/org.gnome.Evince-previewer.desktop.in.in:4
+msgid "Preview before printing"
+msgstr ""
+
+#: libdocument/ev-attachment.c:310 libdocument/ev-attachment.c:331
+#, c-format
+msgid "Couldn’t save attachment “%s”: %s"
+msgstr ""
+
+#: libdocument/ev-attachment.c:378
+#, c-format
+msgid "Couldn’t open attachment “%s”: %s"
+msgstr ""
+
+#: libdocument/ev-attachment.c:417
+#, c-format
+msgid "Couldn’t open attachment “%s”"
+msgstr ""
+
+#: libdocument/ev-document-factory.c:105
+#, c-format
+msgid "File type %s (%s) is not supported"
+msgstr "Anaw n ufaylu %s (%s) ur yettusefrak ara"
+
+#: libdocument/ev-document-factory.c:370 libdocument/ev-file-helpers.c:417
+#: libdocument/ev-file-helpers.c:463 libdocument/ev-file-helpers.c:482
+#: libdocument/ev-file-helpers.c:563 libdocument/ev-file-helpers.c:572
+msgid "Unknown MIME Type"
+msgstr ""
+
+#: libdocument/ev-document-factory.c:637
+msgid "All Documents"
+msgstr ""
+
+#: libdocument/ev-document-factory.c:664 shell/ev-utils.c:272
+msgid "All Files"
+msgstr "Akk ifuyla"
+
+#: libdocument/ev-file-helpers.c:157
+#, c-format
+msgid "Failed to create a temporary file: %s"
+msgstr ""
+
+#: libdocument/ev-file-helpers.c:234
+#, c-format
+msgid "Failed to create a temporary directory: %s"
+msgstr ""
+
+#: libdocument/ev-xmp.c:350
+msgid "This work is in the Public Domain"
+msgstr ""
+
+#: libmisc/ev-page-action-widget.c:91 libmisc/ev-page-action-widget.c:130
+#, c-format
+msgid "(%d of %d)"
+msgstr ""
+
+#: libmisc/ev-page-action-widget.c:93 libmisc/ev-page-action-widget.c:134
+#, c-format
+msgid "of %d"
+msgstr ""
+
+#: libmisc/ev-page-action-widget.c:254 shell/ev-history.c:454
+#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:954
+#: shell/ev-window.c:5159
+#, c-format
+msgid "Page %s"
+msgstr "Asebtar %s"
+
+#: libmisc/ev-search-box.c:112
+msgid "Not found, click to change search options"
+msgstr ""
+
+#: libmisc/ev-search-box.c:186 libmisc/ev-search-box.c:242
+msgid "Search options"
+msgstr "Tinefrunin n unadi"
+
+#: libmisc/ev-search-box.c:318
+msgid "_Whole Words Only"
+msgstr ""
+
+#: libmisc/ev-search-box.c:331
+msgid "C_ase Sensitive"
+msgstr ""
+
+#: libmisc/ev-search-box.c:600
+msgid "Find previous occurrence of the search string"
+msgstr ""
+
+#: libmisc/ev-search-box.c:607
+msgid "Find next occurrence of the search string"
+msgstr ""
+
+#: libview/ev-jobs.c:625
+#, c-format
+msgid "Failed to render page %d: %s"
+msgstr ""
+
+#: libview/ev-jobs.c:632
+#, c-format
+msgid "Failed to render page %d"
+msgstr ""
+
+#: libview/ev-jobs.c:878
+#, c-format
+msgid "Failed to create thumbnail for page %d"
+msgstr ""
+
+#: libview/ev-jobs.c:2288
+#, c-format
+msgid "Failed to print page %d: %s"
+msgstr ""
+
+#. Initial state
+#: libview/ev-print-operation.c:346
+msgid "Preparing preview…"
+msgstr ""
+
+#: libview/ev-print-operation.c:348 libview/ev-print-operation.c:358
+msgid "Finishing…"
+msgstr ""
+
+#: libview/ev-print-operation.c:350
+#, c-format
+msgid "Generating preview: page %d of %d"
+msgstr ""
+
+#. Initial state
+#: libview/ev-print-operation.c:356
+msgid "Preparing to print…"
+msgstr ""
+
+#: libview/ev-print-operation.c:360
+#, c-format
+msgid "Printing page %d of %d…"
+msgstr ""
+
+#: libview/ev-print-operation.c:1561 libview/ev-print-operation.c:2028
+msgid "Your print range selection does not include any pages"
+msgstr ""
+
+#. translators: Title of the print dialog
+#: libview/ev-print-operation.c:1702 libview/ev-print-operation.c:1800
+#: libview/ev-print-operation.c:2079
+msgid "Print"
+msgstr "Siggez"
+
+#: libview/ev-print-operation.c:2002
+msgid "Requested format is not supported by this printer."
+msgstr ""
+
+#: libview/ev-print-operation.c:2025
+msgid "Invalid page selection"
+msgstr ""
+
+#: libview/ev-print-operation.c:2026
+msgid "Warning"
+msgstr "Asmigel"
+
+#: libview/ev-print-operation.c:2685
+msgid "Page Scaling:"
+msgstr ""
+
+#: libview/ev-print-operation.c:2692
+msgid "Shrink to Printable Area"
+msgstr ""
+
+#: libview/ev-print-operation.c:2693
+msgid "Fit to Printable Area"
+msgstr ""
+
+#: libview/ev-print-operation.c:2696
+msgid ""
+"Scale document pages to fit the selected printer page. Select from one of "
+"the following:\n"
+"\n"
+"• “None”: No page scaling is performed.\n"
+"\n"
+"• “Shrink to Printable Area”: Document pages larger than the printable area "
+"are reduced to fit the printable area of the printer page.\n"
+"\n"
+"• “Fit to Printable Area”: Document pages are enlarged or reduced as "
+"required to fit the printable area of the printer page.\n"
+msgstr ""
+
+#: libview/ev-print-operation.c:2708
+msgid "Auto Rotate and Center"
+msgstr ""
+
+#: libview/ev-print-operation.c:2711
+msgid ""
+"Rotate printer page orientation of each page to match orientation of each "
+"document page. Document pages will be centered within the printer page."
+msgstr ""
+
+#: libview/ev-print-operation.c:2716
+msgid "Select page size using document page size"
+msgstr ""
+
+#: libview/ev-print-operation.c:2718
+msgid ""
+"When enabled, each page will be printed on the same size paper as the "
+"document page."
+msgstr ""
+
+#: libview/ev-print-operation.c:2723
+msgid "Draw border around pages"
+msgstr ""
+
+#: libview/ev-print-operation.c:2725
+msgid "When enabled, a border will be drawn around each page."
+msgstr ""
+
+#: libview/ev-print-operation.c:2819
+msgid "Page Handling"
+msgstr ""
+
+#: libview/ev-view-accessible.c:43
+msgid "Scroll Up"
+msgstr "Drurem d asawen"
+
+#: libview/ev-view-accessible.c:44
+msgid "Scroll Down"
+msgstr "Drurem d akessar"
+
+#: libview/ev-view-accessible.c:50
+msgid "Scroll View Up"
+msgstr ""
+
+#: libview/ev-view-accessible.c:51
+msgid "Scroll View Down"
+msgstr ""
+
+#: libview/ev-view-accessible.c:131
+msgid "Document View"
+msgstr "Taskant n tsemlit"
+
+#: libview/ev-view.c:2138
+msgid "Go to first page"
+msgstr "Ddu ɣer usebter amezwaru"
+
+#: libview/ev-view.c:2140
+msgid "Go to previous page"
+msgstr "Ddu ɣer usebter udfir"
+
+#: libview/ev-view.c:2142
+msgid "Go to next page"
+msgstr "Ddu ɣer usebter uḍfir"
+
+#: libview/ev-view.c:2144
+msgid "Go to last page"
+msgstr "Ddu ɣer usebter aneggaru"
+
+#: libview/ev-view.c:2146
+msgid "Go to page"
+msgstr "Ddu ɣer usebter"
+
+#: libview/ev-view.c:2148
+msgid "Find"
+msgstr "Nadi"
+
+#: libview/ev-view.c:2176
+#, c-format
+msgid "Go to page %s"
+msgstr "Ddu ɣer usebter %s"
+
+#: libview/ev-view.c:2182
+#, c-format
+msgid "Go to %s on file “%s”"
+msgstr "Ddu ɣer %s deg ufaylu \"%s\""
+
+#: libview/ev-view.c:2185
+#, c-format
+msgid "Go to file “%s”"
+msgstr "Ddu ɣer ufaylu \"%s\""
+
+#: libview/ev-view.c:2193
+#, c-format
+msgid "Launch %s"
+msgstr ""
+
+#: libview/ev-view.c:2200
+msgid "Reset form"
+msgstr "Wennez seg"
+
+#: libview/ev-view-presentation.c:726
+msgid "Jump to page:"
+msgstr "Neggez ɣer usebter:"
+
+#: libview/ev-view-presentation.c:1010
+msgid "End of presentation. Press Esc or click to exit."
+msgstr ""
+
+#: previewer/ev-previewer.c:57
+msgid "Delete the temporary file"
+msgstr ""
+
+#: previewer/ev-previewer.c:59
+msgid "File specifying print settings"
+msgstr ""
+
+#: previewer/ev-previewer.c:59
+msgid "FILE"
+msgstr "AFAYLU"
+
+#: previewer/ev-previewer.c:61
+msgid "File descriptor of input file"
+msgstr ""
+
+#: previewer/ev-previewer.c:61 previewer/ev-previewer.c:65
+msgid "FD"
+msgstr "FD"
+
+#: previewer/ev-previewer.c:63
+msgid "MIME type of input file"
+msgstr ""
+
+#: previewer/ev-previewer.c:63
+msgid "TYPE"
+msgstr ""
+
+#: previewer/ev-previewer.c:65
+msgid "File descriptor of print settings file"
+msgstr ""
+
+#: previewer/ev-previewer.c:295 previewer/ev-previewer.c:315
+msgid "GNOME Document Previewer"
+msgstr ""
+
+#: previewer/ev-previewer-toolbar.c:112 shell/evince-toolbar.ui:35
+msgid "Select page or search in the outline"
+msgstr ""
+
+#: previewer/ev-previewer-toolbar.c:114 shell/evince-toolbar.ui:38
+msgid "Select page"
+msgstr ""
+
+#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3636
+msgid "Failed to print document"
+msgstr ""
+
+#: previewer/ev-previewer-window.c:193 previewer/ev-previewer-window.c:558
+msgid "Evince Document Viewer"
+msgstr ""
+
+#: previewer/ev-previewer-window.c:229
+#, c-format
+msgid "The selected printer “%s” could not be found"
+msgstr ""
+
+#: previewer/ev-previewer-window.c:536 shell/ev-window.c:4227
+msgid "Evince"
+msgstr ""
+
+#: previewer/previewer.ui:7
+msgid "_Print"
+msgstr "_Siggez"
+
+#: previewer/previewer.ui:10
+msgid "Print this document"
+msgstr ""
+
+#: previewer/previewer.ui:20 shell/evince-menus.ui:129
+msgid "Previous Page"
+msgstr "Asebter udfir"
+
+#: previewer/previewer.ui:27 shell/evince-menus.ui:133
+msgid "Next Page"
+msgstr "Asebtar uḍfir"
+
+#: previewer/previewer.ui:34
+msgid "Enlarge the document"
+msgstr ""
+
+#: previewer/previewer.ui:42
+msgid "Shrink the document"
+msgstr ""
+
+#: previewer/previewer.ui:49
+msgid "Reset zoom and make the page fit in the window"
+msgstr ""
+
+#: properties/ev-properties-main.c:116
+msgid "Document"
+msgstr "Isemli"
+
+#: properties/ev-properties-view.c:62
+msgid "Title:"
+msgstr "Azwel:"
+
+#: properties/ev-properties-view.c:63
+msgid "Location:"
+msgstr "Adig:"
+
+#: properties/ev-properties-view.c:64
+msgid "Subject:"
+msgstr "Asentel:"
+
+#: properties/ev-properties-view.c:65
+#: shell/ev-annotation-properties-dialog.c:169
+msgid "Author:"
+msgstr "Ameskar :"
+
+#: properties/ev-properties-view.c:66
+msgid "Keywords:"
+msgstr "Awalen n tsura:"
+
+#: properties/ev-properties-view.c:67
+msgid "Producer:"
+msgstr ""
+
+#: properties/ev-properties-view.c:68
+msgid "Creator:"
+msgstr ""
+
+#: properties/ev-properties-view.c:69
+msgid "Created:"
+msgstr "Yettwarna:"
+
+#: properties/ev-properties-view.c:70
+msgid "Modified:"
+msgstr "Yettwabeddel:"
+
+#: properties/ev-properties-view.c:71
+msgid "Number of Pages:"
+msgstr "Amḍan n yisebtar:"
+
+#: properties/ev-properties-view.c:72
+msgid "Optimized:"
+msgstr ""
+
+#: properties/ev-properties-view.c:73
+msgid "Format:"
+msgstr "Amasal:"
+
+#: properties/ev-properties-view.c:74
+msgid "Security:"
+msgstr "Taɣellist:"
+
+#: properties/ev-properties-view.c:75
+msgid "Contains Javascript:"
+msgstr ""
+
+#: properties/ev-properties-view.c:76
+msgid "Paper Size:"
+msgstr ""
+
+#: properties/ev-properties-view.c:77
+msgid "Size:"
+msgstr "Teɣzi:"
+
+#. Translate to the default units to use for presenting
+#. * lengths to the user. Translate to default:inch if you
+#. * want inches, otherwise translate to default:mm.
+#. * Do *not* translate it to "predefinito:mm", if it
+#. * it isn't default:mm or default:inch it will not work
+#.
+#: properties/ev-properties-view.c:267
+msgid "default:mm"
+msgstr ""
+
+#: properties/ev-properties-view.c:311
+#, c-format
+msgid "%.0f × %.0f mm"
+msgstr "%.0f × %.0f mm"
+
+#: properties/ev-properties-view.c:315
+#, c-format
+msgid "%.2f × %.2f inch"
+msgstr "%.2f × %.2f inch"
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: properties/ev-properties-view.c:339
+#, c-format
+msgid "%s, Portrait (%s)"
+msgstr ""
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: properties/ev-properties-view.c:346
+#, c-format
+msgid "%s, Landscape (%s)"
+msgstr ""
+
+#: properties/ev-properties-view.c:433
+#: shell/ev-annotation-properties-dialog.c:109
+msgid "Unknown"
+msgstr "Arussin"
+
+#: shell/ev-annotation-properties-dialog.c:94
+msgid "Icon:"
+msgstr "Tignit:"
+
+#: shell/ev-annotation-properties-dialog.c:100
+msgid "Note"
+msgstr "Tazmilt"
+
+#: shell/ev-annotation-properties-dialog.c:101
+msgid "Comment"
+msgstr "Awennit"
+
+#: shell/ev-annotation-properties-dialog.c:102
+msgid "Key"
+msgstr "Tasarut"
+
+#: shell/ev-annotation-properties-dialog.c:103
+msgid "Help"
+msgstr "Tallalt"
+
+#: shell/ev-annotation-properties-dialog.c:104
+msgid "New Paragraph"
+msgstr "Adiwenni amaynut"
+
+#: shell/ev-annotation-properties-dialog.c:105
+msgid "Paragraph"
+msgstr "Taseddart"
+
+#: shell/ev-annotation-properties-dialog.c:106
+msgid "Insert"
+msgstr "Ger"
+
+#: shell/ev-annotation-properties-dialog.c:107
+msgid "Cross"
+msgstr ""
+
+#: shell/ev-annotation-properties-dialog.c:108
+msgid "Circle"
+msgstr "Tawinest"
+
+#: shell/ev-annotation-properties-dialog.c:120
+msgid "Markup type:"
+msgstr ""
+
+#: shell/ev-annotation-properties-dialog.c:126
+msgid "Highlight"
+msgstr "Asebrureq"
+
+#: shell/ev-annotation-properties-dialog.c:127
+msgid "Strike out"
+msgstr ""
+
+#: shell/ev-annotation-properties-dialog.c:128
+msgid "Underline"
+msgstr "Derrer"
+
+#: shell/ev-annotation-properties-dialog.c:129
+msgid "Squiggly"
+msgstr ""
+
+#: shell/ev-annotation-properties-dialog.c:150 shell/evince-menus.ui:170
+msgid "Annotation Properties"
+msgstr ""
+
+#: shell/ev-annotation-properties-dialog.c:154
+msgid "_Close"
+msgstr "Mdel (_C)"
+
+#: shell/ev-annotation-properties-dialog.c:155
+msgid "_Apply"
+msgstr "Snes (_A)"
+
+#: shell/ev-annotation-properties-dialog.c:180
+msgid "Color:"
+msgstr "Ini!"
+
+#: shell/ev-annotation-properties-dialog.c:190
+msgid "Opacity:"
+msgstr ""
+
+#: shell/ev-annotation-properties-dialog.c:202
+msgid "Initial window state:"
+msgstr ""
+
+#: shell/ev-annotation-properties-dialog.c:208
+msgid "Open"
+msgstr "Ldi"
+
+#: shell/ev-annotation-properties-dialog.c:209
+msgid "Close"
+msgstr "Mdel"
+
+#. Translators: an annotation that looks like a "sticky note"
+#: shell/ev-annotations-toolbar.c:132
+msgid "Note text"
+msgstr ""
+
+#: shell/ev-annotations-toolbar.c:134
+msgid "Add text annotation"
+msgstr ""
+
+#: shell/ev-annotations-toolbar.c:139
+msgid "Highlight text"
+msgstr ""
+
+#: shell/ev-annotations-toolbar.c:141
+msgid "Add highlight annotation"
+msgstr ""
+
+#: shell/evince-menus.ui:24
+msgid "_Open Link"
+msgstr "Ldi aseɣwen (_O)"
+
+#: shell/evince-menus.ui:29
+msgid "_Copy Link Address"
+msgstr ""
+
+#: shell/evince-menus.ui:34
+msgid "_Go To"
+msgstr ""
+
+#: shell/evince-menus.ui:39
+msgid "Open in New _Window"
+msgstr "Ldi deg usfaylu a_maynut"
+
+#: shell/evince-menus.ui:46
+msgid "_Previous Page"
+msgstr ""
+
+#: shell/evince-menus.ui:50
+msgid "_Next Page"
+msgstr ""
+
+#: shell/evince-menus.ui:54 shell/ev-window.c:3935
+msgid "_Reload"
+msgstr "Ales aεebbi (R)"
+
+#: shell/evince-menus.ui:58
+msgid "Auto_scroll"
+msgstr ""
+
+#: shell/evince-menus.ui:64
+msgid "_Copy"
+msgstr "Nɣel (_C)"
+
+#: shell/evince-menus.ui:68
+msgid "Select _All"
+msgstr "Fren _Akk"
+
+#: shell/evince-menus.ui:74
+msgid "_Save Image As…"
+msgstr "_Sekles tugna am…"
+
+#: shell/evince-menus.ui:79
+msgid "Copy _Image"
+msgstr ""
+
+#: shell/evince-menus.ui:86 shell/evince-menus.ui:157 shell/evince-menus.ui:180
+msgid "_Open Attachment"
+msgstr ""
+
+#: shell/evince-menus.ui:91 shell/evince-menus.ui:161 shell/evince-menus.ui:185
+msgid "_Save Attachment As…"
+msgstr ""
+
+#: shell/evince-menus.ui:98
+msgid "Annotation _Properties"
+msgstr ""
+
+#: shell/evince-menus.ui:103
+msgid "R_emove Annotation"
+msgstr ""
+
+#: shell/evince-menus.ui:110
+msgid "_Highlight Selected Text"
+msgstr ""
+
+#: shell/evince-menus.ui:115 shell/evince-toolbar.ui:153
+msgid "Open Containing _Folder"
+msgstr ""
+
+#: shell/evince-menus.ui:123
+msgid "Navigation"
+msgstr "Tunigin"
+
+#: shell/evince-menus.ui:125
+msgid "First Page"
+msgstr "Asebtar amezwaru"
+
+#: shell/evince-menus.ui:137
+msgid "Last Page"
+msgstr ""
+
+#: shell/evince-menus.ui:142
+msgid "History"
+msgstr "Amazray"
+
+#: shell/evince-menus.ui:144
+msgid "Back"
+msgstr "Tuɣalin"
+
+#: shell/evince-menus.ui:148
+msgid "Forward"
+msgstr "Ɣer sdat"
+
+#: shell/evince-menus.ui:175
+msgid "Remove Annotation"
+msgstr ""
+
+#: shell/evince-menus.ui:195
+msgid "_Open Bookmark"
+msgstr ""
+
+#: shell/evince-menus.ui:201
+msgid "_Rename Bookmark"
+msgstr ""
+
+#: shell/evince-menus.ui:205
+msgid "_Delete Bookmark"
+msgstr ""
+
+#: shell/evince-menus.ui:214
+msgid "Search in the outline…"
+msgstr ""
+
+#: shell/evince-menus.ui:218
+msgid "Print this section…"
+msgstr ""
+
+#: shell/evince-menus.ui:222
+msgid "Collapse all tree"
+msgstr ""
+
+#: shell/evince-menus.ui:226
+msgid "Expand all tree"
+msgstr ""
+
+#: shell/evince-menus.ui:230
+msgid "Expand all under this element"
+msgstr ""
+
+#: shell/evince-password-view.ui:22
+msgid ""
+"This document is locked and can only be read by entering the correct "
+"password."
+msgstr ""
+
+#: shell/evince-password-view.ui:37
+msgid "_Unlock Document"
+msgstr ""
+
+#: shell/evince-properties-fonts.ui:40
+msgid "Font"
+msgstr "Tasefsit"
+
+#: shell/evince-sidebar-bookmarks.ui:55
+msgid "Add bookmark"
+msgstr "Rnu tacreṭ"
+
+#: shell/evince-sidebar-bookmarks.ui:64
+msgid "Remove bookmark"
+msgstr ""
+
+#: shell/evince-toolbar.ui:10
+msgid "Open…"
+msgstr ""
+
+#: shell/evince-toolbar.ui:11
+msgid "Open an existing document"
+msgstr ""
+
+#: shell/evince-toolbar.ui:20
+msgid "Side pane"
+msgstr ""
+
+#: shell/evince-toolbar.ui:49
+msgid "Annotate the document"
+msgstr ""
+
+#: shell/evince-toolbar.ui:59
+msgid "Annotate document"
+msgstr ""
+
+#: shell/evince-toolbar.ui:70 shell/evince-toolbar.ui:81
+msgid "File options"
+msgstr ""
+
+#: shell/evince-toolbar.ui:110
+msgid "Set zoom level"
+msgstr ""
+
+#: shell/evince-toolbar.ui:126
+msgid "Print…"
+msgstr "Siggez…"
+
+#: shell/evince-toolbar.ui:131
+msgid "Fullscreen"
+msgstr "Agdil aččuran"
+
+#: shell/evince-toolbar.ui:136
+msgid "Send To…"
+msgstr "Azen i…"
+
+#: shell/evince-toolbar.ui:143
+msgid "New _Window"
+msgstr "A_sfaylu amaynut"
+
+#: shell/evince-toolbar.ui:149
+msgid "Open a C_opy"
+msgstr ""
+
+#: shell/evince-toolbar.ui:159
+msgid "_Save As…"
+msgstr "_Sekles am…"
+
+#: shell/evince-toolbar.ui:165
+msgid "Present as _Slideshow"
+msgstr ""
+
+#: shell/evince-toolbar.ui:171
+msgid "_Continuous"
+msgstr ""
+
+#: shell/evince-toolbar.ui:175
+msgid "_Dual"
+msgstr ""
+
+#: shell/evince-toolbar.ui:179
+msgid "_Odd Pages Left"
+msgstr ""
+
+#: shell/evince-toolbar.ui:183
+msgid "Right to Left Document"
+msgstr ""
+
+#: shell/evince-toolbar.ui:189
+msgid "Ro_tate ⤵"
+msgstr ""
+
+#: shell/evince-toolbar.ui:195
+msgid "Ni_ght Mode"
+msgstr ""
+
+#: shell/evince-toolbar.ui:201
+msgid "Prop_erties"
+msgstr ""
+
+#: shell/evince-toolbar.ui:207
+msgid "_Keyboard Shortcuts"
+msgstr "Inegzumen n unasiw (_K)"
+
+#: shell/evince-toolbar.ui:211
+msgid "_Help"
+msgstr "Tallalt (_H)"
+
+#: shell/evince-toolbar.ui:215
+msgid "_About Document Viewer"
+msgstr ""
+
+#: shell/evince-zoom-action.ui:5
+msgid "Select or set the zoom level of the document"
+msgstr ""
+
+#: shell/evince-zoom-action.ui:30
+msgid "Fit Pa_ge"
+msgstr ""
+
+#: shell/evince-zoom-action.ui:35
+msgid "Fit _Width"
+msgstr ""
+
+#: shell/evince-zoom-action.ui:40
+msgid "_Automatic"
+msgstr "_Awurman"
+
+#: shell/ev-keyring.c:86
+#, c-format
+msgid "Password for document %s"
+msgstr ""
+
+#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:140
+#: shell/ev-sidebar-layers.c:119 shell/ev-sidebar-links.c:274
+msgid "Loading…"
+msgstr "Asali…"
+
+#: shell/ev-password-view.c:224
+#, c-format
+msgid ""
+"The document “%s” is locked and requires a password before it can be opened."
+msgstr ""
+
+#: shell/ev-password-view.c:231
+msgid "Password required"
+msgstr ""
+
+#: shell/ev-password-view.c:238 shell/ev-sidebar-attachments.c:493
+#: shell/ev-window.c:2877 shell/ev-window.c:3174 shell/ev-window.c:4059
+#: shell/ev-window.c:6987 shell/ev-window.c:7213
+msgid "_Cancel"
+msgstr "Sefsex (_C)"
+
+#: shell/ev-password-view.c:239
+msgid "_Unlock"
+msgstr "Iserreḥ (_u)"
+
+#: shell/ev-password-view.c:251
+msgid "_Password:"
+msgstr "_Awal n uɛeddi:"
+
+#: shell/ev-password-view.c:285
+msgid "Forget password _immediately"
+msgstr "Ttu awal n uɛeddi _din din"
+
+#: shell/ev-password-view.c:296
+msgid "Remember password until you _log out"
+msgstr ""
+
+#: shell/ev-password-view.c:307
+msgid "Remember _forever"
+msgstr "Cfu ɣef wawal n uɛeddi i _lebda"
+
+#: shell/ev-properties-dialog.c:63
+msgid "Properties"
+msgstr "Iraten"
+
+#: shell/ev-properties-dialog.c:85
+msgid "General"
+msgstr "Amatu"
+
+#: shell/ev-properties-dialog.c:95
+msgid "Fonts"
+msgstr "Tisefsa"
+
+#: shell/ev-properties-dialog.c:108
+msgid "Document License"
+msgstr ""
+
+#: shell/ev-properties-fonts.c:136
+#, c-format
+msgid "Gathering font information… %3d%%"
+msgstr ""
+
+#: shell/ev-properties-license.c:146
+msgid "Usage terms"
+msgstr ""
+
+#: shell/ev-properties-license.c:158
+msgid "Text License"
+msgstr ""
+
+#: shell/ev-properties-license.c:169
+msgid "Further Information"
+msgstr ""
+
+#: shell/ev-sidebar-annotations.c:341
+msgid "Document contains no annotations"
+msgstr ""
+
+#: shell/ev-sidebar-annotations.c:371
+#, c-format
+msgid "Page %d"
+msgstr ""
+
+#: shell/ev-sidebar-annotations.c:405
+msgid "No Comment"
+msgstr ""
+
+#: shell/ev-sidebar-annotations.c:566 shell/ev-window.c:7596
+msgid "Annotations"
+msgstr ""
+
+#: shell/ev-sidebar-attachments.c:485
+#, c-format
+msgid "A file named “%s” already exists. Do you want to replace it?"
+msgstr ""
+
+#: shell/ev-sidebar-attachments.c:489
+#, c-format
+msgid "The file “%s” already exists. Replacing it will overwrite its contents."
+msgstr ""
+
+#: shell/ev-sidebar-attachments.c:494
+msgid "_Replace"
+msgstr "Semselsi (_R)"
+
+#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7620
+msgid "Attachments"
+msgstr "Ticeqqufin"
+
+#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7604
+msgid "Bookmarks"
+msgstr "Signets"
+
+#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7632
+msgid "Layers"
+msgstr "Tissiyin"
+
+#. Translators: This is the title for the sidebar pane that
+#. * shows the Outline or Table of Contents of the document.
+#.
+#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7584
+msgid "Outline"
+msgstr "Aɣawas"
+
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7567
+msgid "Thumbnails"
+msgstr ""
+
+#: shell/ev-toolbar.c:98
+msgid "Find a word or phrase in the document"
+msgstr ""
+
+#: shell/ev-toolbar.c:104
+msgid "Search not available for this document"
+msgstr ""
+
+#: shell/ev-utils.c:268
+msgid "Supported Image Files"
+msgstr ""
+
+#: shell/ev-window.c:1753
+msgid "The document contains no pages"
+msgstr ""
+
+#: shell/ev-window.c:1756
+msgid "The document contains only empty pages"
+msgstr ""
+
+#: shell/ev-window.c:1997 shell/ev-window.c:2171
+#, c-format
+msgid "Unable to open document “%s”."
+msgstr ""
+
+#: shell/ev-window.c:2136
+#, c-format
+msgid "Loading document from “%s”"
+msgstr ""
+
+#: shell/ev-window.c:2141 shell/ev-window.c:2599 shell/ev-window.c:2965
+#: shell/ev-window.c:3700 shell/ev-window.c:3948
+msgid "C_ancel"
+msgstr "Sefsex (_A)"
+
+#: shell/ev-window.c:2293 shell/ev-window.c:2650
+#, c-format
+msgid "Downloading document (%d%%)"
+msgstr ""
+
+#: shell/ev-window.c:2326
+msgid "Failed to load remote file."
+msgstr ""
+
+#: shell/ev-window.c:2595
+#, c-format
+msgid "Reloading document from %s"
+msgstr ""
+
+#: shell/ev-window.c:2625
+msgid "Failed to reload document."
+msgstr ""
+
+#: shell/ev-window.c:2873
+msgid "Open Document"
+msgstr ""
+
+#: shell/ev-window.c:2876
+msgid "_Open"
+msgstr "Ldi (_O)"
+
+#: shell/ev-window.c:2951
+#, c-format
+msgid "Saving document to %s"
+msgstr ""
+
+#: shell/ev-window.c:2954
+#, c-format
+msgid "Saving attachment to %s"
+msgstr ""
+
+#: shell/ev-window.c:2957
+#, c-format
+msgid "Saving image to %s"
+msgstr ""
+
+#: shell/ev-window.c:2999 shell/ev-window.c:3113
+#, c-format
+msgid "The file could not be saved as “%s”."
+msgstr ""
+
+#: shell/ev-window.c:3031
+#, c-format
+msgid "Uploading document (%d%%)"
+msgstr ""
+
+#: shell/ev-window.c:3035
+#, c-format
+msgid "Uploading attachment (%d%%)"
+msgstr ""
+
+#: shell/ev-window.c:3039
+#, c-format
+msgid "Uploading image (%d%%)"
+msgstr ""
+
+#: shell/ev-window.c:3171
+msgid "Save As…"
+msgstr "Sekles am…"
+
+#: shell/ev-window.c:3173 shell/ev-window.c:6986 shell/ev-window.c:7212
+msgid "_Save"
+msgstr "_Sekles"
+
+#: shell/ev-window.c:3260
+msgid "Could not send current document"
+msgstr ""
+
+#: shell/ev-window.c:3587
+#, c-format
+msgid "%d pending job in queue"
+msgid_plural "%d pending jobs in queue"
+msgstr[0] ""
+msgstr[1] ""
+
+#: shell/ev-window.c:3696
+#, c-format
+msgid "Printing job “%s”"
+msgstr ""
+
+#: shell/ev-window.c:3914
+msgid "Document contains form fields that have been filled out."
+msgstr ""
+
+#: shell/ev-window.c:3917
+msgid "Document contains new or modified annotations."
+msgstr ""
+
+#: shell/ev-window.c:3929
+#, c-format
+msgid "Reload document “%s”?"
+msgstr ""
+
+#: shell/ev-window.c:3931
+msgid "If you reload the document, changes will be permanently lost."
+msgstr ""
+
+#: shell/ev-window.c:3933
+msgid "_No"
+msgstr ""
+
+#: shell/ev-window.c:3942
+#, c-format
+msgid "Save a copy of document “%s” before closing?"
+msgstr ""
+
+#: shell/ev-window.c:3944
+msgid "If you don’t save a copy, changes will be permanently lost."
+msgstr ""
+
+#: shell/ev-window.c:3946
+msgid "Close _without Saving"
+msgstr ""
+
+#: shell/ev-window.c:3950
+msgid "Save a _Copy"
+msgstr ""
+
+#: shell/ev-window.c:4032
+#, c-format
+msgid "Wait until print job “%s” finishes before closing?"
+msgstr ""
+
+#. TRANS: the singular form is not really used as n_print_jobs > 1
+#. but some languages distinguish between different plurals forms,
+#. so the ngettext is needed.
+#: shell/ev-window.c:4038
+#, c-format
+msgid "There is %d print job active. Wait until print finishes before closing?"
+msgid_plural ""
+"There are %d print jobs active. Wait until print finishes before closing?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: shell/ev-window.c:4053
+msgid "If you close the window, pending print jobs will not be printed."
+msgstr ""
+
+#: shell/ev-window.c:4057
+msgid "Cancel _print and Close"
+msgstr ""
+
+#: shell/ev-window.c:4061
+msgid "Close _after Printing"
+msgstr ""
+
+#: shell/ev-window.c:4229
+msgid "© 1996–2023 The Evince document viewer authors"
+msgstr ""
+
+#: shell/ev-window.c:4232
+msgid "Evince is a simple document viewer for GNOME"
+msgstr ""
+
+#: shell/ev-window.c:4235
+msgid "translator-credits"
+msgstr "amsuqqel-isemdan"
+
+#: shell/ev-window.c:4717
+msgid "Running in presentation mode"
+msgstr ""
+
+#: shell/ev-window.c:5704
+msgid "The attachment could not be saved."
+msgstr ""
+
+#: shell/ev-window.c:6026
+msgid "Enable caret navigation?"
+msgstr ""
+
+#: shell/ev-window.c:6027
+msgid "_Enable"
+msgstr "Sermed (_E)"
+
+#: shell/ev-window.c:6030
+msgid ""
+"Pressing F7 turns the caret navigation on or off. This feature places a "
+"moveable cursor in text pages, allowing you to move around and select text "
+"with your keyboard. Do you want to enable the caret navigation?"
+msgstr ""
+
+#: shell/ev-window.c:6035
+msgid "Don’t show this message again"
+msgstr ""
+
+#: shell/ev-window.c:6624
+#, c-format
+msgid ""
+"Security alert: this document has been prevented from opening the file “%s”"
+msgstr ""
+
+#: shell/ev-window.c:6689
+msgid "Unable to open external link"
+msgstr ""
+
+#: shell/ev-window.c:6915
+msgid "Couldn’t find appropriate format to save image"
+msgstr ""
+
+#: shell/ev-window.c:6947
+msgid "The image could not be saved."
+msgstr ""
+
+#: shell/ev-window.c:6983
+msgid "Save Image"
+msgstr "Sekles tugna"
+
+#: shell/ev-window.c:7141
+msgid "Unable to open attachment"
+msgstr ""
+
+#: shell/ev-window.c:7209
+msgid "Save Attachment"
+msgstr ""
+
+#: shell/ev-window-title.c:108
+msgid "Recent Documents"
+msgstr ""
+
+#: shell/ev-window-title.c:151 shell/ev-window-title.c:153
+#: shell/ev-window-title.c:158
+msgid "Password Required"
+msgstr "Awal uffir yettusra"
+
+#: shell/ev-zoom-action.c:41
+msgid "50%"
+msgstr "50%"
+
+#: shell/ev-zoom-action.c:42
+msgid "70%"
+msgstr "70%"
+
+#: shell/ev-zoom-action.c:43
+msgid "85%"
+msgstr "85%"
+
+#: shell/ev-zoom-action.c:44
+msgid "100%"
+msgstr "100%"
+
+#: shell/ev-zoom-action.c:45
+msgid "125%"
+msgstr "125%"
+
+#: shell/ev-zoom-action.c:46
+msgid "150%"
+msgstr "150%"
+
+#: shell/ev-zoom-action.c:47
+msgid "175%"
+msgstr "175%"
+
+#: shell/ev-zoom-action.c:48
+msgid "200%"
+msgstr "200%"
+
+#: shell/ev-zoom-action.c:49
+msgid "300%"
+msgstr "300%"
+
+#: shell/ev-zoom-action.c:50
+msgid "400%"
+msgstr "400%"
+
+#: shell/ev-zoom-action.c:51
+msgid "800%"
+msgstr "800%"
+
+#: shell/ev-zoom-action.c:52
+msgid "1600%"
+msgstr "1600%"
+
+#: shell/ev-zoom-action.c:53
+msgid "3200%"
+msgstr "3200%"
+
+#: shell/ev-zoom-action.c:54
+msgid "6400%"
+msgstr "6400%"
+
+#: shell/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "Opening, closing, saving and printing"
+msgstr ""
+
+#: shell/help-overlay.ui:17
+msgctxt "shortcut window"
+msgid "Open a document"
+msgstr ""
+
+#: shell/help-overlay.ui:24
+msgctxt "shortcut window"
+msgid "Open a copy of the current document"
+msgstr ""
+
+#: shell/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Save a copy of the current document"
+msgstr ""
+
+#: shell/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Print the current document"
+msgstr ""
+
+#: shell/help-overlay.ui:45
+msgctxt "shortcut window"
+msgid "Close the current document window"
+msgstr ""
+
+#: shell/help-overlay.ui:52
+msgctxt "shortcut window"
+msgid "Reload the document"
+msgstr ""
+
+#: shell/help-overlay.ui:61
+msgctxt "shortcut window"
+msgid "Window"
+msgstr "Asfaylu"
+
+#: shell/help-overlay.ui:65
+msgctxt "shortcut window"
+msgid "Toggle fullscreen"
+msgstr "Senfel agdil aččuran"
+
+#: shell/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Enter presentation mode"
+msgstr ""
+
+#: shell/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Toggle sidebar"
+msgstr ""
+
+#: shell/help-overlay.ui:86
+msgctxt "shortcut window"
+msgid "Toggle caret navigation"
+msgstr ""
+
+#: shell/help-overlay.ui:95
+msgctxt "shortcut window"
+msgid "Selecting and copying text"
+msgstr ""
+
+#: shell/help-overlay.ui:99
+msgctxt "shortcut window"
+msgid "Copy highlighted text"
+msgstr ""
+
+#: shell/help-overlay.ui:106
+msgctxt "shortcut window"
+msgid "Select all the text in a document"
+msgstr ""
+
+#: shell/help-overlay.ui:115
+msgctxt "shortcut window"
+msgid "Rotating and zooming"
+msgstr ""
+
+#: shell/help-overlay.ui:119
+msgctxt "shortcut window"
+msgid "Rotate the page 90 degrees counter-clockwise"
+msgstr ""
+
+#: shell/help-overlay.ui:126
+msgctxt "shortcut window"
+msgid "Rotate the page 90 degrees clockwise"
+msgstr ""
+
+#: shell/help-overlay.ui:133 shell/help-overlay.ui:435
+msgctxt "shortcut window"
+msgid "Zoom in"
+msgstr "Semɣeṛ"
+
+#: shell/help-overlay.ui:140 shell/help-overlay.ui:442
+msgctxt "shortcut window"
+msgid "Zoom out"
+msgstr "Semẓi"
+
+#: shell/help-overlay.ui:147
+msgctxt "shortcut window"
+msgid "Zoom 1∶1"
+msgstr ""
+
+#: shell/help-overlay.ui:154
+msgctxt "shortcut window"
+msgid "Zoom in (alternative)"
+msgstr ""
+
+#: shell/help-overlay.ui:161
+msgctxt "shortcut window"
+msgid "Fit page"
+msgstr ""
+
+#: shell/help-overlay.ui:168
+msgctxt "shortcut window"
+msgid "Fit width"
+msgstr ""
+
+#: shell/help-overlay.ui:175
+msgctxt "shortcut window"
+msgid "Automatic zoom"
+msgstr ""
+
+#: shell/help-overlay.ui:184
+msgctxt "shortcut window"
+msgid "Moving around the document"
+msgstr ""
+
+#: shell/help-overlay.ui:188 shell/help-overlay.ui:195
+msgctxt "shortcut window"
+msgid "Move around a page"
+msgstr ""
+
+#: shell/help-overlay.ui:202
+msgctxt "shortcut window"
+msgid "Move up/down a page several lines at a time"
+msgstr ""
+
+#: shell/help-overlay.ui:209 shell/help-overlay.ui:456
+msgctxt "shortcut window"
+msgid "Go to previous page"
+msgstr "Ddu ɣer usebter udfir"
+
+#: shell/help-overlay.ui:216 shell/help-overlay.ui:449
+msgctxt "shortcut window"
+msgid "Go to next page"
+msgstr "Ddu ɣer usebter uḍfir"
+
+#: shell/help-overlay.ui:223
+msgctxt "shortcut window"
+msgid "Go to page number"
+msgstr ""
+
+#: shell/help-overlay.ui:230
+msgctxt "shortcut window"
+msgid "Go to previous page (fast)"
+msgstr ""
+
+#: shell/help-overlay.ui:237
+msgctxt "shortcut window"
+msgid "Go to next page (fast)"
+msgstr ""
+
+#: shell/help-overlay.ui:244
+msgctxt "shortcut window"
+msgid "Go to previous page visited"
+msgstr ""
+
+#: shell/help-overlay.ui:251
+msgctxt "shortcut window"
+msgid "Go to next page visited"
+msgstr ""
+
+#: shell/help-overlay.ui:258
+msgctxt "shortcut window"
+msgid "Go to the beginning/end of a page"
+msgstr ""
+
+#: shell/help-overlay.ui:265
+msgctxt "shortcut window"
+msgid "Go to the beginning of the document"
+msgstr ""
+
+#: shell/help-overlay.ui:272
+msgctxt "shortcut window"
+msgid "Go to the end of the document"
+msgstr ""
+
+#: shell/help-overlay.ui:281
+msgctxt "shortcut window"
+msgid "Document view and handling"
+msgstr ""
+
+#: shell/help-overlay.ui:285
+msgctxt "shortcut window"
+msgid "Add bookmark"
+msgstr "Rnu tacreṭ"
+
+#: shell/help-overlay.ui:292
+msgctxt "shortcut window"
+msgid "Remove bookmark"
+msgstr ""
+
+#: shell/help-overlay.ui:299
+msgctxt "shortcut window"
+msgid "Toggle night mode"
+msgstr ""
+
+#: shell/help-overlay.ui:306
+msgctxt "shortcut window"
+msgid "Toggle continuous scrolling"
+msgstr ""
+
+#: shell/help-overlay.ui:313
+msgctxt "shortcut window"
+msgid "Toggle dual page"
+msgstr ""
+
+#: shell/help-overlay.ui:320
+msgctxt "shortcut window"
+msgid "Toggle odd pages left"
+msgstr ""
+
+#: shell/help-overlay.ui:327
+msgctxt "shortcut window"
+msgid "Document properties"
+msgstr "Iraten  n isemli"
+
+#: shell/help-overlay.ui:334
+msgctxt "shortcut window"
+msgid "Add a post-it like note"
+msgstr ""
+
+#: shell/help-overlay.ui:341
+msgctxt "shortcut window"
+msgid "Highlight text"
+msgstr ""
+
+#: shell/help-overlay.ui:350
+msgctxt "shortcut window"
+msgid "Finding text"
+msgstr ""
+
+#: shell/help-overlay.ui:354
+msgctxt "shortcut window"
+msgid "Show the search bar"
+msgstr ""
+
+#: shell/help-overlay.ui:361
+msgctxt "shortcut window"
+msgid "Go to the next search result"
+msgstr ""
+
+#: shell/help-overlay.ui:368
+msgctxt "shortcut window"
+msgid "Go to the previous search result"
+msgstr ""
+
+#: shell/help-overlay.ui:377
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Amatu"
+
+#: shell/help-overlay.ui:381
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Sken tallalt"
+
+#: shell/help-overlay.ui:388
+msgctxt "shortcut window"
+msgid "Toggle primary menu"
+msgstr ""
+
+#: shell/help-overlay.ui:395
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "Inegzumen n unasiw"
+
+#: shell/help-overlay.ui:402
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Mdel asfaylu"
+
+#: shell/help-overlay.ui:411
+msgctxt "shortcut window"
+msgid "Presentation mode"
+msgstr ""
+
+#: shell/help-overlay.ui:415
+msgctxt "shortcut window"
+msgid "Toggle black screen"
+msgstr ""
+
+#: shell/help-overlay.ui:422
+msgctxt "shortcut window"
+msgid "Toggle white screen"
+msgstr ""
+
+#: shell/help-overlay.ui:431
+msgctxt "shortcut window"
+msgid "Touchpad gestures"
+msgstr ""
+
+#: shell/main.c:64 shell/main.c:271
+msgid "GNOME Document Viewer"
+msgstr ""
+
+#: shell/main.c:72
+msgid "Open a new window."
+msgstr ""
+
+#: shell/main.c:73
+msgid "The page label of the document to display."
+msgstr ""
+
+#: shell/main.c:73
+msgid "PAGE"
+msgstr ""
+
+#: shell/main.c:74
+msgid "The page number of the document to display."
+msgstr ""
+
+#: shell/main.c:74
+msgid "NUMBER"
+msgstr "AMIḌAN"
+
+#: shell/main.c:75
+msgid "Named destination to display."
+msgstr ""
+
+#: shell/main.c:75
+msgid "DEST"
+msgstr ""
+
+#: shell/main.c:76
+msgid "Run evince in fullscreen mode"
+msgstr ""
+
+#: shell/main.c:77
+msgid "Run evince in presentation mode"
+msgstr ""
+
+#: shell/main.c:78
+msgid "Run evince as a previewer"
+msgstr ""
+
+#: shell/main.c:79
+msgid "The word or phrase to find in the document"
+msgstr ""
+
+#: shell/main.c:79
+msgid "STRING"
+msgstr ""
+
+#: shell/main.c:83
+msgid "[FILE…]"
+msgstr "[AFAYLU…]"
