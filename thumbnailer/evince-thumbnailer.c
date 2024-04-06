@@ -47,7 +47,7 @@ static const gchar **file_arguments;
 static const GOptionEntry goption_options[] = {
 	{ "size", 's', 0, G_OPTION_ARG_INT, &size, NULL, "SIZE" },
         { "no-limit", 'l', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE, &time_limit, "Don't limit the thumbnailing time to 15 seconds", NULL },
-	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &file_arguments, NULL, "<input> <ouput>" },
+	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &file_arguments, NULL, "<input> <output>" },
 	{ NULL }
 };
 
