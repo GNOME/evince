@@ -99,8 +99,8 @@ typedef enum
 	EV_DOCUMENT_INFO_LAYOUT = 1 << 5,
 	EV_DOCUMENT_INFO_CREATOR = 1 << 6,
 	EV_DOCUMENT_INFO_PRODUCER = 1 << 7,
-	EV_DOCUMENT_INFO_CREATION_DATE = 1 << 8,
-	EV_DOCUMENT_INFO_MOD_DATE = 1 << 9,
+	EV_DOCUMENT_INFO_CREATION_DATETIME = 1 << 8,
+	EV_DOCUMENT_INFO_MOD_DATETIME = 1 << 9,
 	EV_DOCUMENT_INFO_LINEARIZED = 1 << 10,
 	EV_DOCUMENT_INFO_START_MODE = 1 << 11,
 	EV_DOCUMENT_INFO_UI_HINTS = 1 << 12,
@@ -109,11 +109,9 @@ typedef enum
 	EV_DOCUMENT_INFO_SECURITY = 1 << 15,
 	EV_DOCUMENT_INFO_PAPER_SIZE = 1 << 16,
 	EV_DOCUMENT_INFO_LICENSE = 1 << 17,
-	EV_DOCUMENT_INFO_CONTAINS_JS = 1 << 18,
-	_EV_DOCUMENT_INFO_EXTENDED = 1 << 30 /*< skip >*/
+	EV_DOCUMENT_INFO_CONTAINS_JS = 1 << 18
 } EvDocumentInfoFields;
 
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 struct _EvDocumentInfo
 {
 	char *title;
@@ -124,9 +122,9 @@ struct _EvDocumentInfo
 	char *creator;
 	char *producer;
 	char *linearized;
-        char *security;
-	GTime creation_date G_GNUC_DEPRECATED_FOR(ev_document_info_get_created_datetime);
-	GTime modified_date G_GNUC_DEPRECATED_FOR(ev_document_info_get_modified_datetime);
+	char *security;
+	GDateTime *creation_datetime;
+	GDateTime *modified_datetime;
 	EvDocumentLayout layout;
 	EvDocumentMode mode;
 	guint ui_hints;
@@ -140,7 +138,6 @@ struct _EvDocumentInfo
 	/* Mask of all the valid fields */
 	guint fields_mask;
 };
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 EV_PUBLIC
 GType           ev_document_info_get_type (void) G_GNUC_CONST;

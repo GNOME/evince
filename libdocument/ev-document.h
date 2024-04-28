@@ -37,15 +37,9 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT            (ev_document_get_type ())
-#define EV_DOCUMENT(o)              (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT, EvDocument))
-#define EV_DOCUMENT_CLASS(k)        (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT, EvDocumentClass))
-#define EV_IS_DOCUMENT(o)           (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT))
-#define EV_IS_DOCUMENT_CLASS(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT))
-#define EV_DOCUMENT_GET_CLASS(inst) (G_TYPE_INSTANCE_GET_CLASS ((inst), EV_TYPE_DOCUMENT, EvDocumentClass))
 
-typedef struct _EvDocument        EvDocument;
-typedef struct _EvDocumentClass   EvDocumentClass;
-typedef struct _EvDocumentPrivate EvDocumentPrivate;
+EV_PUBLIC
+G_DECLARE_DERIVABLE_TYPE (EvDocument, ev_document, EV, DOCUMENT, GObject)
 
 #define EV_DOCUMENT_ERROR ev_document_error_quark ()
 #define EV_DOC_MUTEX_LOCK (ev_document_doc_mutex_lock ())
@@ -78,13 +72,6 @@ struct _EvDocumentBackendInfo
 {
 	const gchar *name;
 	const gchar *version;
-};
-
-struct _EvDocument
-{
-	GObject base;
-
-	EvDocumentPrivate *priv;
 };
 
 struct _EvDocumentClass
@@ -136,8 +123,6 @@ struct _EvDocumentClass
 						     GError             **error);
 };
 
-EV_PUBLIC
-GType            ev_document_get_type             (void) G_GNUC_CONST;
 EV_PUBLIC
 GQuark           ev_document_error_quark          (void);
 
@@ -307,85 +292,9 @@ EvSourceLink  *ev_source_link_copy     (EvSourceLink *link);
 EV_PUBLIC
 void           ev_source_link_free     (EvSourceLink *link);
 
-/* convenience macro to ease interface addition in the CODE
- * section of EV_BACKEND_REGISTER_WITH_CODE (this macro relies on
- * the g_define_type_id present within EV_BACKEND_REGISTER_WITH_CODE()).
- * usage example:
- * EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
- *                          EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
- *                                                 pdf_document_document_thumbnails_iface_init));
+/* backends shall implement this function to be able to be opened by Evince
  */
-#define EV_BACKEND_IMPLEMENT_INTERFACE(TYPE_IFACE, iface_init) {                \
-	const GInterfaceInfo g_implement_interface_info = {                     \
-		(GInterfaceInitFunc) iface_init, NULL, NULL                     \
-	};                                                                      \
-	g_type_module_add_interface (module,                                    \
-				     g_define_type_id,                          \
-				     TYPE_IFACE,                                \
-				     &g_implement_interface_info);              \
-}
-
-/*
- * Utility macro used to register backends
- *
- * use: EV_BACKEND_REGISTER_WITH_CODE(BackendName, backend_name, CODE)
- */
-#define EV_BACKEND_REGISTER_WITH_CODE(BackendName, backend_name, CODE)	        \
-										\
-static GType g_define_type_id = 0;						\
-										\
-GType										\
-backend_name##_get_type (void)							\
-{										\
-	return g_define_type_id;						\
-}										\
-										\
-static void     backend_name##_init              (BackendName        *self);	\
-static void     backend_name##_class_init        (BackendName##Class *klass);	\
-static gpointer backend_name##_parent_class = NULL;				\
-static void     backend_name##_class_intern_init (gpointer klass)		\
-{										\
-	backend_name##_parent_class = g_type_class_peek_parent (klass);		\
-	backend_name##_class_init ((BackendName##Class *) klass);		\
-}										\
-                                                                                \
-EV_PUBLIC                                                                       \
-GType				                                                \
-register_evince_backend (GTypeModule *module)					\
-{										\
-	const GTypeInfo our_info = {  				                \
-		sizeof (BackendName##Class),					\
-		NULL, /* base_init */						\
-		NULL, /* base_finalize */					\
-		(GClassInitFunc) backend_name##_class_intern_init,		\
-		NULL,								\
-		NULL, /* class_data */						\
-		sizeof (BackendName),						\
-		0, /* n_preallocs */						\
-		(GInstanceInitFunc) backend_name##_init				\
-	};									\
-										\
-	/* Initialise the i18n stuff */						\
-	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);			\
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");			\
-                                                                                \
-	g_define_type_id = g_type_module_register_type (module,		        \
-					                EV_TYPE_DOCUMENT,	\
-					                #BackendName,		\
-					                &our_info,		\
-					                (GTypeFlags)0);	        \
-							                        \
-	CODE									\
-										\
-	return g_define_type_id;						\
-}
-
-/*
- * Utility macro used to register backend
- *
- * use: EV_BACKEND_REGISTER(BackendName, backend_name)
- */
-#define EV_BACKEND_REGISTER(BackendName, backend_name)			\
-	EV_BACKEND_REGISTER_WITH_CODE(BackendName, backend_name, ;)
+EV_PUBLIC
+GType ev_backend_query_type (void);
 
 G_END_DECLS

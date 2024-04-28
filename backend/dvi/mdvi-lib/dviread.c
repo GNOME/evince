@@ -622,8 +622,6 @@ int mdvi_configure(DviContext *dvi, DviParamCode option, ...)
 		return -1;
 	if(np.mag <= 0.0)
 		return -1;
-	if(np.density < 0)
-		return -1;
 	if(np.hshrink < 1 || np.vshrink < 1)
 		return -1;
 	if(np.hdrift < 0 || np.vdrift < 0)
@@ -1104,7 +1102,7 @@ again:
 	return 0;
 }
 
-static int inline move_vertical(DviContext *dvi, int amount)
+static inline int move_vertical(DviContext *dvi, int amount)
 {
 	int	rvv;
 
@@ -1127,7 +1125,7 @@ static int inline move_vertical(DviContext *dvi, int amount)
 	}
 }
 
-static int inline move_horizontal(DviContext *dvi, int amount)
+static inline int move_horizontal(DviContext *dvi, int amount)
 {
 	int	rhh;
 
@@ -1150,7 +1148,7 @@ static int inline move_horizontal(DviContext *dvi, int amount)
 	}
 }
 
-static void inline fix_after_horizontal(DviContext *dvi)
+static inline void fix_after_horizontal(DviContext *dvi)
 {
 	int	rhh;
 
@@ -1559,4 +1557,3 @@ int	undefined(DviContext *dvi, int opcode)
 	dvierr(dvi, _("undefined opcode %d\n"), opcode);
 	return -1;
 }
-

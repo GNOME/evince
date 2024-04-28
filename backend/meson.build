@@ -1,7 +1,7 @@
 backends_common_incs = [top_inc]
 backends_common_deps = [libevdocument_dep]
 backends_common_cflags = [
-  '-DGNOMELOCALEDIR="@0@"'.format(ev_localedir),
+  '-DEV_LOCALEDIR="@0@"'.format(ev_localedir),
   '-DEVINCE_COMPILATION',
 ]
 
@@ -24,7 +24,6 @@ foreach backend, backend_mime_types: backends
     gnu_symbol_visibility: 'hidden',
     install: true,
     install_dir: ev_backendsdir,
-    name_suffix: name_suffix,
   )
 
   backend_mime_types_conf = configuration_data()

@@ -228,10 +228,9 @@ static gboolean
 ev_view_accessible_idle_do_action (gpointer data)
 {
 	EvViewAccessiblePrivate* priv = EV_VIEW_ACCESSIBLE (data)->priv;
+	EvView *view = EV_VIEW (gtk_accessible_get_widget (GTK_ACCESSIBLE (data)));
 
-	ev_view_scroll (EV_VIEW (gtk_accessible_get_widget (GTK_ACCESSIBLE (data))),
-	                priv->idle_scroll,
-	                FALSE);
+	g_signal_emit_by_name (view, "scroll", priv->idle_scroll, GTK_ORIENTATION_VERTICAL);
 	priv->action_idle_handler = 0;
 	return FALSE;
 }

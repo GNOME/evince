@@ -31,14 +31,9 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_PAGE              (ev_page_get_type())
-#define EV_PAGE(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PAGE, EvPage))
-#define EV_PAGE_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_PAGE, EvPageClass))
-#define EV_IS_PAGE(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_PAGE))
-#define EV_IS_PAGE_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_PAGE))
-#define EV_PAGE_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_PAGE, EvPageClass))
 
-typedef struct _EvPage        EvPage;
-typedef struct _EvPageClass   EvPageClass;
+EV_PUBLIC
+G_DECLARE_FINAL_TYPE (EvPage, ev_page, EV, PAGE, GObject)
 
 typedef gpointer       EvBackendPage;
 typedef GDestroyNotify EvBackendPageDestroyFunc;
@@ -52,12 +47,6 @@ struct _EvPage {
 	EvBackendPageDestroyFunc backend_destroy_func;
 };
 
-struct _EvPageClass {
-	GObjectClass base_class;
-};
-
-EV_PUBLIC
-GType   ev_page_get_type (void) G_GNUC_CONST;
 
 EV_PUBLIC
 EvPage *ev_page_new      (gint index);

@@ -83,20 +83,7 @@ typedef struct {
 	GtkWidget *window;
 	guint      page;
 
-	/* Current position */
-	gint       x;
-	gint       y;
-
-	/* EvView root position */
-	gint       parent_x;
-	gint       parent_y;
-
-	/* Document coords */
-	gdouble    orig_x;
-	gdouble    orig_y;
-
 	gboolean   visible;
-	gboolean   moved;
 } EvViewWindowChild;
 
 typedef enum {
@@ -164,7 +151,6 @@ struct _EvView {
 	EvPageCache *page_cache;
 	EvHeightToPageCache *height_to_page_cache;
 	EvViewCursor cursor;
-	EvJobRender *current_job;
 
 	GtkRequisition requisition;
 	gboolean       internal_size_request;
@@ -203,7 +189,6 @@ struct _EvView {
 	gboolean can_zoom_out;
 	gboolean continuous;
 	gboolean dual_even_left;
-	gboolean fullscreen;
 	EvSizingMode sizing_mode;
 	EvPageLayout page_layout;
 	GtkWidget *loading_window;
@@ -237,7 +222,6 @@ struct _EvView {
 
 	/* Annotations */
 	GList             *window_children;
-	EvViewWindowChild *window_child_focus;
 	AddingAnnotInfo    adding_annot_info;
 	MovingAnnotInfo    moving_annot_info;
 	GHashTable        *annot_window_map;

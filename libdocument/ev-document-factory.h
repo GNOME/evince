@@ -58,6 +58,6 @@ EvDocument* ev_document_factory_get_document_for_fd (int fd,
                                                      GError **error);
 
 EV_PUBLIC
-void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
+void 	    ev_document_factory_add_filters  (GtkFileChooser *chooser, EvDocument *document);
 
 G_END_DECLS

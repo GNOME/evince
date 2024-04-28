@@ -29,8 +29,8 @@ enum
 	PROP_0,
 	PROP_NAME,
 	PROP_DESCRIPTION,
-	PROP_MTIME,
-	PROP_CTIME,
+	PROP_MDATETIME,
+	PROP_CDATETIME,
 	PROP_SIZE,
 	PROP_DATA
 };
@@ -38,8 +38,8 @@ enum
 typedef struct {
 	gchar                   *name;
 	gchar                   *description;
-	GTime                    mtime;
-	GTime                    ctime;
+	GDateTime               *mdatetime;
+	GDateTime               *cdatetime;
 	gsize                    size;
 	gchar                   *data;
 	gchar                   *mime_type;
@@ -76,6 +76,9 @@ ev_attachment_finalize (GObject *object)
 	g_clear_pointer (&priv->mime_type, g_free);
 	g_clear_object (&priv->app);
 
+	g_clear_pointer (&priv->mdatetime, g_date_time_unref);
+	g_clear_pointer (&priv->cdatetime, g_date_time_unref);
+
 	if (priv->tmp_file) {
 		ev_tmp_file_unlink (priv->tmp_file);
 		g_clear_object (&priv->tmp_file);
@@ -100,11 +103,15 @@ ev_attachment_set_property (GObject      *object,
 	case PROP_DESCRIPTION:
 		priv->description = g_value_dup_string (value);
 		break;
-	case PROP_MTIME:
-		priv->mtime = g_value_get_ulong (value);
+	case PROP_MDATETIME:
+		priv->mdatetime = g_value_get_boxed (value);
+		if (priv->mdatetime)
+			g_date_time_ref (priv->mdatetime);
 		break;
-	case PROP_CTIME:
-		priv->ctime = g_value_get_ulong (value);
+	case PROP_CDATETIME:
+		priv->cdatetime = g_value_get_boxed (value);
+		if (priv->cdatetime)
+			g_date_time_ref (priv->cdatetime);
 		break;
 	case PROP_SIZE:
 		priv->size = g_value_get_uint (value);
@@ -153,20 +160,20 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 							      G_PARAM_CONSTRUCT_ONLY |
                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
-					 PROP_MTIME,
-					 g_param_spec_ulong ("mtime",
+					 PROP_MDATETIME,
+					 g_param_spec_boxed ("mdatetime",
 							     "ModifiedTime",
 							     "The attachment modification date",
-							     0, G_MAXULONG, 0,
+							     G_TYPE_DATE_TIME,
 							     G_PARAM_WRITABLE |
 							     G_PARAM_CONSTRUCT_ONLY |
                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
-					 PROP_CTIME,
-					 g_param_spec_ulong ("ctime",
+					 PROP_CDATETIME,
+					 g_param_spec_boxed ("cdatetime",
 							     "CreationTime",
 							     "The attachment creation date",
-							     0, G_MAXULONG, 0,
+							     G_TYPE_DATE_TIME,
 							     G_PARAM_WRITABLE |
 							     G_PARAM_CONSTRUCT_ONLY |
                                                              G_PARAM_STATIC_STRINGS));
@@ -194,36 +201,24 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 static void
 ev_attachment_init (EvAttachment *attachment)
 {
-	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
-
-	priv->name = NULL;
-	priv->description = NULL;
-	priv->data = NULL;
-	priv->mime_type = NULL;
-
-	priv->tmp_file = NULL;
 }
 
 EvAttachment *
 ev_attachment_new (const gchar *name,
 		   const gchar *description,
-		   GTime        mtime,
-		   GTime        ctime,
+		   GDateTime   *mdatetime,
+		   GDateTime   *cdatetime,
 		   gsize        size,
 		   gpointer     data)
 {
-	EvAttachment *attachment;
-
-	attachment = g_object_new (EV_TYPE_ATTACHMENT,
-				   "name", name,
-				   "description", description,
-				   "mtime", mtime,
-				   "ctime", ctime,
-				   "size", size,
-				   "data", data,
-				   NULL);
-
-	return attachment;
+	return (EvAttachment *)g_object_new (EV_TYPE_ATTACHMENT,
+					    "name", name,
+					    "description", description,
+					    "mdatetime", mdatetime,
+					    "cdatetime", cdatetime,
+					    "size", size,
+					    "data", data,
+					    NULL);
 }
 
 const gchar *
@@ -250,8 +245,8 @@ ev_attachment_get_description (EvAttachment *attachment)
 	return priv->description;
 }
 
-GTime
-ev_attachment_get_modification_date (EvAttachment *attachment)
+GDateTime*
+ev_attachment_get_modification_datetime (EvAttachment *attachment)
 {
 	EvAttachmentPrivate *priv;
 
@@ -259,11 +254,11 @@ ev_attachment_get_modification_date (EvAttachment *attachment)
 
 	priv = GET_PRIVATE (attachment);
 
-	return priv->mtime;
+	return priv->mdatetime;
 }
 
-GTime
-ev_attachment_get_creation_date (EvAttachment *attachment)
+GDateTime*
+ev_attachment_get_creation_datetime (EvAttachment *attachment)
 {
 	EvAttachmentPrivate *priv;
 
@@ -271,7 +266,7 @@ ev_attachment_get_creation_date (EvAttachment *attachment)
 
 	priv = GET_PRIVATE (attachment);
 
-	return priv->ctime;
+	return priv->cdatetime;
 }
 
 const gchar *

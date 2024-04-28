@@ -45,15 +45,11 @@ GType         ev_annotation_window_get_type       (void) G_GNUC_CONST;
 GtkWidget    *ev_annotation_window_new            (EvAnnotation       *annot,
 						   GtkWindow          *parent);
 EvAnnotation *ev_annotation_window_get_annotation (EvAnnotationWindow *window);
-void          ev_annotation_window_set_annotation (EvAnnotationWindow *window,
-						   EvAnnotation       *annot);
 gboolean      ev_annotation_window_is_open        (EvAnnotationWindow *window);
 void          ev_annotation_window_get_rectangle  (EvAnnotationWindow *window,
 						   EvRectangle        *rect);
 void          ev_annotation_window_set_rectangle  (EvAnnotationWindow *window,
 						   const EvRectangle  *rect);
-void          ev_annotation_window_grab_focus     (EvAnnotationWindow *window);
-void          ev_annotation_window_ungrab_focus   (EvAnnotationWindow *window);
 void          ev_annotation_window_set_enable_spellchecking (EvAnnotationWindow *window,
                                                              gboolean spellcheck);
 gboolean      ev_annotation_window_get_enable_spellchecking (EvAnnotationWindow *window);

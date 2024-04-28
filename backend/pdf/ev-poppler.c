@@ -136,39 +136,39 @@ static gboolean    attachment_save_to_buffer (PopplerAttachment *attachment,
 					      gsize             *buffer_size,
 					      GError           **error);
 
-EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
-			 {
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_SECURITY,
-								 pdf_document_security_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
-								 pdf_document_document_links_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_IMAGES,
-								 pdf_document_document_images_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FORMS,
-								 pdf_document_document_forms_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FONTS,
-								 pdf_document_document_fonts_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LAYERS,
-								 pdf_document_document_layers_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_PRINT,
-								 pdf_document_document_print_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ANNOTATIONS,
-								 pdf_document_document_annotations_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ATTACHMENTS,
-								 pdf_document_document_attachments_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_MEDIA,
-								 pdf_document_document_media_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
-								 pdf_document_find_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
-								 pdf_document_file_exporter_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION,
-								 pdf_selection_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TRANSITION,
-								 pdf_document_page_transition_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TEXT,
-								 pdf_document_text_iface_init);
-			 });
+G_DEFINE_TYPE_WITH_CODE (PdfDocument,
+			 pdf_document,
+			 EV_TYPE_DOCUMENT,
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_SECURITY,
+						pdf_document_security_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
+						pdf_document_document_links_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_IMAGES,
+						pdf_document_document_images_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FORMS,
+						pdf_document_document_forms_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FONTS,
+						pdf_document_document_fonts_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LAYERS,
+						pdf_document_document_layers_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_PRINT,
+						pdf_document_document_print_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ANNOTATIONS,
+						pdf_document_document_annotations_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ATTACHMENTS,
+						pdf_document_document_attachments_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_MEDIA,
+						pdf_document_document_media_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
+						pdf_document_find_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+						pdf_document_file_exporter_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION,
+						pdf_selection_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TRANSITION,
+						pdf_document_page_transition_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TEXT,
+						pdf_document_text_iface_init));
 
 static void
 pdf_document_dispose (GObject *object)
@@ -1509,60 +1509,10 @@ pdf_document_document_images_iface_init (EvDocumentImagesInterface *iface)
 }
 
 static GList *
-pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
-                                          EvPage         *page,
-                                          const gchar    *text,
-                                          EvFindOptions   options)
-{
-        GList *matches, *l;
-        PopplerPage *poppler_page;
-        gdouble height;
-        GList *retval = NULL;
-        guint find_flags = 0;
-
-        g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
-        g_return_val_if_fail (text != NULL, NULL);
-
-        poppler_page = POPPLER_PAGE (page->backend_page);
-
-        if (options & EV_FIND_CASE_SENSITIVE)
-                find_flags |= POPPLER_FIND_CASE_SENSITIVE;
-        else    /* When search is not case sensitive, do also ignore diacritics
-                to broaden our search in order to match on more expected results */
-                find_flags |= POPPLER_FIND_IGNORE_DIACRITICS;
-
-        if (options & EV_FIND_WHOLE_WORDS_ONLY)
-                find_flags |= POPPLER_FIND_WHOLE_WORDS_ONLY;
-        matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
-        if (!matches)
-                return NULL;
-
-        poppler_page_get_size (poppler_page, NULL, &height);
-        for (l = matches; l && l->data; l = g_list_next (l)) {
-                PopplerRectangle *rect = (PopplerRectangle *)l->data;
-                EvRectangle      *ev_rect;
-
-                ev_rect = ev_rectangle_new ();
-                ev_rect->x1 = rect->x1;
-                ev_rect->x2 = rect->x2;
-                /* Invert this for X-style coordinates */
-                ev_rect->y1 = height - rect->y2;
-                ev_rect->y2 = height - rect->y1;
-
-                retval = g_list_prepend (retval, ev_rect);
-        }
-
-        g_list_foreach (matches, (GFunc)poppler_rectangle_free, NULL);
-        g_list_free (matches);
-
-        return g_list_reverse (retval);
-}
-
-static GList *
-pdf_document_find_find_text_extended (EvDocumentFind *document_find,
-				      EvPage         *page,
-				      const gchar    *text,
-				      EvFindOptions   options)
+pdf_document_find_find_text (EvDocumentFind *document_find,
+			     EvPage         *page,
+			     const gchar    *text,
+			     EvFindOptions   options)
 {
 	GList *matches, *l;
 	PopplerPage *poppler_page;
@@ -1610,20 +1560,6 @@ pdf_document_find_find_text_extended (EvDocumentFind *document_find,
 	return g_list_reverse (retval);
 }
 
-static GList *
-pdf_document_find_find_text (EvDocumentFind *document_find,
-			     EvPage         *page,
-			     const gchar    *text,
-			     gboolean        case_sensitive)
-{
-	guint options = 0;
-
-	if (case_sensitive)
-		options |= EV_FIND_CASE_SENSITIVE;
-
-	return pdf_document_find_find_text_with_options (document_find, page, text, (EvFindOptions)options);
-}
-
 static EvFindOptions
 pdf_document_find_get_supported_options (EvDocumentFind *document_find)
 {
@@ -1634,8 +1570,6 @@ static void
 pdf_document_find_iface_init (EvDocumentFindInterface *iface)
 {
         iface->find_text = pdf_document_find_find_text;
-	iface->find_text_with_options = pdf_document_find_find_text_with_options;
-	iface->find_text_extended = pdf_document_find_find_text_extended;
 	iface->get_supported_options = pdf_document_find_get_supported_options;
 }
 
@@ -1944,8 +1878,8 @@ pdf_selection_render_selection (EvSelection      *selection,
 				EvRectangle      *points,
 				EvRectangle      *old_points,
 				EvSelectionStyle  style,
-				GdkColor         *text,
-				GdkColor         *base)
+				GdkRGBA          *text,
+				GdkRGBA          *base)
 {
 	PopplerPage *poppler_page;
 	cairo_t *cr;
@@ -1960,13 +1894,13 @@ pdf_selection_render_selection (EvSelection      *selection,
 			       &width_points, &height_points);
 	ev_render_context_compute_scaled_size (rc, width_points, height_points, &width, &height);
 
-	text_color.red = text->red;
-	text_color.green = text->green;
-	text_color.blue = text->blue;
+	text_color.red = CLAMP ((guint) (text->red * 65535), 0, 65535);
+	text_color.green = CLAMP ((guint) (text->green * 65535), 0, 65535);
+	text_color.blue = CLAMP ((guint) (text->blue * 65535), 0, 65535);
 
-	base_color.red = base->red;
-	base_color.green = base->green;
-	base_color.blue = base->blue;
+	base_color.red = CLAMP ((guint) (base->red * 65535), 0, 65535);
+	base_color.green = CLAMP ((guint) (base->green * 65535), 0, 65535);
+	base_color.blue = CLAMP ((guint) (base->blue * 65535), 0, 65535);
 
 	if (*surface == NULL) {
 		*surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
@@ -2792,11 +2726,14 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			if (poppler_attachment &&
 			    attachment_save_to_buffer (poppler_attachment, &data, &size, &error)) {
 				EvAttachment *ev_attachment;
+				GDateTime *mtime, *ctime;
+
+				mtime = poppler_attachment_get_mtime (poppler_attachment);
+				ctime = poppler_attachment_get_ctime (poppler_attachment);
 
 				ev_attachment = ev_attachment_new (poppler_attachment->name,
 								   poppler_attachment->description,
-								   poppler_attachment->mtime,
-								   poppler_attachment->ctime,
+								   mtime, ctime,
 								   size, data);
 				ev_annot = ev_annotation_attachment_new (page, ev_attachment);
 				g_object_unref (ev_attachment);
@@ -2899,7 +2836,7 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 
 		modified = poppler_annot_get_modified (poppler_annot);
 		if (poppler_date_parse (modified, &utime)) {
-			ev_annotation_set_modified_from_time (ev_annot, utime);
+			ev_annotation_set_modified_from_time_t (ev_annot, utime);
 		} else {
 			ev_annotation_set_modified (ev_annot, modified);
 		}
@@ -3902,10 +3839,14 @@ pdf_document_attachments_get_attachments (EvDocumentAttachments *document)
 		attachment = (PopplerAttachment *) list->data;
 
 		if (attachment_save_to_buffer (attachment, &data, &size, &error)) {
+			GDateTime *mtime, *ctime;
+
+			mtime = poppler_attachment_get_mtime (attachment);
+			ctime = poppler_attachment_get_ctime (attachment);
+
 			ev_attachment = ev_attachment_new (attachment->name,
 							   attachment->description,
-							   attachment->mtime,
-							   attachment->ctime,
+							   mtime, ctime,
 							   size, data);
 
 			retval = g_list_prepend (retval, ev_attachment);
@@ -4075,4 +4016,10 @@ pdf_document_document_layers_iface_init (EvDocumentLayersInterface *iface)
 	iface->show_layer = pdf_document_layers_show_layer;
 	iface->hide_layer = pdf_document_layers_hide_layer;
 	iface->layer_is_visible = pdf_document_layers_layer_is_visible;
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return PDF_TYPE_DOCUMENT;
 }

@@ -32,9 +32,6 @@
 #include "ev-backend-info.h"
 #include "ev-document-factory.h"
 #include "ev-file-helpers.h"
-#include "ev-module.h"
-
-#include "ev-backends-manager.h"
 
 /* Backends manager */
 
@@ -87,7 +84,9 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
 {
         EvDocument    *document;
         EvBackendInfo *info;
-        GTypeModule *module = NULL;
+        GModule *module = NULL;
+	GType backend_type;
+	GType (*query_type_function) (void) = NULL;
 
         g_return_val_if_fail (mime_type != NULL, NULL);
 
@@ -114,11 +113,28 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
                 module = g_hash_table_lookup (ev_module_hash, info->module_name);
         }
         if (module == NULL) {
-                gchar *path;
+		g_autofree gchar *path = NULL;
 
-                path = g_module_build_path (ev_backends_dir, info->module_name);
-                module = G_TYPE_MODULE (_ev_module_new (path, info->resident));
-                g_free (path);
+		path = g_strconcat (ev_backends_dir, G_DIR_SEPARATOR_S,
+				    info->module_name, NULL);
+
+		module = g_module_open (path, 0);
+
+		if (!g_module_symbol (module, "ev_backend_query_type",
+				      (void *) &query_type_function)) {
+			const char *err = g_module_error ();
+			g_set_error (error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_INVALID,
+				     "Failed to load backend for '%s': %s",
+				     mime_type, err ? err : "unknown error");
+			g_module_close (module);
+			return NULL;
+		}
+
+		/* Make the module resident so it can’t be unloaded: without using a
+		 * full #GTypePlugin implementation for the modules, it’s not safe to
+		 * re-load a module and re-register its types with GObject, as that will
+		 * confuse the GType system. */
+		g_module_make_resident (module);
 
                 if (ev_module_hash == NULL) {
                         ev_module_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
@@ -128,18 +144,19 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
                 g_hash_table_insert (ev_module_hash, g_strdup (info->module_name), module);
         }
 
-        if (!g_type_module_use (module)) {
-                const char *err;
+	if (!query_type_function && !g_module_symbol (module, "ev_backend_query_type",
+			      (void *) &query_type_function)) {
+		const char *err = g_module_error ();
+		g_set_error (error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_INVALID,
+			     "Failed to load backend for '%s': %s",
+			     mime_type, err ? err : "unknown error");
+		return NULL;
+	}
 
-                err = g_module_error ();
-                g_set_error (error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_INVALID,
-                             "Failed to load backend for '%s': %s",
-                             mime_type, err ? err : "unknown error");
-                return NULL;
-        }
+	backend_type = query_type_function ();
+	g_assert (g_type_is_a (backend_type, EV_TYPE_DOCUMENT));
 
-        document = EV_DOCUMENT (_ev_module_new_object (EV_MODULE (module)));
-        g_type_module_unuse (module);
+	document = g_object_new (backend_type, NULL);
 
         g_object_set_data_full (G_OBJECT (document), BACKEND_DATA_KEY,
                                 _ev_backend_info_ref (info),
@@ -624,7 +641,7 @@ file_filter_add_mime_types (EvBackendInfo *info, GtkFileFilter *filter)
  * can handle.
  */
 void
-ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
+ev_document_factory_add_filters (GtkFileChooser *chooser, EvDocument *document)
 {
 	GtkFileFilter *filter;
 	GtkFileFilter *default_filter;
@@ -636,7 +653,7 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 	default_filter = document_filter = filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All Documents"));
 	g_list_foreach (ev_backends_list, (GFunc)file_filter_add_mime_types, filter);
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+	gtk_file_chooser_add_filter (chooser, filter);
 
 	if (document) {
 		EvBackendInfo *info;
@@ -646,7 +663,7 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 		default_filter = filter = gtk_file_filter_new ();
 		gtk_file_filter_set_name (filter, info->type_desc);
 		file_filter_add_mime_types (info, filter);
-		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+		gtk_file_chooser_add_filter (chooser, filter);
 	} else {
 		GList *l;
 
@@ -656,61 +673,15 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 			default_filter = filter = gtk_file_filter_new ();
 			gtk_file_filter_set_name (filter, info->type_desc);
 			file_filter_add_mime_types (info, filter);
-			gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+			gtk_file_chooser_add_filter (chooser, filter);
 		}
 	}
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All Files"));
 	gtk_file_filter_add_pattern (filter, "*");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+	gtk_file_chooser_add_filter (chooser, filter);
 
-	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser),
+	gtk_file_chooser_set_filter (chooser,
 				     document == NULL ? document_filter : default_filter);
-}
-
-/* Deprecated API/ABI compatibility wrappers */
-
-/**
- * ev_backends_manager_get_document:
- * @mime_type: a mime type hint
- *
- * Returns: (transfer full): a new #EvDocument
- */
-EvDocument  *ev_backends_manager_get_document (const gchar *mime_type)
-{
-        return ev_document_factory_new_document_for_mime_type (mime_type, NULL);
-}
-
-const gchar *
-ev_backends_manager_get_document_module_name (EvDocument  *document)
-{
-        EvBackendInfo *info = get_backend_info_for_document (document);
-        if (info == NULL)
-                return NULL;
-
-        return info->module_name;
-}
-
-/**
- * ev_backends_manager_get_document_type_info: (skip)
- * @document: a #EvDocument
- *
- * Returns: a EvTypeInfo
- */
-EvTypeInfo *ev_backends_manager_get_document_type_info (EvDocument  *document)
-{
-        return (EvTypeInfo *) get_backend_info_for_document (document);
-}
-
-/**
- * ev_backends_manager_get_all_types_info: (skip)
- *
- * Returns: @list: (element-type EvBackendInfo): a shallow copy of #GList
- *    containing #EvBackendInfo objects
- */
-GList *
-ev_backends_manager_get_all_types_info       (void)
-{
-        return g_list_copy (ev_backends_list);
 }

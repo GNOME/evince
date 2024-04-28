@@ -448,7 +448,7 @@ get_match_offset (EvRectangle *areas,
         return -1;
 }
 
-static gboolean
+static void
 process_matches_idle (EvFindSidebar *sidebar)
 {
         EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
@@ -461,7 +461,7 @@ process_matches_idle (EvFindSidebar *sidebar)
         if (!ev_job_find_has_results (priv->job)) {
                 if (ev_job_is_finished (EV_JOB (priv->job)))
                         g_clear_object (&priv->job);
-		return G_SOURCE_REMOVE;
+		return;
         }
 
         document = EV_JOB (priv->job)->document;
@@ -523,7 +523,7 @@ process_matches_idle (EvFindSidebar *sidebar)
                                 offset = new_offset;
                                 markup = get_surrounding_text_markup (page_text,
                                                                       priv->job->text,
-                                                                      priv->job->case_sensitive,
+								      priv->job->options & EV_FIND_CASE_SENSITIVE,
                                                                       text_log_attrs,
                                                                       text_log_attrs_length,
                                                                       offset,
@@ -556,8 +556,6 @@ process_matches_idle (EvFindSidebar *sidebar)
 
         if (ev_job_is_finished (EV_JOB (priv->job)) && priv->current_page == priv->job->start_page)
                 ev_find_sidebar_highlight_first_match_of_page (sidebar, priv->first_match_page);
-
-        return G_SOURCE_REMOVE;
 }
 
 static void
@@ -638,7 +636,7 @@ ev_find_sidebar_update (EvFindSidebar *sidebar)
                 return;
 
         if (priv->process_matches_idle_id == 0)
-                priv->process_matches_idle_id = g_idle_add ((GSourceFunc)process_matches_idle, sidebar);
+                priv->process_matches_idle_id = g_idle_add_once ((GSourceOnceFunc)process_matches_idle, sidebar);
 }
 
 void

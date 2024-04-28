@@ -55,11 +55,9 @@ typedef struct _TiffDocumentClass TiffDocumentClass;
 
 static void tiff_document_document_file_exporter_iface_init (EvFileExporterInterface *iface);
 
-EV_BACKEND_REGISTER_WITH_CODE (TiffDocument, tiff_document,
-			 {
-			   EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
-							   tiff_document_document_file_exporter_iface_init);
-			 });
+G_DEFINE_TYPE_WITH_CODE (TiffDocument, tiff_document, EV_TYPE_DOCUMENT,
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+						tiff_document_document_file_exporter_iface_init))
 
 static TIFFErrorHandler orig_error_handler = NULL;
 static TIFFErrorHandler orig_warning_handler = NULL;
@@ -337,6 +335,12 @@ tiff_document_render (EvDocument      *document,
 	return rotated_surface;
 }
 
+static void
+free_buffer (guchar *pixels, gpointer data)
+{
+	g_free (pixels);
+}
+
 static GdkPixbuf *
 tiff_document_get_thumbnail (EvDocument      *document,
 			     EvRenderContext *rc)
@@ -399,7 +403,7 @@ tiff_document_get_thumbnail (EvDocument      *document,
 
 	pixbuf = gdk_pixbuf_new_from_data (pixels, GDK_COLORSPACE_RGB, TRUE, 8,
 					   width, height, rowstride,
-					   (GdkPixbufDestroyNotify) g_free, NULL);
+					   free_buffer, NULL);
 	pop_handlers ();
 
 	ev_render_context_compute_scaled_size (rc, width, height * (x_res / y_res),
@@ -534,4 +538,10 @@ static void
 tiff_document_init (TiffDocument *tiff_document)
 {
 	tiff_document->n_pages = -1;
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return TIFF_TYPE_DOCUMENT;
 }

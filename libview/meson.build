@@ -7,7 +7,6 @@ headers = files(
   'ev-job-scheduler.h',
   'ev-jobs.h',
   'ev-print-operation.h',
-  'ev-stock-icons.h',
   'ev-view-presentation.h',
   'ev-view.h',
 )
@@ -30,7 +29,6 @@ sources = files(
   'ev-page-cache.c',
   'ev-pixbuf-cache.c',
   'ev-print-operation.c',
-  'ev-stock-icons.c',
   'ev-timeline.c',
   'ev-transition-animation.c',
   'ev-view.c',
@@ -50,21 +48,24 @@ marshal_sources = gnome.genmarshal(
 )
 
 enum_types = 'ev-view-type-builtins'
+enum_header_prefix = '''
+#if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-view.h> can be included directly."
+#endif
 
-enum_sources = gnome.mkenums(
+#include <evince-document.h>
+'''
+
+enum_sources = gnome.mkenums_simple(
   enum_types,
   sources: headers,
-  h_template: enum_types + '.h.template',
-  c_template: enum_types + '.c.template',
+  header_prefix: enum_header_prefix,
+  decorator: 'EV_PUBLIC',
   install_header: true,
   install_dir: join_paths(ev_includedir, include_subdir),
 )
 
 deps = [
-  gspell_dep,
-  gstreamer_base_dep,
-  gstreamer_dep,
-  gstreamer_video_dep,
   gtk_unix_print_dep,
   gthread_dep,
   libevdocument_dep,
@@ -73,16 +74,11 @@ deps = [
 
 cflags = [
   '-DG_LOG_DOMAIN="EvinceView"',
-  '-DEVINCEDATADIR="@0@"'.format(ev_pkgdatadir),
   '-DEVINCE_COMPILATION'
 ]
 
-if enable_multimedia
-  sources += files('ev-media-player.c')
-endif
-
 libevview = shared_library(
-  'evview3',
+  'evview-' + ev_api_version,
   version: ev_view_version,
   sources: sources + marshal_sources + enum_sources,
   include_directories: top_inc,

@@ -27,105 +27,6 @@
 
 #include "ev-document-misc.h"
 
-/* Returns a new GdkPixbuf that is suitable for placing in the thumbnail view.
- * It is four pixels wider and taller than the source.  If source_pixbuf is not
- * NULL, then it will fill the return pixbuf with the contents of
- * source_pixbuf.
- */
-static GdkPixbuf *
-create_thumbnail_frame (int        width,
-			int        height,
-			GdkPixbuf *source_pixbuf,
-			gboolean   fill_bg)
-{
-	GdkPixbuf *retval;
-	guchar *data;
-	gint rowstride;
-	int i;
-	int width_r, height_r;
-
-	if (source_pixbuf)
-		g_return_val_if_fail (GDK_IS_PIXBUF (source_pixbuf), NULL);
-
-	if (source_pixbuf) {
-		width_r = gdk_pixbuf_get_width (source_pixbuf);
-		height_r = gdk_pixbuf_get_height (source_pixbuf);
-	} else {
-		width_r = width;
-		height_r = height;
-	}
-
-	/* make sure no one is passing us garbage */
-	g_return_val_if_fail (width_r >= 0 && height_r >= 0, NULL);
-
-	retval = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
-				 TRUE, 8,
-				 width_r + 4,
-				 height_r + 4);
-
-	/* make it black and fill in the middle */
-	data = gdk_pixbuf_get_pixels (retval);
-	rowstride = gdk_pixbuf_get_rowstride (retval);
-
-	gdk_pixbuf_fill (retval, 0x000000ff);
-	if (fill_bg) {
-		for (i = 1; i < height_r + 1; i++)
-			memset (data + (rowstride * i) + 4, 0xff, width_r * 4);
-	}
-
-	/* copy the source pixbuf */
-	if (source_pixbuf)
-		gdk_pixbuf_copy_area (source_pixbuf, 0, 0,
-				      width_r,
-				      height_r,
-				      retval,
-				      1, 1);
-	/* Add the corner */
-	data [(width_r + 2) * 4 + 3] = 0;
-	data [(width_r + 3) * 4 + 3] = 0;
-	data [(width_r + 2) * 4 + (rowstride * 1) + 3] = 0;
-	data [(width_r + 3) * 4 + (rowstride * 1) + 3] = 0;
-
-	data [(height_r + 2) * rowstride + 3] = 0;
-	data [(height_r + 3) * rowstride + 3] = 0;
-	data [(height_r + 2) * rowstride + 4 + 3] = 0;
-	data [(height_r + 3) * rowstride + 4 + 3] = 0;
-
-	return retval;
-}
-
-/**
- * ev_document_misc_get_thumbnail_frame:
- * @width: the desired width
- * @height: the desired height
- * @source_pixbuf: a #GdkPixbuf
- *
- * Returns: (transfer full): a #GdkPixbuf
- */
-GdkPixbuf *
-ev_document_misc_get_thumbnail_frame (int        width,
-				      int        height,
-				      GdkPixbuf *source_pixbuf)
-{
-	return create_thumbnail_frame (width, height, source_pixbuf, TRUE);
-}
-
-/**
- * ev_document_misc_get_loading_thumbnail:
- * @width: the desired width
- * @height: the desired height
- * @inverted_colors: whether to invert colors
- *
- * Returns: (transfer full): a #GdkPixbuf
- */
-GdkPixbuf *
-ev_document_misc_get_loading_thumbnail (int      width,
-					int      height,
-					gboolean inverted_colors)
-{
-	return create_thumbnail_frame (width, height, NULL, !inverted_colors);
-}
-
 static cairo_surface_t *
 ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
                                          int              width,
@@ -147,23 +48,17 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
         if (source_surface) {
                 width_r = cairo_image_surface_get_width (source_surface);
                 height_r = cairo_image_surface_get_height (source_surface);
-#ifdef HAVE_HIDPI_SUPPORT
                 cairo_surface_get_device_scale (source_surface, &device_scale_x, &device_scale_y);
-#endif
         } else if (source_pixbuf) {
                 g_return_val_if_fail (GDK_IS_PIXBUF (source_pixbuf), NULL);
 
                 width_r = gdk_pixbuf_get_width (source_pixbuf);
                 height_r = gdk_pixbuf_get_height (source_pixbuf);
-#ifdef HAVE_HIDPI_SUPPORT
                 device_scale_x = device_scale_y = gtk_widget_get_scale_factor (widget);
-#endif
         } else {
                 width_r = width;
                 height_r = height;
-#ifdef HAVE_HIDPI_SUPPORT
                 device_scale_x = device_scale_y = gtk_widget_get_scale_factor (widget);
-#endif
         }
 
         width_r /= device_scale_x;
@@ -183,9 +78,7 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
                                               device_scale_x * width_f,
                                               device_scale_y * height_f);
 
-#ifdef HAVE_HIDPI_SUPPORT
         cairo_surface_set_device_scale (surface, device_scale_x, device_scale_y);
-#endif
 
         cr = cairo_create (surface);
         if (source_surface) {
@@ -203,33 +96,6 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
         gtk_style_context_restore (context);
 
         return surface;
-}
-
-/**
- * ev_document_misc_render_loading_thumbnail:
- * @widget: a #GtkWidget to use for style information
- * @width: the desired width
- * @height: the desired height
- * @inverted_colors: whether to invert colors
- *
- * Returns: (transfer full): a #GdkPixbuf
- *
- * Since: 3.8
- */
-GdkPixbuf *
-ev_document_misc_render_loading_thumbnail (GtkWidget *widget,
-                                           int        width,
-                                           int        height,
-                                           gboolean   inverted_colors)
-{
-        GdkPixbuf *retval;
-        cairo_surface_t *surface;
-
-        surface = ev_document_misc_render_thumbnail_frame (widget, width, height, inverted_colors, NULL, NULL);
-        retval = gdk_pixbuf_get_from_surface (surface, 0, 0, width, height);
-        cairo_surface_destroy (surface);
-
-        return retval;
 }
 
 /**
@@ -253,31 +119,6 @@ ev_document_misc_render_loading_thumbnail_surface (GtkWidget *widget,
 }
 
 /**
- * ev_document_misc_render_thumbnail_with_frame:
- * @widget: a #GtkWidget to use for style information
- * @source_pixbuf: a #GdkPixbuf
- *
- * Returns: (transfer full): a #GdkPixbuf
- *
- * Since: 3.8
- */
-GdkPixbuf *
-ev_document_misc_render_thumbnail_with_frame (GtkWidget *widget,
-                                              GdkPixbuf *source_pixbuf)
-{
-        GdkPixbuf *retval;
-        cairo_surface_t *surface;
-
-        surface = ev_document_misc_render_thumbnail_frame (widget, -1, -1, FALSE, source_pixbuf, NULL);
-        retval = gdk_pixbuf_get_from_surface (surface, 0, 0,
-                                              cairo_image_surface_get_width (surface),
-                                              cairo_image_surface_get_height (surface));
-        cairo_surface_destroy (surface);
-
-        return retval;
-}
-
-/**
  * ev_document_misc_render_thumbnail_surface_with_frame:
  * @widget: a #GtkWidget to use for style information
  * @source_surface: a #cairo_surface_t
@@ -295,87 +136,6 @@ ev_document_misc_render_thumbnail_surface_with_frame (GtkWidget       *widget,
                                                       int              height)
 {
         return ev_document_misc_render_thumbnail_frame (widget, width, height, FALSE, NULL, source_surface);
-}
-
-void
-ev_document_misc_get_page_border_size (gint       page_width,
-				       gint       page_height,
-				       GtkBorder *border)
-{
-	g_assert (border);
-
-	border->left = 1;
-	border->top = 1;
-	if (page_width < 100) {
-		border->right = 2;
-		border->bottom = 2;
-	} else if (page_width < 500) {
-		border->right = 3;
-		border->bottom = 3;
-	} else {
-		border->right = 4;
-		border->bottom = 4;
-	}
-}
-
-/**
- * ev_document_misc_paint_one_page:
- * @cr: a #cairo_tEvannotation
- * @widget a #GtkWidget
- * @area: a #GdkRectangle
- * @border: a #GtkBorder
- * @highlight: whether to highlight the text
- * @inverted_colors: whether to invert colors
- *
- * Deprecated: 3.10.
- */
-void
-ev_document_misc_paint_one_page (cairo_t      *cr,
-				 GtkWidget    *widget,
-				 GdkRectangle *area,
-				 GtkBorder    *border,
-				 gboolean      highlight,
-				 gboolean      inverted_colors)
-{
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-	GtkStyleContext *context = gtk_widget_get_style_context (widget);
-	GtkStateFlags state = gtk_widget_get_state_flags (widget);
-        GdkRGBA fg, bg, shade_bg;
-
-        gtk_style_context_get_background_color (context, state, &bg);
-        gtk_style_context_get_color (context, state, &fg);
-        gtk_style_context_get_color (context, GTK_STATE_FLAG_INSENSITIVE, &shade_bg);
-
-	gdk_cairo_set_source_rgba (cr, highlight ? &fg : &shade_bg);
-	gdk_cairo_rectangle (cr, area);
-	cairo_fill (cr);
-
-	if (inverted_colors)
-		cairo_set_source_rgb (cr, 0, 0, 0);
-	else
-		cairo_set_source_rgb (cr, 1, 1, 1);
-	cairo_rectangle (cr,
-			 area->x + border->left,
-			 area->y + border->top,
-			 area->width - (border->left + border->right),
-			 area->height - (border->top + border->bottom));
-	cairo_fill (cr);
-
-	gdk_cairo_set_source_rgba (cr, &bg);
-	cairo_rectangle (cr,
-			 area->x,
-			 area->y + area->height - (border->bottom - border->top),
-			 border->bottom - border->top,
-			 border->bottom - border->top);
-	cairo_fill (cr);
-
-	cairo_rectangle (cr,
-			 area->x + area->width - (border->right - border->left),
-			 area->y,
-			 border->right - border->left,
-			 border->right - border->left);
-	cairo_fill (cr);
-G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 cairo_surface_t *
@@ -488,66 +248,6 @@ ev_document_misc_invert_surface (cairo_surface_t *surface) {
 	cairo_destroy (cr);
 }
 
-void
-ev_document_misc_invert_pixbuf (GdkPixbuf *pixbuf)
-{
-	guchar *data, *p;
-	guint   width, height, x, y, rowstride, n_channels;
-
-	n_channels = gdk_pixbuf_get_n_channels (pixbuf);
-	g_assert (gdk_pixbuf_get_colorspace (pixbuf) == GDK_COLORSPACE_RGB);
-	g_assert (gdk_pixbuf_get_bits_per_sample (pixbuf) == 8);
-
-	/* First grab a pointer to the raw pixel data. */
-	data = gdk_pixbuf_get_pixels (pixbuf);
-
-	/* Find the number of bytes per row (could be padded). */
-	rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-
-	width = gdk_pixbuf_get_width (pixbuf);
-	height = gdk_pixbuf_get_height (pixbuf);
-	for (x = 0; x < width; x++) {
-		for (y = 0; y < height; y++) {
-			/* Calculate pixel's offset into the data array. */
-			p = data + x * n_channels + y * rowstride;
-			/* Change the RGB values*/
-			p[0] = 255 - p[0];
-			p[1] = 255 - p[1];
-			p[2] = 255 - p[2];
-		}
-	}
-}
-
-/**
- * ev_document_misc_get_screen_dpi:
- * @screen: a #GdkScreen
- *
- * Returns: The DPI of @screen, or 96 if the DPI is not available
- *
- * Deprecated: 3.36: This uses a deprecated GDK API. Use
- * ev_document_misc_get_widget_dpi() instead, which uses GDK's per-monitor
- * information.
- */
-gdouble
-ev_document_misc_get_screen_dpi (GdkScreen *screen)
-{
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-	gdouble dp, di;
-
-	/*diagonal in pixels*/
-	dp = hypot (gdk_screen_get_width (screen), gdk_screen_get_height (screen));
-	if (dp == 0)
-		return 96;
-
-	/*diagonal in inches*/
-	di = hypot (gdk_screen_get_width_mm(screen), gdk_screen_get_height_mm (screen)) / 25.4;
-	if (di == 0)
-		return 96;
-
-	return (dp / di);
-G_GNUC_END_IGNORE_DEPRECATIONS
-}
-
 /**
  * ev_document_misc_get_widget_dpi:
  * @widget: a #GtkWidget
@@ -597,24 +297,6 @@ ev_document_misc_get_widget_dpi (GtkWidget *widget)
 	else
 		return 96;
 }
-
-/**
- * ev_document_misc_format_date:
- * @utime: a #GTime
- *
- * Returns: (transfer full): a locale specific date and time representation.
- *
- * Deprecated: 3.38: use ev_document_misc_format_datetime instead as GTime is
- *                   deprecated because it is not year-2038 safe.
- */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-gchar *
-ev_document_misc_format_date (GTime utime)
-{
-	g_autoptr (GDateTime) dt = g_date_time_new_from_unix_utc ((gint64)utime);
-	return ev_document_misc_format_datetime (dt);
-}
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
  * ev_document_misc_format_datetime:

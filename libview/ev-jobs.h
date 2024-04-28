@@ -35,14 +35,14 @@ G_BEGIN_DECLS
 typedef struct _EvJob EvJob;
 typedef struct _EvJobClass EvJobClass;
 
-typedef struct _EvJobRender EvJobRender;
-typedef struct _EvJobRenderClass EvJobRenderClass;
+typedef struct _EvJobRenderCairo EvJobRenderCairo;
+typedef struct _EvJobRenderCairoClass EvJobRenderCairoClass;
 
 typedef struct _EvJobPageData EvJobPageData;
 typedef struct _EvJobPageDataClass EvJobPageDataClass;
 
-typedef struct _EvJobThumbnail EvJobThumbnail;
-typedef struct _EvJobThumbnailClass EvJobThumbnailClass;
+typedef struct _EvJobThumbnailCairo EvJobThumbnailCairo;
+typedef struct _EvJobThumbnailCairoClass EvJobThumbnailCairoClass;
 
 typedef struct _EvJobLinks EvJobLinks;
 typedef struct _EvJobLinksClass EvJobLinksClass;
@@ -111,12 +111,12 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_IS_JOB_ANNOTS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_ANNOTS))
 #define EV_JOB_ANNOTS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_ANNOTS, EvJobAnnotsClass))
 
-#define EV_TYPE_JOB_RENDER            (ev_job_render_get_type())
-#define EV_JOB_RENDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_RENDER, EvJobRender))
-#define EV_IS_JOB_RENDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_RENDER))
-#define EV_JOB_RENDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_RENDER, EvJobRenderClass))
-#define EV_IS_JOB_RENDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_RENDER))
-#define EV_JOB_RENDER_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_RENDER, EvJobRenderClass))
+#define EV_TYPE_JOB_RENDER_CAIRO            (ev_job_render_cairo_get_type())
+#define EV_JOB_RENDER_CAIRO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_RENDER_CAIRO, EvJobRenderCairo))
+#define EV_IS_JOB_RENDER_CAIRO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_RENDER_CAIRO))
+#define EV_JOB_RENDER_CAIRO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_RENDER_CAIRO, EvJobRenderCairoClass))
+#define EV_IS_JOB_RENDER_CAIRO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_RENDER_CAIRO))
+#define EV_JOB_RENDER_CAIRO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_RENDER_CAIRO, EvJobRenderCairoClass))
 
 #define EV_TYPE_JOB_PAGE_DATA            (ev_job_page_data_get_type())
 #define EV_JOB_PAGE_DATA(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_PAGE_DATA, EvJobPageData))
@@ -125,12 +125,12 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_IS_JOB_PAGE_DATA_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_PAGE_DATA))
 #define EV_JOB_PAGE_DATA_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_PAGE_DATA, EvJobPageDataClass))
 
-#define EV_TYPE_JOB_THUMBNAIL            (ev_job_thumbnail_get_type())
-#define EV_JOB_THUMBNAIL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnail))
-#define EV_IS_JOB_THUMBNAIL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_THUMBNAIL))
-#define EV_JOB_THUMBNAIL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnailClass))
-#define EV_IS_JOB_THUMBNAIL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_THUMBNAIL))
-#define EV_JOB_THUMBNAIL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnailClass))
+#define EV_TYPE_JOB_THUMBNAIL_CAIRO            (ev_job_thumbnail_cairo_get_type())
+#define EV_JOB_THUMBNAIL_CAIRO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_THUMBNAIL_CAIRO, EvJobThumbnailCairo))
+#define EV_IS_JOB_THUMBNAIL_CAIRO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_THUMBNAIL_CAIRO))
+#define EV_JOB_THUMBNAIL_CAIRO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_THUMBNAIL_CAIRO, EvJobThumbnailCairoClass))
+#define EV_IS_JOB_THUMBNAIL_CAIRO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_THUMBNAIL_CAIRO))
+#define EV_JOB_THUMBNAIL_CAIRO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_THUMBNAIL_CAIRO, EvJobThumbnailCairoClass))
 
 #define EV_TYPE_JOB_FONTS            (ev_job_fonts_get_type())
 #define EV_JOB_FONTS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_FONTS, EvJobFonts))
@@ -274,7 +274,7 @@ struct _EvJobAnnotsClass
 	EvJobClass parent_class;
 };
 
-struct _EvJobRender
+struct _EvJobRenderCairo
 {
 	EvJob parent;
 
@@ -292,11 +292,11 @@ struct _EvJobRender
 	cairo_region_t *selection_region;
 	EvRectangle selection_points;
 	EvSelectionStyle selection_style;
-	GdkColor base;
-	GdkColor text;
+	GdkRGBA base;
+	GdkRGBA text;
 };
 
-struct _EvJobRenderClass
+struct _EvJobRenderCairoClass
 {
 	EvJobClass parent_class;
 };
@@ -342,12 +342,7 @@ struct _EvJobPageDataClass
 	EvJobClass parent_class;
 };
 
-typedef enum {
-        EV_JOB_THUMBNAIL_PIXBUF,
-        EV_JOB_THUMBNAIL_SURFACE
-} EvJobThumbnailFormat;
-
-struct _EvJobThumbnail
+struct _EvJobThumbnailCairo
 {
 	EvJob parent;
 
@@ -357,14 +352,10 @@ struct _EvJobThumbnail
 	gint target_width;
 	gint target_height;
 
-	GdkPixbuf *thumbnail;
-        gboolean has_frame;
-
-        EvJobThumbnailFormat format;
         cairo_surface_t *thumbnail_surface;
 };
 
-struct _EvJobThumbnailClass
+struct _EvJobThumbnailCairoClass
 {
 	EvJobClass parent_class;
 };
@@ -462,7 +453,6 @@ struct _EvJobFind
 	gint n_pages;
 	GList **pages;
 	gchar *text;
-	gboolean case_sensitive;
 	gboolean has_results;
         EvFindOptions options;
 };
@@ -562,22 +552,22 @@ GType           ev_job_annots_get_type      (void) G_GNUC_CONST;
 EV_PUBLIC
 EvJob          *ev_job_annots_new           (EvDocument     *document);
 
-/* EvJobRender */
+/* EvJobRenderCairo */
 EV_PUBLIC
-GType           ev_job_render_get_type    (void) G_GNUC_CONST;
-EV_PUBLIC
-EvJob          *ev_job_render_new         (EvDocument      *document,
-					   gint             page,
-					   gint             rotation,
-					   gdouble          scale,
-					   gint             width,
-					   gint             height);
-EV_PUBLIC
-void     ev_job_render_set_selection_info (EvJobRender     *job,
-					   EvRectangle     *selection_points,
-					   EvSelectionStyle selection_style,
-					   GdkColor        *text,
-					   GdkColor        *base);
+GType           ev_job_render_cairo_get_type    (void) G_GNUC_CONST;
+EV_DEPRECATED EV_PUBLIC
+EvJob          *ev_job_render_cairo_new         (EvDocument      *document,
+						 gint             page,
+						 gint             rotation,
+						 gdouble          scale,
+						 gint             width,
+						 gint             height);
+EV_DEPRECATED EV_PUBLIC
+void     ev_job_render_cairo_set_selection_info (EvJobRenderCairo     *job,
+						 EvRectangle     *selection_points,
+						 EvSelectionStyle selection_style,
+						 GdkRGBA         *text,
+						 GdkRGBA         *base);
 /* EvJobPageData */
 EV_PUBLIC
 GType           ev_job_page_data_get_type (void) G_GNUC_CONST;
@@ -586,26 +576,20 @@ EvJob          *ev_job_page_data_new      (EvDocument      *document,
 					   gint             page,
 					   EvJobPageDataFlags flags);
 
-/* EvJobThumbnail */
-EV_PUBLIC
-GType           ev_job_thumbnail_get_type      (void) G_GNUC_CONST;
-EV_PUBLIC
-EvJob          *ev_job_thumbnail_new           (EvDocument      *document,
-                                                gint             page,
-                                                gint             rotation,
-                                                gdouble          scale);
-EV_PUBLIC
-EvJob	       *ev_job_thumbnail_new_with_target_size (EvDocument      *document,
-						       gint		page,
-						       gint		rotation,
-						       gint		target_width,
-						       gint		target_height);
-EV_PUBLIC
-void            ev_job_thumbnail_set_has_frame (EvJobThumbnail  *job,
-                                                gboolean         has_frame);
-EV_PUBLIC
-void            ev_job_thumbnail_set_output_format (EvJobThumbnail      *job,
-                                                    EvJobThumbnailFormat format);
+/* EvJobThumbnailCairo */
+EV_DEPRECATED EV_PUBLIC
+GType           ev_job_thumbnail_cairo_get_type      (void) G_GNUC_CONST;
+EV_DEPRECATED EV_PUBLIC
+EvJob          *ev_job_thumbnail_cairo_new           (EvDocument      *document,
+						      gint             page,
+						      gint             rotation,
+						      gdouble          scale);
+EV_DEPRECATED EV_PUBLIC
+EvJob          *ev_job_thumbnail_cairo_new_with_target_size (EvDocument *document,
+							     gint        page,
+							     gint        rotation,
+							     gint        target_width,
+							     gint        target_height);
 /* EvJobFonts */
 EV_PUBLIC
 GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;
@@ -704,18 +688,9 @@ EvJob          *ev_job_find_new           (EvDocument      *document,
 					   gint             start_page,
 					   gint             n_pages,
 					   const gchar     *text,
-					   gboolean         case_sensitive);
-EV_PUBLIC
-void            ev_job_find_set_options   (EvJobFind       *job,
-                                           EvFindOptions    options);
+					   EvFindOptions    options);
 EV_PUBLIC
 EvFindOptions   ev_job_find_get_options   (EvJobFind       *job);
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-EV_DEPRECATED_FOR(ev_job_find_get_n_main_results)
-EV_PUBLIC
-gint            ev_job_find_get_n_results (EvJobFind       *job,
-					   gint             pages);
-G_GNUC_END_IGNORE_DEPRECATIONS
 EV_PUBLIC
 gint            ev_job_find_get_n_main_results (EvJobFind  *job,
 						gint        page);

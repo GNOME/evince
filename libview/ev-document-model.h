@@ -36,14 +36,12 @@ G_DECLARE_FINAL_TYPE(EvDocumentModel, ev_document_model, EV, DOCUMENT_MODEL, GOb
 /**
  * EvSizingMode:
  * @EV_SIZING_FIT_PAGE: Since: 3.8
- * @EV_SIZING_BEST_FIT: Same as %EV_SIZING_FIT_PAGE. Deprecated:
  * @EV_SIZING_FIT_WIDTH:
  * @EV_SIZING_FREE:
  * @EV_SIZING_AUTOMATIC: Since: 3.8
  */
 typedef enum {
         EV_SIZING_FIT_PAGE,
-	EV_SIZING_BEST_FIT = EV_SIZING_FIT_PAGE, /* Deprecated */
 	EV_SIZING_FIT_WIDTH,
 	EV_SIZING_FREE,
         EV_SIZING_AUTOMATIC
@@ -123,20 +121,5 @@ void             ev_document_model_set_rtl (EvDocumentModel *model,
                                             gboolean         rtl);
 EV_PUBLIC
 gboolean         ev_document_model_get_rtl (EvDocumentModel *model);
-EV_PUBLIC
-void             ev_document_model_set_fullscreen    (EvDocumentModel *model,
-						      gboolean         fullscreen);
-EV_PUBLIC
-gboolean         ev_document_model_get_fullscreen    (EvDocumentModel *model);
-
-/* deprecated */
-
-EV_DEPRECATED_FOR(ev_document_model_set_page_layout)
-EV_PUBLIC
-void             ev_document_model_set_dual_page     (EvDocumentModel *model,
-						      gboolean         dual_page);
-EV_DEPRECATED_FOR(ev_document_model_get_page_layout)
-EV_PUBLIC
-gboolean         ev_document_model_get_dual_page     (EvDocumentModel *model);
 
 G_END_DECLS

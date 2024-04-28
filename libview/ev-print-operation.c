@@ -30,7 +30,7 @@
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
 
-#if GTK_CHECK_VERSION (3, 22, 0) && defined (G_OS_UNIX)
+#if defined (G_OS_UNIX)
 #define PORTAL_ENABLED
 #endif
 
@@ -441,8 +441,7 @@ static GHashTable *print_queue = NULL;
 static void
 queue_free (GQueue *queue)
 {
-	g_queue_foreach (queue, (GFunc)g_object_unref, NULL);
-	g_queue_free (queue);
+	g_queue_free_full (queue, g_object_unref);
 }
 
 static void

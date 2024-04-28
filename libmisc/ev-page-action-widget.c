@@ -31,8 +31,6 @@
 #define COMPLETION_RESULTS_WIDTH 50
 
 /* Widget we pass back */
-static void  ev_page_action_widget_init       (EvPageActionWidget      *action_widget);
-static void  ev_page_action_widget_class_init (EvPageActionWidgetClass *action_widget);
 static gboolean ev_page_action_widget_completion_search_is_enabled (EvPageActionWidget *proxy);
 
 enum
@@ -43,7 +41,7 @@ enum
 
 struct _EvPageActionWidget
 {
-	GtkToolItem parent;
+	GtkBox parent;
 
 	EvDocument *document;
 	EvDocumentModel *doc_model;
@@ -60,7 +58,7 @@ struct _EvPageActionWidget
 
 static guint widget_signals[WIDGET_N_SIGNALS] = {0, };
 
-G_DEFINE_TYPE (EvPageActionWidget, ev_page_action_widget, GTK_TYPE_TOOL_ITEM)
+G_DEFINE_TYPE (EvPageActionWidget, ev_page_action_widget, GTK_TYPE_BOX)
 
 static gboolean
 show_page_number_in_pages_label (EvPageActionWidget *action_widget,
@@ -290,51 +288,7 @@ focus_out_cb (EvPageActionWidget *action_widget)
 static void
 ev_page_action_widget_init (EvPageActionWidget *action_widget)
 {
-	GtkWidget *hbox;
-	AtkObject *obj;
-        GtkStyleContext *style_context;
-
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-
-        style_context = gtk_widget_get_style_context (hbox);
-        gtk_style_context_add_class (style_context, "raised");
-        gtk_style_context_add_class (style_context, "linked");
-        gtk_style_context_add_class (style_context, "tnum");
-
-	action_widget->entry = gtk_entry_new ();
-	gtk_widget_add_events (action_widget->entry,
-			       GDK_BUTTON_MOTION_MASK);
-	gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry), 5);
-	gtk_entry_set_text (GTK_ENTRY (action_widget->entry), "");
-	g_signal_connect_swapped (action_widget->entry, "scroll-event",
-				  G_CALLBACK (page_scroll_cb),
-				  action_widget);
-	g_signal_connect_swapped (action_widget->entry, "activate",
-				  G_CALLBACK (activate_cb),
-				  action_widget);
-        g_signal_connect_swapped (action_widget->entry, "focus-out-event",
-                                  G_CALLBACK (focus_out_cb),
-                                  action_widget);
-	g_object_set (action_widget->entry, "xalign", 1.0, NULL);
-
-	obj = gtk_widget_get_accessible (action_widget->entry);
-	atk_object_set_name (obj, "page-label-entry");
-
-	gtk_box_pack_start (GTK_BOX (hbox), action_widget->entry,
-			    FALSE, FALSE, 0);
-	gtk_widget_show (action_widget->entry);
-
-	action_widget->label = gtk_entry_new ();
-        gtk_widget_set_sensitive (action_widget->label, FALSE);
-        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), 5);
-	gtk_box_pack_start (GTK_BOX (hbox), action_widget->label,
-			    FALSE, FALSE, 0);
-	gtk_widget_show (action_widget->label);
-
-	gtk_container_add (GTK_CONTAINER (action_widget), hbox);
-	gtk_widget_show (hbox);
-
-        gtk_widget_set_sensitive (GTK_WIDGET (action_widget), FALSE);
+	gtk_widget_init_template (GTK_WIDGET (action_widget));
 }
 
 static void
@@ -346,13 +300,8 @@ ev_page_action_widget_set_document (EvPageActionWidget *action_widget,
                 gtk_widget_set_sensitive (GTK_WIDGET (action_widget), ev_document_get_n_pages (document) > 0);
         }
 
-        if (action_widget->signal_id > 0) {
-                if (action_widget->doc_model != NULL) {
-                        g_signal_handler_disconnect (action_widget->doc_model,
-                                                     action_widget->signal_id);
-                }
-                action_widget->signal_id = 0;
-        }
+	g_clear_signal_handler (&action_widget->signal_id,
+				action_widget->doc_model);
 
         if (action_widget->document)
                 g_object_unref (action_widget->document);
@@ -416,17 +365,11 @@ ev_page_action_widget_finalize (GObject *object)
 {
 	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
 
+	g_clear_signal_handler (&action_widget->signal_id,
+				action_widget->doc_model);
+	g_clear_signal_handler (&action_widget->notify_document_signal_id,
+				action_widget->doc_model);
 	if (action_widget->doc_model != NULL) {
-		if (action_widget->signal_id > 0) {
-			g_signal_handler_disconnect (action_widget->doc_model,
-						     action_widget->signal_id);
-			action_widget->signal_id = 0;
-		}
-		if (action_widget->notify_document_signal_id > 0) {
-			g_signal_handler_disconnect (action_widget->doc_model,
-						     action_widget->notify_document_signal_id);
-			action_widget->notify_document_signal_id = 0;
-		}
 		g_object_remove_weak_pointer (G_OBJECT (action_widget->doc_model),
 					      (gpointer)&action_widget->doc_model);
 		action_widget->doc_model = NULL;
@@ -440,23 +383,6 @@ ev_page_action_widget_finalize (GObject *object)
 }
 
 static void
-ev_page_action_widget_get_preferred_width (GtkWidget *widget,
-                                           gint      *minimum_width,
-                                           gint      *natural_width)
-{
-        GtkWidget *child;
-
-        *minimum_width = *natural_width = 0;
-
-        child = gtk_bin_get_child (GTK_BIN (widget));
-        if (!child || !gtk_widget_get_visible (child))
-                return;
-
-        gtk_widget_get_preferred_width (child, minimum_width, natural_width);
-        *natural_width = *minimum_width;
-}
-
-static void
 ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
@@ -464,7 +390,15 @@ ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
 
 	object_class->dispose = ev_page_action_widget_dispose;
 	object_class->finalize = ev_page_action_widget_finalize;
-        widget_class->get_preferred_width = ev_page_action_widget_get_preferred_width;
+
+	gtk_widget_class_set_template_from_resource (widget_class,
+						     "/org/gnome/evince/ui/ev-page-action-widget.ui");
+	gtk_widget_class_bind_template_child (widget_class, EvPageActionWidget, entry);
+	gtk_widget_class_bind_template_child (widget_class, EvPageActionWidget, label);
+
+	gtk_widget_class_bind_template_callback (widget_class, page_scroll_cb);
+	gtk_widget_class_bind_template_callback (widget_class, activate_cb);
+	gtk_widget_class_bind_template_callback (widget_class, focus_out_cb);
 
 	widget_signals[WIDGET_ACTIVATE_LINK] =
 		g_signal_new ("activate_link",
@@ -662,10 +596,8 @@ ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeMode
 	completion = gtk_entry_completion_new ();
 	g_clear_object (&proxy->completion);
 	proxy->completion = completion;
-	g_object_set (G_OBJECT (completion),
-		      "popup-set-width", FALSE,
-		      "model", filter_model,
-		      NULL);
+	gtk_entry_completion_set_popup_set_width (completion, FALSE);
+	gtk_entry_completion_set_model (completion, filter_model);
 
 	g_signal_connect (completion, "match-selected", G_CALLBACK (match_selected_cb), proxy);
 	gtk_entry_completion_set_match_func (completion,

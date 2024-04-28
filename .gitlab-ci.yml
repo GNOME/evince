@@ -18,7 +18,7 @@ editorconfig:
     allow_failure: true
 
 meson:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk4
     stage: build
 
     script:
@@ -36,7 +36,7 @@ meson:
         expire_in: 2 days
 
 meson-internal-synctex:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk4
     stage: build
 
     script:
@@ -57,7 +57,7 @@ flatpak:
         MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
         RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
         FLATPAK_MODULE: "evince"
-        MESON_ARGS: "-Dnautilus=false -Dgtk_doc=false"
+        MESON_ARGS: "-Dnautilus=false -Ddevelopment=true"
         APP_ID: "org.gnome.Evince"
     artifacts:
         # Rewrite paths and reports to "remove" testlog.txt and junit files,
@@ -75,7 +75,7 @@ nightly:
     extends: .publish_nightly
 
 pages:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk4
     stage: deploy
     rules:
         - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PROJECT_NAMESPACE == "GNOME"
@@ -112,6 +112,7 @@ update image:
     only:
        - web
        - main
+       - evince-next
     except:
        variables:
            - $CI_PROJECT_NAMESPACE != "GNOME"

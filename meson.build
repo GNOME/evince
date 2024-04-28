@@ -1,6 +1,6 @@
 project(
   'evince', ['c'],
-  version: '46.1',
+  version: '47.alpha',
   license: 'GPL-2.0-or-later',
   meson_version: '>= 0.59.0',
   default_options: [
@@ -44,26 +44,25 @@ ev_appstreamdir = join_paths(ev_datadir, 'metainfo')
 # - If the interface is the same as the previous version, change to C:R+1:A
 
 # Libtool version of the backend library
-ev_document_current = 4
+ev_document_current = 5
 ev_document_revision = 0
 ev_document_age = 0
 ev_document_version = '@0@.@1@.@2@'.format(ev_document_current, ev_document_revision, ev_document_age)
 ev_document_current_minus_age = ev_document_current - ev_document_age
 
 # Libtool version of the view library
-ev_view_current = 3
+ev_view_current = 4
 ev_view_revision = 0
 ev_view_age = 0
 ev_view_version = '@0@.@1@.@2@'.format(ev_view_current, ev_view_revision, ev_view_age)
 ev_view_current_minus_age = ev_view_current - ev_view_age
 
-ev_api_version = '3.0'
+ev_api_version = '4.0'
 
 ev_include_subdir = join_paths(ev_name, ev_api_version)
 
 # Backends directory
-ev_binary_version = ev_document_current
-ev_backends_binary_version = ev_binary_version
+ev_backends_binary_version = ev_document_current
 ev_backends_subdir = join_paths(ev_name, ev_backends_binary_version.to_string(), 'backends')
 ev_backendsdir = join_paths(ev_libdir, ev_backends_subdir)
 
@@ -85,7 +84,6 @@ config_h.set_quoted('VERSION', ev_version)
 
 # i18n
 config_h.set_quoted('GETTEXT_PACKAGE', ev_name)
-config_h.set('ENABLE_NLS', true)
 
 # Support for nl_langinfo (_NL_MEASUREMENT_MEASUREMENT) (optional)
 langinfo_measurement_src = '''
@@ -109,13 +107,6 @@ if build_machine.system() == 'windows'
   common_flags += '-D_WIN32_WINNT=0x0500'
 
   common_ldflags = cc.get_supported_link_arguments('-mwindows')
-endif
-
-# GLib on macOS expects so as shared_module suffix, while meson uses dylib by default
-if host_machine.system() == 'darwin'
-  name_suffix = 'so'
-else
-  name_suffix = []
 endif
 
 if ev_debug
@@ -145,10 +136,10 @@ po_dir = join_paths(source_root, 'po')
 
 top_inc = include_directories('.')
 
-glib_req_version = '>= 2.44.0'
+glib_req_version = '>= 2.75.0'
 gtk_req_version = '>= 3.22.0'
 hdy_req_version = '>= 1.5.0'
-libxml_req_version = '>= 2.5.0'
+exempi_req_version = '>= 2.0'
 
 gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', version: '>= 2.40.0')
 config_h.set_quoted('EXTRA_GDK_PIXBUF_LOADERS_DIR',
@@ -157,24 +148,14 @@ config_h.set_quoted('EXTRA_GDK_PIXBUF_LOADERS_DIR',
 gio_dep = dependency('gio-2.0', version: glib_req_version)
 glib_dep = dependency('glib-2.0', version: glib_req_version)
 gmodule_dep = dependency('gmodule-2.0')
-gmodule_no_export_dep = dependency('gmodule-no-export-2.0', version: glib_req_version)
 gtk_dep = dependency('gtk+-3.0', version: gtk_req_version)
 gthread_dep = dependency('gthread-2.0', version: glib_req_version)
 hdy_dep = dependency('libhandy-1', version: hdy_req_version)
-libxml_dep = dependency('libxml-2.0', version: libxml_req_version)
+exempi_dep = dependency('exempi-2.0', version: exempi_req_version)
 
 m_dep = cc.find_library('m')
 
-gidocgen_dep = dependency('gi-docgen', version: '>= 2021.1',
-			  fallback: ['gi-docgen', 'dummy_dep'],
-			  required: get_option('gtk_doc'),
-			  native: true)
-
-# Although GTK+ 3.10 includes hi-dpi functionality, it does not require a cairo with
-# cairo_surface_set_device_scale(), which we also need if we're to support hi-dpi,
-# so we need check for that explicitly.
-cairo_dep = dependency('cairo', version: '>= 1.10.0')
-config_h.set('HAVE_HIDPI_SUPPORT', cc.has_function('cairo_surface_set_device_scale', dependencies: cairo_dep))
+cairo_dep = dependency('cairo', version: '>= 1.14.0')
 
 # ZLIB support (required)
 zlib_dep = cc.find_library('z', required: false)
@@ -237,19 +218,6 @@ endif
 gnome_desktop_dep = dependency('gnome-desktop-3.0', required: get_option('thumbnail_cache'))
 enable_thumbnail_cache = gdk_pixbuf_dep.found() and gnome_desktop_dep.found()
 config_h.set('HAVE_LIBGNOME_DESKTOP', enable_thumbnail_cache)
-
-# *** GStreamer (Multimedia) ***
-gstreamer_base_dep = dependency('gstreamer-base-1.0', required: get_option('multimedia'))
-gstreamer_dep = dependency('gstreamer-1.0', required: get_option('multimedia'))
-gstreamer_video_dep = dependency('gstreamer-video-1.0', required: get_option('multimedia'))
-
-enable_multimedia = gstreamer_dep.found() and gstreamer_base_dep.found() and gstreamer_video_dep.found()
-config_h.set('ENABLE_MULTIMEDIA', enable_multimedia)
-
-# *** Gspell ***
-gspell_dep = dependency('gspell-1', version: '>= 1.6.0', required: get_option('gspell'))
-enable_gspell = gspell_dep.found()
-config_h.set10('WITH_GSPELL', enable_gspell)
 
 # *** systemd user unit dir ***
 systemd_user_unit_dir = get_option('systemduserunitdir')
@@ -401,6 +369,14 @@ if enable_pdf
   cairo_pdf_dep = dependency('cairo-pdf', required: false)
   cairo_ps_dep = dependency('cairo-ps', required: false)
 
+  if cairo_pdf_dep.found()
+    config_h.set('HAVE_CAIRO_PDF', true)
+  endif
+
+  if cairo_ps_dep.found()
+    config_h.set('HAVE_CAIRO_PS', true)
+  endif
+
   backends += {'pdf': mime_types_list.get('pdf')}
   evince_mime_types += mime_types_list.get('pdf')
 elif get_option('pdf').auto()
@@ -546,7 +522,5 @@ summary({'Gtk-doc reference..........': enable_gtk_doc,
          'Keyring integration........': enable_keyring,
          'GTK+ Unix print ...........': enable_gtk_unix_print,
          'Thumbnail cache ...........': enable_thumbnail_cache,
-         'Multimedia ................': enable_multimedia,
-         'Spell checker .............': enable_gspell,
          'SyncTex ...................': external_synctex.to_string('external', 'internal'),
         }, section: 'Features', bool_yn: true)

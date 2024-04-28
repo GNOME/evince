@@ -31,7 +31,4 @@ typedef struct _DjvuDocument DjvuDocument;
 
 GType                 djvu_document_get_type  (void) G_GNUC_CONST;
 
-EV_PUBLIC
-GType                 register_evince_backend (GTypeModule *module);
-
 G_END_DECLS

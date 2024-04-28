@@ -31,11 +31,9 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_TRANSITION_EFFECT		  (ev_transition_effect_get_type ())
-#define EV_TRANSITION_EFFECT(obj)		  (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_TRANSITION_EFFECT, EvTransitionEffect))
-#define EV_TRANSITION_EFFECT_CLASS(klass)	  (G_TYPE_CHECK_CLASS_CAST ((klass),  EV_TYPE_TRANSITION_EFFECT, EvTransitionEffectClass))
-#define EV_IS_TRANSITION_EFFECT(obj)		  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_TRANSITION_EFFECT))
-#define EV_IS_TRANSITION_EFFECT_CLASS(klass)	  (G_TYPE_CHECK_CLASS_TYPE ((klass),  EV_TYPE_TRANSITION_EFFECT))
-#define EV_TRANSITION_EFFECT_GET_CLASS(obj)	  (G_TYPE_INSTANCE_GET_CLASS ((obj),  EV_TYPE_TRANSITION_EFFECT, EvTransitionEffectClass))
+
+EV_PUBLIC
+G_DECLARE_FINAL_TYPE (EvTransitionEffect, ev_transition_effect, EV, TRANSITION_EFFECT, GObject)
 
 typedef enum {
 	EV_TRANSITION_EFFECT_REPLACE,
@@ -62,22 +60,10 @@ typedef enum {
 	EV_TRANSITION_DIRECTION_OUTWARD
 } EvTransitionEffectDirection;
 
-
-typedef struct _EvTransitionEffect      EvTransitionEffect;
-typedef struct _EvTransitionEffectClass EvTransitionEffectClass;
-
 struct _EvTransitionEffect
 {
 	GObject parent_instance;
 };
-
-struct _EvTransitionEffectClass
-{
-	GObjectClass parent_class;
-};
-
-EV_PUBLIC
-GType                 ev_transition_effect_get_type           (void) G_GNUC_CONST;
 
 EV_PUBLIC
 EvTransitionEffect   *ev_transition_effect_new                (EvTransitionEffectType  type,

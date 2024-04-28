@@ -24,27 +24,14 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvRecentView        EvRecentView;
-typedef struct _EvRecentViewClass   EvRecentViewClass;
-
 #define EV_TYPE_RECENT_VIEW              (ev_recent_view_get_type ())
-#define EV_RECENT_VIEW(obj)              (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_RECENT_VIEW, EvRecentView))
-#define EV_IS_RECENT_VIEW(obj)           (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_RECENT_VIEW))
-#define EV_RECENT_VIEW_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_RECENT_VIEW, EvRecentViewClass))
-#define EV_IS_RECENT_VIEW_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_RECENT_VIEW))
-#define EV_RECENT_VIEW_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS((obj), EV_TYPE_RECENT_VIEW, EvRecentViewClass))
+G_DECLARE_FINAL_TYPE (EvRecentView, ev_recent_view, EV, RECENT_VIEW, GtkBin);
 
 struct _EvRecentView
 {
-        GtkScrolledWindow parent;
+	GtkBin parent;
 };
 
-struct _EvRecentViewClass
-{
-        GtkScrolledWindowClass parent_class;
-};
-
-GType      ev_recent_view_get_type (void) G_GNUC_CONST;
 GtkWidget *ev_recent_view_new      (void);
 
 G_END_DECLS

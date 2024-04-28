@@ -4,9 +4,7 @@ include_subdir = join_paths(ev_include_subdir, 'libdocument')
 
 headers = files(
   'ev-annotation.h',
-  'ev-async-renderer.h',
   'ev-attachment.h',
-  'ev-backends-manager.h',
   'ev-document-annotations.h',
   'ev-document-attachments.h',
   'ev-document-factory.h',
@@ -50,7 +48,6 @@ install_headers(
 
 sources = files(
   'ev-annotation.c',
-  'ev-async-renderer.c',
   'ev-attachment.c',
   'ev-backend-info.c',
   'ev-debug.c',
@@ -82,7 +79,6 @@ sources = files(
   'ev-link-dest.c',
   'ev-mapping-list.c',
   'ev-media.c',
-  'ev-module.c',
   'ev-page.c',
   'ev-portal.c',
   'ev-render-context.c',
@@ -107,12 +103,19 @@ version_header = configure_file(
 )
 
 enum_types = 'ev-document-type-builtins'
+enum_header_prefix = '''
+#if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-document.h> can be included directly."
+#endif
 
-enum_sources = gnome.mkenums(
+#include "ev-macros.h"
+'''
+
+enum_sources = gnome.mkenums_simple(
   enum_types,
   sources: headers,
-  h_template: enum_types + '.h.template',
-  c_template: enum_types + '.c.template',
+  header_prefix: enum_header_prefix,
+  decorator: 'EV_PUBLIC',
   install_header: true,
   install_dir: join_paths(ev_includedir, include_subdir),
 )
@@ -127,8 +130,7 @@ common_deps = [
 
 deps = common_deps + [
   gmodule_dep,
-  gmodule_no_export_dep,
-  libxml_dep,
+  exempi_dep,
   m_dep,
   synctex_dep,
   zlib_dep,
@@ -136,14 +138,14 @@ deps = common_deps + [
 
 cflags = [
   '-DG_LOG_DOMAIN="EvinceDocument"',
-  '-DGNOMELOCALEDIR="@0@"'.format(ev_localedir),
+  '-DEV_LOCALEDIR="@0@"'.format(ev_localedir),
   '-DEV_BACKENDSDIR="@0@"'.format(ev_backendsdir),
   '-DEV_BACKENDSBINARYVERSION="@0@"'.format(ev_backends_binary_version),
   '-DEVINCE_COMPILATION',
 ]
 
 libevdocument = shared_library(
-  'evdocument3',
+  'evdocument-' + ev_api_version,
   version: ev_document_version,
   sources: sources + enum_sources + [version_header],
   include_directories: top_inc,

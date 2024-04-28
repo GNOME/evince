@@ -27,14 +27,6 @@
 #include "ev-document-info.h"
 #include "ev-xmp.h"
 
-typedef struct _EvDocumentInfoExtended EvDocumentInfoExtended;
-struct _EvDocumentInfoExtended {
-        EvDocumentInfo info;
-
-        GDateTime *created_datetime;
-        GDateTime *modified_datetime;
-};
-
 G_DEFINE_BOXED_TYPE (EvDocumentInfo, ev_document_info, ev_document_info_copy, ev_document_info_free)
 
 /**
@@ -45,12 +37,7 @@ G_DEFINE_BOXED_TYPE (EvDocumentInfo, ev_document_info, ev_document_info_copy, ev
 EvDocumentInfo *
 ev_document_info_new (void)
 {
-        EvDocumentInfoExtended *info_ex;
-
-        info_ex = g_new0 (EvDocumentInfoExtended, 1);
-        info_ex->info.fields_mask |= _EV_DOCUMENT_INFO_EXTENDED;
-
-        return &info_ex->info;
+        return g_new0 (EvDocumentInfo, 1);
 }
 
 /**
@@ -62,15 +49,11 @@ ev_document_info_new (void)
 EvDocumentInfo *
 ev_document_info_copy (EvDocumentInfo *info)
 {
-        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
         EvDocumentInfo *copy;
-        EvDocumentInfoExtended *copy_ex;
 
-        g_return_val_if_fail (info_ex != NULL, NULL);
-        g_return_val_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED, NULL);
+        g_return_val_if_fail (info != NULL, NULL);
 
         copy = ev_document_info_new ();
-        copy_ex = (EvDocumentInfoExtended*)copy;
 
 	copy->title = g_strdup (info->title);
 	copy->format = g_strdup (info->format);
@@ -82,8 +65,9 @@ ev_document_info_copy (EvDocumentInfo *info)
 	copy->producer = g_strdup (info->producer);
 	copy->linearized = g_strdup (info->linearized);
 
-        copy->creation_date = info->creation_date;
-        copy->modified_date = info->modified_date;
+        copy->creation_datetime = g_date_time_ref (info->creation_datetime);
+        copy->modified_datetime = g_date_time_ref (info->modified_datetime);
+
 	copy->layout = info->layout;
 	copy->mode = info->mode;
 	copy->ui_hints = info->ui_hints;
@@ -91,11 +75,7 @@ ev_document_info_copy (EvDocumentInfo *info)
 	copy->n_pages = info->n_pages;
 	copy->license = ev_document_license_copy (info->license);
 
-        copy_ex->info.fields_mask |= info->fields_mask;
-        copy_ex->created_datetime = g_date_time_ref (info_ex->created_datetime);
-        copy_ex->modified_datetime = g_date_time_ref (info_ex->modified_datetime);
-
-        return &copy_ex->info;
+        return copy;
 }
 
 /**
@@ -107,12 +87,8 @@ ev_document_info_copy (EvDocumentInfo *info)
 void
 ev_document_info_free (EvDocumentInfo *info)
 {
-        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
-
-        if (info_ex == NULL)
+        if (info == NULL)
                 return;
-
-        g_return_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED);
 
 	g_free (info->title);
 	g_free (info->format);
@@ -125,10 +101,10 @@ ev_document_info_free (EvDocumentInfo *info)
 	g_free (info->security);
 	ev_document_license_free (info->license);
 
-        g_clear_pointer (&info_ex->created_datetime, g_date_time_unref);
-        g_clear_pointer (&info_ex->modified_datetime, g_date_time_unref);
+        g_clear_pointer (&info->creation_datetime, g_date_time_unref);
+        g_clear_pointer (&info->modified_datetime, g_date_time_unref);
 
-        g_free (info_ex);
+        g_free (info);
 }
 
 /*
@@ -142,22 +118,11 @@ void
 ev_document_info_take_created_datetime (EvDocumentInfo *info,
                                         GDateTime      *datetime)
 {
-        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
-        gint64 ut;
+	g_return_if_fail (info != NULL);
+	g_clear_pointer (&info->creation_datetime, g_date_time_unref);
 
-        g_return_if_fail (info_ex != NULL);
-        g_return_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED);
-
-        g_clear_pointer (&info_ex->created_datetime, g_date_time_unref);
-        info_ex->created_datetime = datetime; /* adopts */
-
-        if (datetime != NULL && (ut = g_date_time_to_unix (datetime)) < G_MAXINT) {
-                info_ex->info.creation_date = (GTime) ut;
-                info_ex->info.fields_mask |= EV_DOCUMENT_INFO_CREATION_DATE;
-        } else {
-                info_ex->info.creation_date = 0;
-                info_ex->info.fields_mask &= ~EV_DOCUMENT_INFO_CREATION_DATE;
-        }
+	info->creation_datetime = datetime;
+	info->fields_mask |= EV_DOCUMENT_INFO_CREATION_DATETIME;
 }
 
 /**
@@ -169,12 +134,10 @@ ev_document_info_take_created_datetime (EvDocumentInfo *info,
 GDateTime *
 ev_document_info_get_created_datetime (const EvDocumentInfo *info)
 {
-        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
+	g_return_val_if_fail (info != NULL, NULL);
+	g_return_val_if_fail (info->fields_mask & EV_DOCUMENT_INFO_CREATION_DATETIME, NULL);
 
-        g_return_val_if_fail (info_ex != NULL, NULL);
-        g_return_val_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED, NULL);
-
-        return info_ex->created_datetime;
+        return info->creation_datetime;
 }
 
 /*
@@ -188,22 +151,11 @@ void
 ev_document_info_take_modified_datetime (EvDocumentInfo *info,
                                          GDateTime      *datetime)
 {
-        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
-        gint64 ut;
+	g_return_if_fail (info != NULL);
 
-        g_return_if_fail (info_ex != NULL);
-        g_return_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED);
-
-        g_clear_pointer (&info_ex->modified_datetime, g_date_time_unref);
-        info_ex->modified_datetime = datetime; /* adopts */
-
-        if (datetime != NULL && (ut = g_date_time_to_unix (datetime)) < G_MAXINT) {
-                info_ex->info.modified_date = (GTime) ut;
-                info_ex->info.fields_mask |= EV_DOCUMENT_INFO_MOD_DATE;
-        } else {
-                info_ex->info.modified_date = 0;
-                info_ex->info.fields_mask &= ~EV_DOCUMENT_INFO_MOD_DATE;
-        }
+	g_clear_pointer (&info->modified_datetime, g_date_time_unref);
+	info->modified_datetime = datetime;
+	info->fields_mask |= EV_DOCUMENT_INFO_MOD_DATETIME;
 }
 
 /**
@@ -215,12 +167,10 @@ ev_document_info_take_modified_datetime (EvDocumentInfo *info,
 GDateTime *
 ev_document_info_get_modified_datetime (const EvDocumentInfo *info)
 {
-        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
+	g_return_val_if_fail (info != NULL, NULL);
+	g_return_val_if_fail (info->fields_mask & EV_DOCUMENT_INFO_MOD_DATETIME, NULL);
 
-        g_return_val_if_fail (info_ex != NULL, NULL);
-        g_return_val_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED, NULL);
-
-        return info_ex->modified_datetime;
+	return info->modified_datetime;
 }
 
 /*

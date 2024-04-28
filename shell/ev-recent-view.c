@@ -48,11 +48,14 @@ typedef enum {
 } EvRecentViewColumns;
 
 typedef struct {
+	GtkWidget        *stack;
+	GtkWidget        *scrolled;
         GtkWidget        *view;
+	GtkWidget        *empty;
         GtkListStore     *model;
         GtkRecentManager *recent_manager;
         GtkTreePath      *pressed_item_tree_path;
-        guint             recent_manager_changed_handler_id;
+	gulong            recent_manager_changed_handler_id;
 
 #ifdef HAVE_LIBGNOME_DESKTOP
         GnomeDesktopThumbnailFactory *thumbnail_factory;
@@ -66,7 +69,7 @@ enum {
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-G_DEFINE_TYPE_WITH_PRIVATE (EvRecentView, ev_recent_view, GTK_TYPE_SCROLLED_WINDOW)
+G_DEFINE_TYPE_WITH_PRIVATE (EvRecentView, ev_recent_view, GTK_TYPE_BIN)
 
 #define ICON_VIEW_SIZE 128
 #define MAX_RECENT_VIEW_ITEMS 64
@@ -153,11 +156,8 @@ ev_recent_view_dispose (GObject *obj)
 		g_clear_object (&priv->model);
         }
 
-        if (priv->recent_manager_changed_handler_id) {
-                g_signal_handler_disconnect (priv->recent_manager,
-                                             priv->recent_manager_changed_handler_id);
-                priv->recent_manager_changed_handler_id = 0;
-        }
+	g_clear_signal_handler (&priv->recent_manager_changed_handler_id,
+				priv->recent_manager);
         priv->recent_manager = NULL;
 
 #ifdef HAVE_LIBGNOME_DESKTOP
@@ -308,7 +308,7 @@ save_thumbnail_in_cache_thread (GTask                    *task,
         GError *error = NULL;
 #endif
 
-        surface = EV_JOB_THUMBNAIL (data->job)->thumbnail_surface;
+	surface = EV_JOB_THUMBNAIL_CAIRO (data->job)->thumbnail_surface;
         thumbnail = gdk_pixbuf_get_from_surface (surface, 0, 0,
                                                  cairo_image_surface_get_width (surface),
                                                  cairo_image_surface_get_height (surface));
@@ -356,7 +356,7 @@ save_document_thumbnail_in_cache (GetDocumentInfoAsyncData *data)
 }
 
 static void
-thumbnail_job_completed_callback (EvJobThumbnail           *job,
+thumbnail_job_completed_callback (EvJobThumbnailCairo      *job,
                                   GetDocumentInfoAsyncData *data)
 {
         if (g_cancellable_is_cancelled (data->cancellable) ||
@@ -397,9 +397,9 @@ document_load_job_completed_callback (EvJobLoad                *job_load,
                         target_height = ICON_VIEW_SIZE;
                 }
 
-                data->job = ev_job_thumbnail_new_with_target_size (document, 0, 0, target_width, target_height);
-                ev_job_thumbnail_set_has_frame (EV_JOB_THUMBNAIL (data->job), FALSE);
-                ev_job_thumbnail_set_output_format (EV_JOB_THUMBNAIL (data->job), EV_JOB_THUMBNAIL_SURFACE);
+		data->job = ev_job_thumbnail_cairo_new_with_target_size (document, 0, 0,
+									 target_width,
+									 target_height);
                 g_signal_connect (data->job, "finished",
                                   G_CALLBACK (thumbnail_job_completed_callback),
                                   data);
@@ -758,6 +758,11 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
                         break;
         }
 
+	if (n_items != 0)
+		gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->scrolled);
+	else
+		gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->empty);
+
         g_list_free_full (items, (GDestroyNotify)gtk_recent_info_unref);
 }
 
@@ -789,6 +794,8 @@ ev_recent_view_init (EvRecentView *ev_recent_view)
 
         gtk_widget_init_template (GTK_WIDGET (ev_recent_view));
 
+	gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->empty);
+
         priv->recent_manager = gtk_recent_manager_get_default ();
         priv->model = gtk_list_store_new (NUM_COLUMNS,
                                           G_TYPE_STRING,
@@ -814,7 +821,10 @@ ev_recent_view_class_init (EvRecentViewClass *klass)
 
         g_type_ensure (GD_TYPE_TWO_LINES_RENDERER);
         gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/recent-view.ui");
+	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, stack);
+	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, scrolled);
         gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, view);
+	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, empty);
 
         signals[ITEM_ACTIVATED] =
                   g_signal_new ("item-activated",

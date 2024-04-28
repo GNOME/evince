@@ -33,22 +33,27 @@ struct _EvImagePrivate {
 	gchar     *tmp_uri;
 };
 
+typedef struct _EvImagePrivate EvImagePrivate;
+
+#define GET_PRIVATE(o) ev_image_get_instance_private (o);
+
 G_DEFINE_TYPE_WITH_PRIVATE (EvImage, ev_image, G_TYPE_OBJECT)
 
 static void
 ev_image_finalize (GObject *object)
 {
 	EvImage *image = EV_IMAGE (object);
+	EvImagePrivate *priv = GET_PRIVATE (image);
 
-	g_clear_object (&image->priv->pixbuf);
+	g_clear_object (&priv->pixbuf);
 
-	if (image->priv->tmp_uri) {
+	if (priv->tmp_uri) {
 		gchar *filename;
 
-		filename = g_filename_from_uri (image->priv->tmp_uri, NULL, NULL);
+		filename = g_filename_from_uri (priv->tmp_uri, NULL, NULL);
 		ev_tmp_filename_unlink (filename);
 		g_free (filename);
-		g_clear_pointer (&image->priv->tmp_uri, g_free);
+		g_clear_pointer (&priv->tmp_uri, g_free);
 	}
 
 	(* G_OBJECT_CLASS (ev_image_parent_class)->finalize) (object);
@@ -67,7 +72,6 @@ ev_image_class_init (EvImageClass *klass)
 static void
 ev_image_init (EvImage *image)
 {
-	image->priv = ev_image_get_instance_private (image);
 }
 
 EvImage *
@@ -75,10 +79,13 @@ ev_image_new (gint page,
 	      gint img_id)
 {
 	EvImage *image;
+	EvImagePrivate *priv;
 
 	image = EV_IMAGE (g_object_new (EV_TYPE_IMAGE, NULL));
-	image->priv->page = page;
-	image->priv->id = img_id;
+
+	priv = GET_PRIVATE (image);
+	priv->page = page;
+	priv->id = img_id;
 
 	return image;
 }
@@ -87,11 +94,13 @@ EvImage *
 ev_image_new_from_pixbuf (GdkPixbuf *pixbuf)
 {
 	EvImage *image;
+	EvImagePrivate *priv;
 
 	g_return_val_if_fail (GDK_IS_PIXBUF (pixbuf), NULL);
 
 	image = EV_IMAGE (g_object_new (EV_TYPE_IMAGE, NULL));
-	image->priv->pixbuf = g_object_ref (pixbuf);
+	priv = GET_PRIVATE (image);
+	priv->pixbuf = g_object_ref (pixbuf);
 
 	return image;
 }
@@ -100,16 +109,18 @@ gint
 ev_image_get_page (EvImage *image)
 {
 	g_return_val_if_fail (EV_IS_IMAGE (image), -1);
+	EvImagePrivate *priv = GET_PRIVATE (image);
 
-	return image->priv->page;
+	return priv->page;
 }
 
 gint
 ev_image_get_id (EvImage *image)
 {
 	g_return_val_if_fail (EV_IS_IMAGE (image), -1);
+	EvImagePrivate *priv = GET_PRIVATE (image);
 
-	return image->priv->id;
+	return priv->id;
 }
 
 /**
@@ -121,10 +132,12 @@ ev_image_get_id (EvImage *image)
 GdkPixbuf *
 ev_image_get_pixbuf (EvImage *image)
 {
+	EvImagePrivate *priv;
 	g_return_val_if_fail (EV_IS_IMAGE (image), NULL);
-	g_return_val_if_fail (GDK_IS_PIXBUF (image->priv->pixbuf), NULL);
+	priv = GET_PRIVATE (image);
+	g_return_val_if_fail (GDK_IS_PIXBUF (priv->pixbuf), NULL);
 
-	return image->priv->pixbuf;
+	return priv->pixbuf;
 }
 
 const gchar *
@@ -133,13 +146,16 @@ ev_image_save_tmp (EvImage   *image,
 {
 	GError *error = NULL;
 	gchar  *filename = NULL;
+	EvImagePrivate *priv;
         int fd;
 
 	g_return_val_if_fail (EV_IS_IMAGE (image), NULL);
 	g_return_val_if_fail (GDK_IS_PIXBUF (pixbuf), NULL);
 
-	if (image->priv->tmp_uri)
-		return image->priv->tmp_uri;
+	priv = GET_PRIVATE (image);
+
+	if (priv->tmp_uri)
+		return priv->tmp_uri;
 
 	if ((fd = ev_mkstemp ("image.XXXXXX.png", &filename, &error)) == -1)
 		goto had_error;
@@ -150,13 +166,13 @@ ev_image_save_tmp (EvImage   *image,
         close (fd);
 
 	if (!error) {
-		image->priv->tmp_uri = g_filename_to_uri (filename, NULL, &error);
-                if (image->priv->tmp_uri == NULL)
+		priv->tmp_uri = g_filename_to_uri (filename, NULL, &error);
+                if (priv->tmp_uri == NULL)
                         goto had_error;
 
 		g_free (filename);
 
-		return image->priv->tmp_uri;
+		return priv->tmp_uri;
 	}
 
     had_error:
@@ -173,6 +189,7 @@ const gchar *
 ev_image_get_tmp_uri (EvImage *image)
 {
 	g_return_val_if_fail (EV_IS_IMAGE (image), NULL);
+	EvImagePrivate *priv = GET_PRIVATE (image);
 
-	return image->priv->tmp_uri;
+	return priv->tmp_uri;
 }

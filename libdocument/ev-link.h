@@ -31,19 +31,10 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvLink EvLink;
-typedef struct _EvLinkClass EvLinkClass;
-typedef struct _EvLinkPrivate EvLinkPrivate;
-
 #define EV_TYPE_LINK              (ev_link_get_type())
-#define EV_LINK(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_LINK, EvLink))
-#define EV_LINK_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_LINK, EvLinkClass))
-#define EV_IS_LINK(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_LINK))
-#define EV_IS_LINK_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_LINK))
-#define EV_LINK_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_LINK, EvLinkClass))
 
 EV_PUBLIC
-GType         ev_link_get_type	 (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (EvLink, ev_link, EV, LINK, GObject)
 
 EV_PUBLIC
 EvLink	     *ev_link_new	 (const gchar  *title,

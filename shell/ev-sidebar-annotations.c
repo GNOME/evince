@@ -27,7 +27,6 @@
 #include "ev-sidebar-annotations.h"
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
-#include "ev-stock-icons.h"
 #include "ev-window.h"
 #include "ev-utils.h"
 
@@ -405,7 +404,7 @@ job_finished_callback (EvJobAnnots          *job,
 				markup = g_strdup_printf ("<i>%s</i>", _("No Comment"));
 
 			if (EV_IS_ANNOTATION_TEXT (annot)) {
-				icon_name = EV_STOCK_ANNOT_TEXT;
+				icon_name = "annotations-text-symbolic";
 			} else if (EV_IS_ANNOTATION_ATTACHMENT (annot)) {
 				icon_name = "mail-attachment-symbolic";
 			} else if (EV_IS_ANNOTATION_TEXT_MARKUP (annot)) {
@@ -420,7 +419,7 @@ job_finished_callback (EvJobAnnots          *job,
                                         icon_name = "format-text-underline-symbolic";
                                         break;
                                 case EV_ANNOTATION_TEXT_MARKUP_SQUIGGLY:
-                                        icon_name = EV_STOCK_ANNOT_SQUIGGLY;
+                                        icon_name = "annotations-squiggly-symbolic";
                                         break;
                                 }
                         }

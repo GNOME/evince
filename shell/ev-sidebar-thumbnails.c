@@ -98,7 +98,7 @@ static void         ev_sidebar_thumbnails_page_iface_init  (EvSidebarPageInterfa
 static const gchar* ev_sidebar_thumbnails_get_label        (EvSidebarPage           *sidebar_page);
 static void         ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
 							    gint     page);
-static void         thumbnail_job_completed_callback       (EvJobThumbnail          *job,
+static void         thumbnail_job_completed_callback       (EvJobThumbnailCairo     *job,
 							    EvSidebarThumbnails     *sidebar_thumbnails);
 static void         ev_sidebar_thumbnails_reload           (EvSidebarThumbnails     *sidebar_thumbnails);
 static void         adjustment_changed_cb                  (EvSidebarThumbnails     *sidebar_thumbnails);
@@ -225,6 +225,9 @@ ev_sidebar_thumbnails_page_is_in_visible_range (EvSidebarThumbnails *sidebar,
         gboolean     retval;
         GList *selection;
 
+	if (!sidebar->priv->icon_view)
+		return FALSE;
+
         selection = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (sidebar->priv->icon_view));
         if (!selection)
                 return FALSE;
@@ -292,23 +295,6 @@ ev_sidebar_thumbnails_map (GtkWidget *widget)
 	GTK_WIDGET_CLASS (ev_sidebar_thumbnails_parent_class)->map (widget);
 
 	adjustment_changed_cb (sidebar);
-}
-
-static void
-ev_sidebar_fullscreen_cb (EvSidebarThumbnails *sidebar)
-{
-	/* After activating or deactivating fullscreen mode, the sidebar
-	 * window is automatically moved to its start, while scroll bar
-	 * stays in its original position.
-	 *
-	 * The sidebar window move is unwanted and unsolicited, and it's
-	 * most probably caused by GtkIconView or GtkScrolledWindow bug.
-	 *
-	 * Workaround this by having the sidebar sync its window with the
-	 * current scroll position after a fullscreen operation, do that by
-	 * just emitting a "value-changed" on the current scroll adjustment.
-	 * Fixes https://bugzilla.gnome.org/show_bug.cgi?id=783404 */
-	g_signal_emit_by_name (sidebar->priv->vadjustment, "value-changed");
 }
 
 static void
@@ -389,9 +375,7 @@ ev_sidebar_thumbnails_get_loading_icon (EvSidebarThumbnails *sidebar_thumbnails,
 		gboolean inverted_colors;
                 gint device_scale = 1;
 
-#ifdef HAVE_HIDPI_SUPPORT
                 device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (sidebar_thumbnails));
-#endif
 
 		inverted_colors = ev_document_model_get_inverted_colors (priv->model);
                 icon = ev_document_misc_render_loading_thumbnail_surface (GTK_WIDGET (sidebar_thumbnails),
@@ -422,7 +406,7 @@ cancel_running_jobs (EvSidebarThumbnails *sidebar_thumbnails,
 	for (result = gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->list_store), &iter, path);
 	     result && start_page <= end_page;
 	     result = gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->list_store), &iter), start_page ++) {
-		EvJobThumbnail *job;
+		EvJobThumbnailCairo *job;
 		gboolean thumbnail_set;
 
 		gtk_tree_model_get (GTK_TREE_MODEL (priv->list_store),
@@ -458,12 +442,9 @@ get_size_for_page (EvSidebarThumbnails *sidebar_thumbnails,
 {
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
         gdouble width, height;
-        gint thumbnail_height;
-        gint device_scale = 1;
+        gint thumbnail_height, device_scale;
 
-#ifdef HAVE_HIDPI_SUPPORT
         device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (sidebar_thumbnails));
-#endif
         ev_document_get_page_size (priv->document, page, &width, &height);
         thumbnail_height = (int)(THUMBNAIL_WIDTH * height / width + 0.5);
 
@@ -508,11 +489,10 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 			gint thumbnail_width, thumbnail_height;
 			get_size_for_page (sidebar_thumbnails, page, &thumbnail_width, &thumbnail_height);
 
-			job = ev_job_thumbnail_new_with_target_size (priv->document,
-								     page, priv->rotation,
-								     thumbnail_width, thumbnail_height);
-                        ev_job_thumbnail_set_has_frame (EV_JOB_THUMBNAIL (job), FALSE);
-                        ev_job_thumbnail_set_output_format (EV_JOB_THUMBNAIL (job), EV_JOB_THUMBNAIL_SURFACE);
+			job = ev_job_thumbnail_cairo_new_with_target_size (priv->document,
+									   page, priv->rotation,
+									   thumbnail_width,
+									   thumbnail_height);
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),
 						(GDestroyNotify) gtk_tree_iter_free);
@@ -717,7 +697,7 @@ ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	g_signal_connect_swapped (priv->icon_view, "size-allocate",
 				  G_CALLBACK (check_toggle_blank_first_dual_mode_when_resizing), ev_sidebar_thumbnails);
 
-	g_signal_connect_data (priv->model, "notify::dual-page",
+	g_signal_connect_data (priv->model, "notify::page-layout",
 			       G_CALLBACK (check_toggle_blank_first_dual_mode), ev_sidebar_thumbnails,
 			       NULL, G_CONNECT_SWAPPED | G_CONNECT_AFTER);
 
@@ -767,7 +747,7 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 					       G_TYPE_STRING,
 					       CAIRO_GOBJECT_TYPE_SURFACE,
 					       G_TYPE_BOOLEAN,
-					       EV_TYPE_JOB_THUMBNAIL);
+					       EV_TYPE_JOB_THUMBNAIL_CAIRO);
 
 	signal_id = g_signal_lookup ("row-changed", GTK_TYPE_TREE_MODEL);
 	g_signal_connect (GTK_TREE_MODEL (priv->list_store), "row-changed",
@@ -832,13 +812,6 @@ page_changed_cb (EvSidebarThumbnails *sidebar,
 	ev_sidebar_thumbnails_set_current_page (sidebar, new_page);
 }
 
-static gboolean
-refresh (EvSidebarThumbnails *sidebar_thumbnails)
-{
-	adjustment_changed_cb (sidebar_thumbnails);
-	return G_SOURCE_REMOVE;
-}
-
 static void
 ev_sidebar_thumbnails_reload (EvSidebarThumbnails *sidebar_thumbnails)
 {
@@ -861,7 +834,7 @@ ev_sidebar_thumbnails_reload (EvSidebarThumbnails *sidebar_thumbnails)
 	sidebar_thumbnails->priv->end_page = -1;
 	ev_sidebar_thumbnails_set_current_page (sidebar_thumbnails,
 						ev_document_model_get_page (model));
-	g_idle_add ((GSourceFunc)refresh, sidebar_thumbnails);
+	g_idle_add_once ((GSourceOnceFunc)adjustment_changed_cb, sidebar_thumbnails);
 }
 
 static void
@@ -887,24 +860,20 @@ ev_sidebar_thumbnails_inverted_colors_changed_cb (EvDocumentModel     *model,
 }
 
 static void
-thumbnail_job_completed_callback (EvJobThumbnail      *job,
+thumbnail_job_completed_callback (EvJobThumbnailCairo *job,
 				  EvSidebarThumbnails *sidebar_thumbnails)
 {
         GtkWidget                  *widget = GTK_WIDGET (sidebar_thumbnails);
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreeIter                *iter;
         cairo_surface_t            *surface;
-#ifdef HAVE_HIDPI_SUPPORT
         gint                        device_scale;
-#endif
 
         if (ev_job_is_failed (EV_JOB (job)))
           return;
 
-#ifdef HAVE_HIDPI_SUPPORT
         device_scale = gtk_widget_get_scale_factor (widget);
         cairo_surface_set_device_scale (job->thumbnail_surface, device_scale, device_scale);
-#endif
 
         surface = ev_document_misc_render_thumbnail_surface_with_frame (widget,
                                                                         job->thumbnail_surface,
@@ -956,7 +925,6 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 
 	if (! priv->icon_view) {
 		ev_sidebar_init_icon_view (sidebar_thumbnails);
-		g_object_notify (G_OBJECT (sidebar_thumbnails), "main_widget");
 	} else {
 		gtk_widget_queue_resize (priv->icon_view);
 	}
@@ -971,9 +939,6 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 	g_signal_connect (priv->model, "notify::inverted-colors",
 			  G_CALLBACK (ev_sidebar_thumbnails_inverted_colors_changed_cb),
 			  sidebar_thumbnails);
-	g_signal_connect_swapped (priv->model, "notify::fullscreen",
-			          G_CALLBACK (ev_sidebar_fullscreen_cb),
-			          sidebar_thumbnails);
 	sidebar_thumbnails->priv->start_page = -1;
 	sidebar_thumbnails->priv->end_page = -1;
 	ev_sidebar_thumbnails_set_current_page (sidebar_thumbnails,
@@ -1112,13 +1077,6 @@ ev_sidebar_thumbnails_get_ev_sidebar (EvSidebarThumbnails *sidebar)
 						    EV_TYPE_SIDEBAR));
 }
 
-static gboolean
-check_reset_current_page (EvSidebarThumbnails *sidebar_thumbnails)
-{
-	ev_sidebar_check_reset_current_page (sidebar_thumbnails);
-	return G_SOURCE_REMOVE;
-}
-
 static void
 ev_sidebar_thumbnails_get_column_widths (EvSidebarThumbnails *sidebar,
 					 gint *one_column_width,
@@ -1203,7 +1161,7 @@ ev_sidebar_thumbnails_set_sidebar_width (EvSidebarThumbnails *sidebar,
 		priv = sidebar->priv;
 		priv->width = sidebar_width;
 		ev_window_set_divider_position (ev_window, sidebar_width);
-		g_idle_add ((GSourceFunc)check_reset_current_page, sidebar);
+		g_idle_add_once ((GSourceOnceFunc)ev_sidebar_check_reset_current_page, sidebar);
 	}
 }
 
@@ -1283,7 +1241,7 @@ check_toggle_blank_first_dual_mode_real (EvSidebarThumbnails *sidebar_thumbnails
 
 	priv = sidebar_thumbnails->priv;
 
-	dual_mode = ev_document_model_get_dual_page (priv->model);
+	dual_mode = ev_document_model_get_page_layout (priv->model) == EV_PAGE_LAYOUT_DUAL;
 	odd_pages_left = ev_document_model_get_dual_page_odd_pages_left (priv->model);
 	should_be_enabled = dual_mode && !odd_pages_left;
 

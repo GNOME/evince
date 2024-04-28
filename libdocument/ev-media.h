@@ -30,29 +30,14 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvMedia        EvMedia;
-typedef struct _EvMediaClass   EvMediaClass;
-typedef struct _EvMediaPrivate EvMediaPrivate;
-
 #define EV_TYPE_MEDIA              (ev_media_get_type())
-#define EV_MEDIA(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_MEDIA, EvMedia))
-#define EV_IS_MEDIA(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_MEDIA))
-#define EV_MEDIA_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_MEDIA, EvMediaClass))
-#define EV_IS_MEDIA_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_MEDIA))
-#define EV_MEDIA_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_MEDIA, EvMediaClass))
+
+EV_PUBLIC
+G_DECLARE_FINAL_TYPE (EvMedia, ev_media, EV, MEDIA, GObject)
 
 struct _EvMedia {
         GObject base_instance;
-
-        EvMediaPrivate *priv;
 };
-
-struct _EvMediaClass {
-        GObjectClass base_class;
-};
-
-EV_PUBLIC
-GType        ev_media_get_type          (void) G_GNUC_CONST;
 
 EV_PUBLIC
 EvMedia     *ev_media_new_for_uri       (EvPage      *page,

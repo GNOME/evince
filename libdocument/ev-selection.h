@@ -34,20 +34,15 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_SELECTION            (ev_selection_get_type ())
-#define EV_SELECTION(o)		     (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_SELECTION, EvSelection))
-#define EV_SELECTION_IFACE(k)	     (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_SELECTION, EvSelectionInterface))
-#define EV_IS_SELECTION(o)	     (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_SELECTION))
-#define EV_IS_SELECTION_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_SELECTION))
-#define EV_SELECTION_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_SELECTION, EvSelectionInterface))
+
+EV_PUBLIC
+G_DECLARE_INTERFACE (EvSelection, ev_selection, EV, SELECTION, GObject)
 
 typedef enum {
 	EV_SELECTION_STYLE_GLYPH,
 	EV_SELECTION_STYLE_WORD,
 	EV_SELECTION_STYLE_LINE
 } EvSelectionStyle;
-
-typedef struct _EvSelection	       EvSelection;
-typedef struct _EvSelectionInterface   EvSelectionInterface;
 
 struct _EvSelectionInterface
 {
@@ -59,8 +54,8 @@ struct _EvSelectionInterface
 						   EvRectangle      *points,
 						   EvRectangle      *old_points,
 						   EvSelectionStyle  style,
-						   GdkColor         *text,
-						   GdkColor         *base);
+						   GdkRGBA          *text,
+						   GdkRGBA          *base);
 	gchar          * (* get_selected_text)    (EvSelection      *selection,
 						   EvPage           *page,
 						   EvSelectionStyle  style,
@@ -72,16 +67,14 @@ struct _EvSelectionInterface
 };
 
 EV_PUBLIC
-GType           ev_selection_get_type             (void) G_GNUC_CONST;
-EV_PUBLIC
 void            ev_selection_render_selection     (EvSelection      *selection,
 						   EvRenderContext  *rc,
 						   cairo_surface_t **surface,
 						   EvRectangle      *points,
 						   EvRectangle      *old_points,
 						   EvSelectionStyle  style,
-						   GdkColor         *text,
-						   GdkColor         *base);
+						   GdkRGBA          *text,
+						   GdkRGBA          *base);
 EV_PUBLIC
 gchar          *ev_selection_get_selected_text    (EvSelection      *selection,
 						   EvPage           *page,

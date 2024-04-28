@@ -30,18 +30,10 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvRenderContext EvRenderContext;
-typedef struct _EvRenderContextClass EvRenderContextClass;
-
 #define EV_TYPE_RENDER_CONTEXT		(ev_render_context_get_type())
-#define EV_RENDER_CONTEXT(object)	(G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_RENDER_CONTEXT, EvRenderContext))
-#define EV_RENDER_CONTEXT_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_RENDER_CONTEXT, EvRenderContextClass))
-#define EV_IS_RENDER_CONTEXT(object)	(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_RENDER_CONTEXT))
 
-struct _EvRenderContextClass
-{
-	GObjectClass klass;
-};
+EV_PUBLIC
+G_DECLARE_FINAL_TYPE (EvRenderContext, ev_render_context, EV, RENDER_CONTEXT, GObject)
 
 struct _EvRenderContext
 {
@@ -55,8 +47,6 @@ struct _EvRenderContext
 };
 
 
-EV_PUBLIC
-GType            ev_render_context_get_type        (void) G_GNUC_CONST;
 EV_PUBLIC
 EvRenderContext *ev_render_context_new             (EvPage          *page,
 						    gint             rotation,

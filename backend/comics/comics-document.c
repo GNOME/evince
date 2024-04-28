@@ -55,7 +55,7 @@ struct _ComicsDocument
 	GHashTable    *page_positions; /* key: char *, value: uint + 1 */
 };
 
-EV_BACKEND_REGISTER (ComicsDocument, comics_document)
+G_DEFINE_TYPE (ComicsDocument, comics_document, EV_TYPE_DOCUMENT)
 
 #define FORMAT_UNKNOWN     0
 #define FORMAT_SUPPORTED   1
@@ -197,6 +197,7 @@ comics_document_list (ComicsDocument  *comics_document,
 	has_unsupported_images = FALSE;
 	has_archive_errors = FALSE;
 	array = g_ptr_array_sized_new (64);
+	g_ptr_array_set_free_func (array, g_free);
 
 	while (1) {
 		const char *name;
@@ -607,10 +608,8 @@ comics_document_finalize (GObject *object)
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (object);
 
-	if (comics_document->page_names) {
-                g_ptr_array_foreach (comics_document->page_names, (GFunc) g_free, NULL);
+	if (comics_document->page_names)
                 g_ptr_array_free (comics_document->page_names, TRUE);
-	}
 
 	g_clear_pointer (&comics_document->page_positions, g_hash_table_destroy);
 	g_clear_object (&comics_document->archive);
@@ -639,4 +638,10 @@ static void
 comics_document_init (ComicsDocument *comics_document)
 {
 	comics_document->archive = ev_archive_new ();
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return COMICS_TYPE_DOCUMENT;
 }

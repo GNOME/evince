@@ -50,10 +50,6 @@ GtkWidget*	ev_view_new		    (void);
 EV_PUBLIC
 void		ev_view_set_model	    (EvView          *view,
 					     EvDocumentModel *model);
-EV_DEPRECATED
-EV_PUBLIC
-void 		ev_view_set_loading         (EvView 	     *view,
-					     gboolean         loading);
 EV_PUBLIC
 gboolean        ev_view_is_loading          (EvView          *view);
 EV_PUBLIC
@@ -111,11 +107,6 @@ void            ev_view_find_search_changed       (EvView         *view);
 EV_PUBLIC
 void     	ev_view_find_set_highlight_search (EvView         *view,
 						   gboolean        value);
-EV_DEPRECATED_FOR(ev_view_find_started)
-EV_PUBLIC
-void            ev_view_find_changed              (EvView         *view,
-						   GList         **results,
-						   gint            page);
 EV_PUBLIC
 void            ev_view_find_cancel               (EvView         *view);
 
@@ -131,11 +122,6 @@ EV_PUBLIC
 void           ev_view_show_cursor        (EvView         *view);
 
 /* Navigation */
-EV_DEPRECATED_FOR(g_signal_emit_by_name)
-EV_PUBLIC
-void	       ev_view_scroll             (EvView         *view,
-	                                   GtkScrollType   scroll,
-					   gboolean        horizontal);
 EV_PUBLIC
 void	       ev_view_handle_link        (EvView         *view,
 					   EvLink         *link);
@@ -159,6 +145,7 @@ gboolean       ev_view_get_page_extents_for_border (EvView       *view,
                                                     gint          page,
                                                     GtkBorder    *border,
                                                     GdkRectangle *page_area);
+
 /* Annotations */
 EV_PUBLIC
 void           ev_view_focus_annotation      (EvView          *view,

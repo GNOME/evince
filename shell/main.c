@@ -30,7 +30,6 @@
 #include "ev-debug.h"
 #include "ev-init.h"
 #include "ev-file-helpers.h"
-#include "ev-stock-icons.h"
 #include "ev-metadata.h"
 
 #ifdef G_OS_WIN32
@@ -261,12 +260,10 @@ main (int argc, char *argv[])
 	}
 #endif
 
-#ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
 	bindtextdomain (GETTEXT_PACKAGE, ev_get_locale_dir());
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
-#endif
 
 	context = g_option_context_new (N_("GNOME Document Viewer"));
 	g_option_context_set_translation_domain(context, GETTEXT_PACKAGE);
@@ -294,8 +291,6 @@ main (int argc, char *argv[])
         if (!ev_init ())
                 return 1;
 
-	ev_stock_icons_init ();
-
 	/* Manually set name and icon */
 	g_set_application_name (_("Document Viewer"));
 	gtk_window_set_default_icon_name (PACKAGE_ICON_NAME);
@@ -320,7 +315,6 @@ main (int argc, char *argv[])
     done:
 	ev_job_scheduler_wait ();
 	ev_shutdown ();
-	ev_stock_icons_shutdown ();
 
         g_object_unref (application);
 	return status;

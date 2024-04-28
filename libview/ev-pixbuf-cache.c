@@ -245,28 +245,20 @@ ev_pixbuf_cache_set_max_size (EvPixbufCache *pixbuf_cache,
 static int
 get_device_scale (EvPixbufCache *pixbuf_cache)
 {
-#ifdef HAVE_HIDPI_SUPPORT
         return gtk_widget_get_scale_factor (pixbuf_cache->view);
-#else
-        return 1;
-#endif
 }
 
 static void
 set_device_scale_on_surface (cairo_surface_t *surface,
                              int              device_scale)
 {
-#ifdef HAVE_HIDPI_SUPPORT
         cairo_surface_set_device_scale (surface, device_scale, device_scale);
-#else
-        g_return_if_fail (device_scale == 1);
-#endif
 }
 
 static void
-copy_job_to_job_info (EvJobRender   *job_render,
-		      CacheJobInfo  *job_info,
-		      EvPixbufCache *pixbuf_cache)
+copy_job_to_job_info (EvJobRenderCairo *job_render,
+		      CacheJobInfo     *job_info,
+		      EvPixbufCache    *pixbuf_cache)
 {
 	if (job_info->surface) {
 		cairo_surface_destroy (job_info->surface);
@@ -307,7 +299,7 @@ job_finished_cb (EvJob         *job,
 		 EvPixbufCache *pixbuf_cache)
 {
 	CacheJobInfo *job_info;
-	EvJobRender *job_render = EV_JOB_RENDER (job);
+	EvJobRenderCairo *job_render = EV_JOB_RENDER_CAIRO (job);
 
 	/* If the job is outside of our interest, we silently discard it */
 	if ((job_render->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
@@ -346,12 +338,12 @@ check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
         device_scale = get_device_scale (pixbuf_cache);
 	if (job_info->device_scale == device_scale) {
 		_get_page_size_for_scale_and_rotation (job_info->job->document,
-						       EV_JOB_RENDER (job_info->job)->page,
+						       EV_JOB_RENDER_CAIRO (job_info->job)->page,
 						       scale,
-						       EV_JOB_RENDER (job_info->job)->rotation,
+						       EV_JOB_RENDER_CAIRO (job_info->job)->rotation,
 						       &width, &height);
-		if (width * device_scale == EV_JOB_RENDER (job_info->job)->target_width &&
-		    height * device_scale == EV_JOB_RENDER (job_info->job)->target_height)
+		if (width * device_scale == EV_JOB_RENDER_CAIRO (job_info->job)->target_width &&
+		    height * device_scale == EV_JOB_RENDER_CAIRO (job_info->job)->target_height)
 			return;
 	}
 
@@ -630,24 +622,6 @@ ev_pixbuf_cache_clear_job_sizes (EvPixbufCache *pixbuf_cache,
 }
 
 static void
-get_selection_colors (EvView *view, GdkColor *text, GdkColor *base)
-{
-        GdkRGBA fg, bg;
-
-        _ev_view_get_selection_colors (view, &bg, &fg);
-
-        text->pixel = 0;
-        text->red = CLAMP ((guint) (fg.red * 65535), 0, 65535);
-        text->green = CLAMP ((guint) (fg.green * 65535), 0, 65535);
-        text->blue = CLAMP ((guint) (fg.blue * 65535), 0, 65535);
-
-        base->pixel = 0;
-        base->red = CLAMP ((guint) (bg.red * 65535), 0, 65535);
-        base->green = CLAMP ((guint) (bg.green * 65535), 0, 65535);
-        base->blue = CLAMP ((guint) (bg.blue * 65535), 0, 65535);
-}
-
-static void
 add_job (EvPixbufCache  *pixbuf_cache,
 	 CacheJobInfo   *job_info,
 	 cairo_region_t *region,
@@ -668,20 +642,20 @@ add_job (EvPixbufCache  *pixbuf_cache,
 	if (job_info->job)
 		end_job (job_info, pixbuf_cache);
 
-	job_info->job = ev_job_render_new (pixbuf_cache->document,
-					   page, rotation,
-                                           scale * job_info->device_scale,
-					   width * job_info->device_scale,
-                                           height * job_info->device_scale);
+	job_info->job = ev_job_render_cairo_new (pixbuf_cache->document,
+						 page, rotation,
+						 scale * job_info->device_scale,
+						 width * job_info->device_scale,
+						 height * job_info->device_scale);
 
 	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
-		GdkColor text, base;
+		GdkRGBA text, base;
 
-		get_selection_colors (EV_VIEW (pixbuf_cache->view), &text, &base);
-		ev_job_render_set_selection_info (EV_JOB_RENDER (job_info->job),
-						  &(job_info->target_points),
-						  job_info->selection_style,
-						  &text, &base);
+		_ev_view_get_selection_colors (EV_VIEW (pixbuf_cache->view), &base, &text);
+		ev_job_render_cairo_set_selection_info (EV_JOB_RENDER_CAIRO (job_info->job),
+							&(job_info->target_points),
+							job_info->selection_style,
+							&text, &base);
 	}
 
 	g_signal_connect (job_info->job, "finished",
@@ -890,8 +864,8 @@ ev_pixbuf_cache_get_surface (EvPixbufCache *pixbuf_cache,
 
 	/* We don't need to wait for the idle to handle the callback */
 	if (job_info->job &&
-	    EV_JOB_RENDER (job_info->job)->page_ready) {
-		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
+	    EV_JOB_RENDER_CAIRO (job_info->job)->page_ready) {
+		copy_job_to_job_info (EV_JOB_RENDER_CAIRO (job_info->job), job_info, pixbuf_cache);
 		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
 	}
 
@@ -1023,7 +997,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 	/* If we have a running job, we just return what we have under the
 	 * assumption that it'll be updated later and we can scale it as need
 	 * be */
-	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection)
+	if (job_info->job && EV_JOB_RENDER_CAIRO (job_info->job)->include_selection)
 		return job_info->selection;
 
 	/* Now, lets see if we need to resize the image.  If we do, we clear the
@@ -1037,7 +1011,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 	 */
 	if (ev_rect_cmp (&(job_info->target_points), &(job_info->selection_points))) {
 		EvRectangle *old_points;
-		GdkColor text, base;
+		GdkRGBA text, base;
 		EvRenderContext *rc;
 		EvPage *ev_page;
 		gint width, height;
@@ -1061,7 +1035,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
                 ev_render_context_set_target_size (rc, width, height);
 		g_object_unref (ev_page);
 
-		get_selection_colors (EV_VIEW (pixbuf_cache->view), &text, &base);
+		_ev_view_get_selection_colors (EV_VIEW (pixbuf_cache->view), &base, &text);
 		ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
 					       rc, &(job_info->selection),
 					       &(job_info->target_points),
@@ -1100,7 +1074,7 @@ ev_pixbuf_cache_get_selection_region (EvPixbufCache *pixbuf_cache,
 	/* If we have a running job, we just return what we have under the
 	 * assumption that it'll be updated later and we can scale it as need
 	 * be */
-	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection)
+	if (job_info->job && EV_JOB_RENDER_CAIRO (job_info->job)->include_selection)
 		return job_info->selection_region && !cairo_region_is_empty(job_info->selection_region) ?
                         job_info->selection_region : NULL;
 

@@ -25,6 +25,8 @@
 #include <windows.h>
 #endif
 
+#include <exempi/xmp.h>
+
 #include "ev-init.h"
 #include "ev-document-factory.h"
 #include "ev-debug.h"
@@ -87,7 +89,7 @@ ev_get_locale_dir (void)
 #ifdef G_OS_WIN32
 	return _ev_win32_get_locale_dir (evdocument_dll);
 #else
-	return GNOMELOCALEDIR;
+	return EV_LOCALEDIR;
 #endif
 }
 
@@ -114,6 +116,7 @@ ev_init (void)
 	bindtextdomain (GETTEXT_PACKAGE, ev_get_locale_dir ());
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
+	xmp_init ();
         gdk_pixbuf_init_modules (EXTRA_GDK_PIXBUF_LOADERS_DIR, NULL);
         _ev_debug_init ();
         _ev_file_helpers_init ();
@@ -140,6 +143,7 @@ ev_shutdown (void)
 		g_free(locale_dir);
 #endif
 
+	xmp_terminate ();
         _ev_document_factory_shutdown ();
         _ev_file_helpers_shutdown ();
         _ev_debug_shutdown ();

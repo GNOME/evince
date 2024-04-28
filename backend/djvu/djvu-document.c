@@ -55,14 +55,19 @@ static void djvu_document_document_links_iface_init  (EvDocumentLinksInterface *
 static void djvu_selection_iface_init (EvSelectionInterface *iface);
 static void djvu_document_text_iface_init (EvDocumentTextInterface *iface);
 
-EV_BACKEND_REGISTER_WITH_CODE (DjvuDocument, djvu_document,
-    {
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, djvu_document_file_exporter_iface_init);
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND, djvu_document_find_iface_init);
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS, djvu_document_document_links_iface_init);
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION, djvu_selection_iface_init);
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TEXT, djvu_document_text_iface_init);
-     });
+G_DEFINE_TYPE_WITH_CODE (DjvuDocument,
+			 djvu_document,
+			 EV_TYPE_DOCUMENT,
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+						djvu_document_file_exporter_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
+						djvu_document_find_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
+						djvu_document_document_links_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION,
+						djvu_selection_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TEXT,
+						djvu_document_text_iface_init))
 
 
 #define EV_DJVU_ERROR ev_djvu_error_quark ()
@@ -876,65 +881,10 @@ djvu_document_init (DjvuDocument *djvu_document)
 }
 
 static GList *
-djvu_document_find_find_text (EvDocumentFind   *document,
-			      EvPage           *page,
-			      const char       *text,
-			      gboolean          case_sensitive)
-{
-        DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-	miniexp_t page_text;
-	gdouble width, height, dpi;
-	GList *matches = NULL, *l;
-	char *search_text = NULL;
-
-	g_return_val_if_fail (text != NULL, NULL);
-
-	while ((page_text = ddjvu_document_get_pagetext (djvu_document->d_document,
-							 page->index,
-							 "char")) == miniexp_dummy)
-		djvu_handle_events (djvu_document, TRUE, NULL);
-
-	if (page_text != miniexp_nil) {
-		DjvuTextPage *tpage = djvu_text_page_new (page_text);
-
-		djvu_text_page_index_text (tpage, case_sensitive);
-		if (tpage->links->len > 0) {
-			if (!case_sensitive) {
-				search_text = g_utf8_casefold (text, -1);
-				djvu_text_page_search (tpage, search_text);
-				g_free (search_text);
-			} else {
-				djvu_text_page_search (tpage, text);
-			}
-			matches = tpage->results;
-		}
-		djvu_text_page_free (tpage);
-		ddjvu_miniexp_release (djvu_document->d_document, page_text);
-	}
-	if (!matches)
-		return NULL;
-
-	document_get_page_size (djvu_document, page->index, &width, &height, &dpi);
-	for (l = matches; l && l->data; l = g_list_next (l)) {
-		EvRectangle *r = (EvRectangle *)l->data;
-		gdouble tmp = r->y1;
-
-		r->x1 *= 72.0 / dpi;
-		r->x2 *= 72.0 / dpi;
-
-		r->y1 = height - r->y2 * 72.0 / dpi;
-		r->y2 = height - tmp * 72.0 / dpi;
-	}
-
-
-	return matches;
-}
-
-static GList *
-djvu_document_find_find_text_extended (EvDocumentFind *document,
-				       EvPage *page,
-				       const char *text,
-				       EvFindOptions options)
+djvu_document_find_find_text (EvDocumentFind *document,
+			      EvPage *page,
+			      const char *text,
+			      EvFindOptions options)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
 	miniexp_t page_text;
@@ -1005,7 +955,6 @@ static void
 djvu_document_find_iface_init (EvDocumentFindInterface *iface)
 {
         iface->find_text = djvu_document_find_find_text;
-        iface->find_text_extended = djvu_document_find_find_text_extended;
 	iface->get_supported_options = djvu_document_find_get_supported_options;
 }
 
@@ -1027,4 +976,10 @@ djvu_document_document_links_iface_init  (EvDocumentLinksInterface *iface)
 	iface->get_links = djvu_document_links_get_links;
 	iface->find_link_dest = djvu_links_find_link_dest;
 	iface->find_link_page = djvu_links_find_link_page;
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return DJVU_TYPE_DOCUMENT;
 }

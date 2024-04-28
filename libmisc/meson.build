@@ -1,6 +1,11 @@
 sources = files(
   'ev-page-action-widget.c',
-  'ev-search-box.c',
+)
+
+sources += gnome.compile_resources(
+  'ev-resources',
+  'libmisc.gresource.xml',
+  c_name: 'libmisc',
 )
 
 libevmisc = static_library(

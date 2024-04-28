@@ -113,7 +113,7 @@ static void ev_view_presentation_set_cursor_for_location (EvViewPresentation *pv
 							  gdouble             x,
 							  gdouble             y);
 
-#define HIDE_CURSOR_TIMEOUT 5
+#define HIDE_CURSOR_TIMEOUT 5000
 
 G_DEFINE_TYPE (EvViewPresentation, ev_view_presentation, GTK_TYPE_WIDGET)
 
@@ -216,13 +216,11 @@ ev_view_presentation_get_page_area (EvViewPresentation *pview,
 }
 
 /* Page Transition */
-static gboolean
+static void
 transition_next_page (EvViewPresentation *pview)
 {
 	pview->trans_timeout_id = 0;
 	ev_view_presentation_next_page (pview);
-
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -247,9 +245,9 @@ ev_view_presentation_transition_start (EvViewPresentation *pview)
 							     pview->current_page);
 	if (duration >= 0) {
 		        pview->trans_timeout_id =
-				g_timeout_add (duration * 1000,
-					       (GSourceFunc) transition_next_page,
-					       pview);
+				g_timeout_add_once (duration * 1000,
+						    (GSourceOnceFunc) transition_next_page,
+						    pview);
 	}
 }
 
@@ -284,16 +282,12 @@ get_surface_from_job (EvViewPresentation *pview,
         if (!job)
                 return NULL;
 
-        surface = EV_JOB_RENDER(job)->surface;
+	surface = EV_JOB_RENDER_CAIRO(job)->surface;
         if (!surface)
                 return NULL;
 
-#ifdef HAVE_HIDPI_SUPPORT
-        {
-                int scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
-                cairo_surface_set_device_scale (surface, scale_factor, scale_factor);
-        }
-#endif
+        int scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
+        cairo_surface_set_device_scale (surface, scale_factor, scale_factor);
 
         return surface;
 }
@@ -320,7 +314,7 @@ ev_view_presentation_animation_start (EvViewPresentation *pview,
 
 	pview->animation = ev_transition_animation_new (effect);
 
-	surface = pview->curr_job ? EV_JOB_RENDER (pview->curr_job)->surface : NULL;
+	surface = pview->curr_job ? EV_JOB_RENDER_CAIRO (pview->curr_job)->surface : NULL;
 	ev_transition_animation_set_origin_surface (pview->animation,
 						    surface != NULL ?
 						    surface : pview->current_surface);
@@ -349,7 +343,7 @@ static void
 job_finished_cb (EvJob              *job,
 		 EvViewPresentation *pview)
 {
-	EvJobRender *job_render = EV_JOB_RENDER (job);
+	EvJobRenderCairo *job_render = EV_JOB_RENDER_CAIRO (job);
 
 	if (pview->inverted_colors)
 		ev_document_misc_invert_surface (job_render->surface);
@@ -378,15 +372,11 @@ ev_view_presentation_schedule_new_job (EvViewPresentation *pview,
 		return NULL;
 
         ev_view_presentation_get_view_size (pview, page, &view_width, &view_height);
-#ifdef HAVE_HIDPI_SUPPORT
-	{
-		gint device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
-		view_width *= device_scale;
-		view_height *= device_scale;
-	}
-#endif
-        job = ev_job_render_new (pview->document, page, pview->rotation, 0.,
-                                 view_width, view_height);
+	gint device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
+	view_width *= device_scale;
+	view_height *= device_scale;
+	job = ev_job_render_cairo_new (pview->document, page, pview->rotation, 0.,
+				       view_width, view_height);
 	g_signal_connect (job, "finished",
 			  G_CALLBACK (job_finished_cb),
 			  pview);
@@ -518,7 +508,7 @@ ev_view_presentation_update_current_page (EvViewPresentation *pview,
 		ev_view_presentation_set_cursor_for_location (pview, x, y);
 	}
 
-	if (EV_JOB_RENDER (pview->curr_job)->surface)
+	if (EV_JOB_RENDER_CAIRO (pview->curr_job)->surface)
 		gtk_widget_queue_draw (GTK_WIDGET (pview));
 }
 
@@ -919,13 +909,11 @@ ev_view_presentation_set_cursor_for_location (EvViewPresentation *pview,
 		ev_view_presentation_set_cursor (pview, EV_VIEW_CURSOR_NORMAL);
 }
 
-static gboolean
+static void
 hide_cursor_timeout_cb (EvViewPresentation *pview)
 {
 	ev_view_presentation_set_cursor (pview, EV_VIEW_CURSOR_HIDDEN);
 	pview->hide_cursor_timeout_id = 0;
-
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -941,9 +929,9 @@ ev_view_presentation_hide_cursor_timeout_start (EvViewPresentation *pview)
 {
 	ev_view_presentation_hide_cursor_timeout_stop (pview);
 	pview->hide_cursor_timeout_id =
-		g_timeout_add_seconds (HIDE_CURSOR_TIMEOUT,
-				       (GSourceFunc)hide_cursor_timeout_cb,
-				       pview);
+		g_timeout_add_once (HIDE_CURSOR_TIMEOUT,
+				    (GSourceOnceFunc)hide_cursor_timeout_cb,
+				    pview);
 }
 
 static void
@@ -1266,7 +1254,7 @@ ev_view_presentation_update_monitor_geometry (EvViewPresentation *pview)
 #endif
 }
 
-static gboolean
+static void
 init_presentation (GtkWidget *widget)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
@@ -1275,8 +1263,6 @@ init_presentation (GtkWidget *widget)
 
 	ev_view_presentation_update_current_page (pview, pview->current_page);
 	ev_view_presentation_hide_cursor_timeout_start (pview);
-
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -1315,7 +1301,7 @@ ev_view_presentation_realize (GtkWidget *widget)
 	gdk_window_set_user_data (window, widget);
 	gtk_widget_set_window (widget, window);
 
-	g_idle_add ((GSourceFunc)init_presentation, widget);
+	g_idle_add_once ((GSourceOnceFunc)init_presentation, widget);
 }
 
 static void

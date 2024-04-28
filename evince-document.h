@@ -21,9 +21,7 @@
 #define __EV_EVINCE_DOCUMENT_H_INSIDE__
 
 #include <libdocument/ev-annotation.h>
-#include <libdocument/ev-async-renderer.h>
 #include <libdocument/ev-attachment.h>
-#include <libdocument/ev-backends-manager.h>
 #include <libdocument/ev-document-annotations.h>
 #include <libdocument/ev-document-attachments.h>
 #include <libdocument/ev-document-factory.h>

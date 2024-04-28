@@ -29,11 +29,6 @@ enum {
 
 struct _EvLink {
 	GObject base_instance;
-	EvLinkPrivate *priv;
-};
-
-struct _EvLinkClass {
-	GObjectClass base_class;
 };
 
 struct _EvLinkPrivate {
@@ -41,14 +36,18 @@ struct _EvLinkPrivate {
 	EvLinkAction *action;
 };
 
+typedef struct _EvLinkPrivate EvLinkPrivate;
+#define GET_PRIVATE(o) ev_link_get_instance_private (o)
+
 G_DEFINE_TYPE_WITH_PRIVATE (EvLink, ev_link, G_TYPE_OBJECT)
 
 const gchar *
 ev_link_get_title (EvLink *self)
 {
 	g_return_val_if_fail (EV_IS_LINK (self), NULL);
+	EvLinkPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->title;
+	return priv->title;
 }
 
 /**
@@ -61,8 +60,9 @@ EvLinkAction *
 ev_link_get_action (EvLink *self)
 {
 	g_return_val_if_fail (EV_IS_LINK (self), NULL);
+	EvLinkPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->action;
+	return priv->action;
 }
 
 static void
@@ -74,13 +74,14 @@ ev_link_get_property (GObject    *object,
 	EvLink *self;
 
 	self = EV_LINK (object);
+	EvLinkPrivate *priv = GET_PRIVATE (self);
 
 	switch (prop_id) {
 	        case PROP_TITLE:
-			g_value_set_string (value, self->priv->title);
+			g_value_set_string (value, priv->title);
 			break;
 	        case PROP_ACTION:
-			g_value_set_object (value, self->priv->action);
+			g_value_set_object (value, priv->action);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -97,13 +98,14 @@ ev_link_set_property (GObject      *object,
 		      GParamSpec   *param_spec)
 {
 	EvLink *self = EV_LINK (object);
+	EvLinkPrivate *priv = GET_PRIVATE (self);
 
 	switch (prop_id) {
 	        case PROP_TITLE:
-			self->priv->title = g_value_dup_string (value);
+			priv->title = g_value_dup_string (value);
 			break;
 	        case PROP_ACTION:
-			self->priv->action = g_value_dup_object (value);
+			priv->action = g_value_dup_object (value);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -116,9 +118,7 @@ ev_link_set_property (GObject      *object,
 static void
 ev_link_finalize (GObject *object)
 {
-	EvLinkPrivate *priv;
-
-	priv = EV_LINK (object)->priv;
+	EvLinkPrivate *priv = GET_PRIVATE (EV_LINK (object));
 
 	g_clear_pointer (&priv->title, g_free);
 	g_clear_object (&priv->action);
@@ -129,10 +129,6 @@ ev_link_finalize (GObject *object)
 static void
 ev_link_init (EvLink *ev_link)
 {
-	ev_link->priv = ev_link_get_instance_private (ev_link);
-
-	ev_link->priv->title = NULL;
-	ev_link->priv->action = NULL;
 }
 
 static void

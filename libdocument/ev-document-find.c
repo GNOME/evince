@@ -34,66 +34,19 @@ ev_document_find_default_init (EvDocumentFindInterface *klass)
  * @document_find: an #EvDocumentFind
  * @page: an #EvPage
  * @text: text to find
- * @case_sensitive: whether to match the string case
- *
- * Returns: (transfer full) (element-type EvRectangle): a list of results
- */
-GList *
-ev_document_find_find_text (EvDocumentFind *document_find,
-			    EvPage         *page,
-			    const gchar    *text,
-			    gboolean        case_sensitive)
-{
-	EvDocumentFindInterface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-
-	return iface->find_text (document_find, page, text, case_sensitive);
-}
-
-/**
- * ev_document_find_find_text_with_options:
- * @document_find: an #EvDocumentFind
- * @page: an #EvPage
- * @text: text to find
- * @options: a set of #EvFindOptions
- *
- * Returns: (transfer full) (element-type EvRectangle): a list of results
- */
-GList *
-ev_document_find_find_text_with_options (EvDocumentFind *document_find,
-					 EvPage         *page,
-					 const gchar    *text,
-					 EvFindOptions   options)
-{
-	EvDocumentFindInterface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-
-	if (iface->find_text_with_options)
-		return iface->find_text_with_options (document_find, page, text, options);
-
-	return ev_document_find_find_text (document_find, page, text, options & EV_FIND_CASE_SENSITIVE);
-}
-
-/**
- * ev_document_find_find_text_extended:
- * @document_find: an #EvDocumentFind
- * @page: an #EvPage
- * @text: text to find
  * @options: a set of #EvFindOptions
  *
  * Returns: (transfer full) (element-type EvFindRectangle): a list of results
  */
 GList *
-ev_document_find_find_text_extended (EvDocumentFind *document_find,
-				     EvPage         *page,
-				     const gchar    *text,
-				     EvFindOptions   options)
+ev_document_find_find_text (EvDocumentFind *document_find,
+			    EvPage         *page,
+			    const gchar    *text,
+			    EvFindOptions   options)
 {
 	EvDocumentFindInterface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
 
-	if (iface->find_text_extended)
-		return iface->find_text_extended (document_find, page, text, options);
-
-	g_warning ("Unimplemented find_text_extended() interface");
-	return NULL;
+	return iface->find_text (document_find, page, text, options);
 }
 
 /* EvFindRectangle */
