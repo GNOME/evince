@@ -25,7 +25,7 @@ if enable_gtk_unix_print
 endif
 
 previewer = executable(
-  '@0@-previewer'.format(ev_app),
+  'evince-previewer',
   previewer_sources,
   include_directories: top_inc,
   dependencies: previewer_deps,

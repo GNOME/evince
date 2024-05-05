@@ -3,7 +3,7 @@
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "master",
     "sdk" : "org.gnome.Sdk",
-    "command" : "evince-devel",
+    "command" : "evince",
     "tags" : [
         "devel"
     ],
@@ -20,8 +20,10 @@
         "--filesystem=xdg-run/gvfsd",
         "--talk-name=org.gnome.SessionManager",
         "--talk-name=org.freedesktop.FileManager1",
-        "--own-name=org.gnome.evince",
-        "--own-name=org.gnome.evince.Daemon",
+        "--own-name=org.gnome.Evince",
+        "--own-name=org.gnome.Evince.Daemon",
+        "--own-name=org.gnome.Evince.Devel",
+        "--own-name=org.gnome.Evince.Devel.Daemon",
         "--require-version=0.11.6"
     ],
     "build-options" : {
@@ -220,12 +222,12 @@
                 "-Dgtk_doc=true",
                 "-Dintrospection=true",
                 "-Duser_doc=false",
-                "-Ddevelopment=true"
+                "-Dprofile=devel"
             ],
             "sources": [
                 {
                     "type": "git",
-                    "branch": "evince-next",
+                    "branch": "main",
                     "url": "https://gitlab.gnome.org/GNOME/evince.git"
                 }
             ]

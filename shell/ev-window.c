@@ -240,10 +240,6 @@ typedef struct {
 #define GS_LOCKDOWN_PRINT        "disable-printing"
 #define GS_LOCKDOWN_PRINT_SETUP  "disable-print-setup"
 
-#ifdef ENABLE_DBUS
-#define EV_WINDOW_DBUS_OBJECT_PATH "/org/gnome/evince/Window/%d"
-#endif
-
 #define GS_SCHEMA_NAME           "org.gnome.Evince"
 #define GS_OVERRIDE_RESTRICTIONS "override-restrictions"
 #define GS_PAGE_CACHE_SIZE       "page-cache-size"
@@ -4140,7 +4136,7 @@ ev_window_cmd_about (GSimpleAction *action,
                                "authors", authors,
                                "documenters", documenters,
                                "translator-credits", _("translator-credits"),
-                               "logo-icon-name", PACKAGE_ICON_NAME,
+                               "logo-icon-name", APPLICATION_ID,
                                NULL);
 }
 

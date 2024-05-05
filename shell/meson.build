@@ -81,7 +81,7 @@ if enable_keyring
 endif
 
 evince = executable(
-  ev_app,
+  'evince',
   sources: evince_sources,
   include_directories: top_inc,
   dependencies: evince_deps,
@@ -94,13 +94,10 @@ if enable_dbus
 
   gdbus = 'ev-daemon-gdbus'
 
-  # The D-Bus interface names are in lowercase, which does not match
-  # the application name nor the namespace. However, we keep the
-  # interface prefix in lowercase for backward compatibility.
   evinced_sources += gnome.gdbus_codegen(
     gdbus + '-generated',
     gdbus + '.xml',
-    interface_prefix: ev_namespace.to_lower(),
+    interface_prefix: ev_namespace,
     namespace: ev_code_prefix,
     object_manager: true,
     autocleanup: 'objects',
@@ -117,7 +114,7 @@ if enable_dbus
   ]
 
   evinced = executable(
-    ev_daemon,
+    'evinced',
     evinced_sources,
     include_directories: top_inc,
     dependencies: evinced_deps,

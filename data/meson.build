@@ -9,7 +9,7 @@ desktop_in = configure_file(
 i18n.merge_file(
   type: 'desktop',
   input: desktop_in,
-  output: '@0@.desktop'.format(ev_app_id),
+  output: '@0@.desktop'.format(application_id),
   po_dir: po_dir,
   install: true,
   install_dir: join_paths(ev_datadir, 'applications'),
@@ -18,7 +18,7 @@ i18n.merge_file(
 i18n.merge_file(
   type: 'desktop',
   input: 'org.gnome.Evince-previewer.desktop.in',
-  output: '@0@-previewer.desktop'.format(ev_app_id),
+  output: '@0@-previewer.desktop'.format(application_id),
   po_dir: po_dir,
   install: true,
   install_dir: join_paths(ev_datadir, 'applications'),
@@ -28,11 +28,11 @@ i18n.merge_file(
 if enable_dbus
   service_conf = configuration_data()
   service_conf.set('libexecdir', ev_libexecdir)
-  service_conf.set('app_id', ev_namespace)
+  service_conf.set('application_id', application_id)
 
   configure_file(
-      input: 'org.gnome.evince.Daemon.service.in',
-      output: '@0@.Daemon.service'.format(ev_namespace),
+      input: 'org.gnome.Evince.Daemon.service.in',
+      output: '@0@.Daemon.service'.format(application_id),
       configuration: service_conf,
       install: true,
       install_dir: dbus_service_dir,
@@ -41,7 +41,7 @@ if enable_dbus
   if install_systemd_user_unit_dir
     configure_file(
       input: 'org.gnome.Evince.service.in',
-      output: '@0@.service'.format(ev_namespace),
+      output: '@0@.service'.format(application_id),
       configuration: service_conf,
       install: true,
       install_dir: systemd_user_unit_dir,
@@ -71,7 +71,7 @@ endforeach
 
 # Metainfo file
 metainfo_config = configuration_data()
-metainfo_config.set('app_id', ev_app_id)
+metainfo_config.set('app_id', application_id)
 metainfo_file_in = configure_file(
           input: 'org.gnome.Evince.metainfo.xml.in.in',
          output: 'org.gnome.Evince.metainfo.xml.in',
@@ -79,7 +79,7 @@ metainfo_file_in = configure_file(
 )
 metainfo_file = i18n.merge_file(
   input: metainfo_file_in,
-  output: '@0@.metainfo.xml'.format(ev_app_id),
+  output: '@0@.metainfo.xml'.format(application_id),
   po_dir: po_dir,
   install: true,
   install_dir: ev_appstreamdir,

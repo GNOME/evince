@@ -33,12 +33,6 @@
 
 #include "ev-daemon-gdbus-generated.h"
 
-#define EV_DBUS_DAEMON_NAME             "org.gnome.evince.Daemon"
-#define EV_DBUS_DAEMON_INTERFACE_NAME   "org.gnome.evince.Daemon"
-#define EV_DBUS_DAEMON_OBJECT_PATH      "/org/gnome/evince/Daemon"
-
-#define EV_DBUS_WINDOW_INTERFACE_NAME   "org.gnome.evince.Window"
-
 #define DAEMON_TIMEOUT (30) /* seconds */
 
 #define LOG g_debug

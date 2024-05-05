@@ -10,15 +10,13 @@ project(
 
 ev_name = meson.project_name().to_lower()
 
-if get_option('development')
-  ev_app_id = 'org.gnome.Evince.Devel'
-  ev_app = '@0@-devel'.format(ev_name)
-  ev_daemon = '@0@d-devel'.format(ev_name)
+if get_option('profile') == 'devel'
+  application_id = 'org.gnome.Evince.Devel'
 else
-  ev_app_id = 'org.gnome.Evince'
-  ev_app = ev_name
-  ev_daemon = '@0@d'.format(ev_name)
+  application_id = 'org.gnome.Evince'
 endif
+
+ev_namespace = 'org.gnome.Evince'
 
 ev_version = meson.project_version()
 version_array = ev_version.split('.')
@@ -70,8 +68,6 @@ ev_backends_binary_version = ev_document_current
 ev_backends_subdir = join_paths(ev_name, ev_backends_binary_version.to_string(), 'backends')
 ev_backendsdir = join_paths(ev_libdir, ev_backends_subdir)
 
-ev_namespace = 'org.gnome.Evince'
-
 ev_code_prefix = 'Ev'
 
 ev_debug = get_option('buildtype').contains('debug')
@@ -82,8 +78,7 @@ config_h = configuration_data()
 config_h.set10('_GNU_SOURCE', true)
 
 # package
-config_h.set_quoted('PACKAGE_ICON_NAME', ev_app_id)
-config_h.set_quoted('APPLICATION_ID', ev_app_id)
+config_h.set_quoted('APPLICATION_ID', application_id)
 config_h.set_quoted('PACKAGE_VERSION', ev_version)
 config_h.set_quoted('VERSION', ev_version)
 
@@ -182,16 +177,21 @@ if ev_platform == 'gnome'
     # Check for dbus service dir
     dbus_service_dir = dependency('dbus-1').get_variable(pkgconfig: 'session_bus_services_dir', pkgconfig_define: ['datadir', ev_datadir])
 
-    dbus_app_path = '/@0@/Evince'.format(ev_namespace.replace('.', '/'))
-    dbus_app_interface = '@0@.Application'.format(ev_namespace)
-    dbus_evince_daemon = '@0@.Daemon'.format(ev_namespace)
-    dbus_evince_daemon_path = '/@0@/Daemon'.format(ev_namespace.replace('.', '/'))
+    # ev-application
+    config_h.set_quoted('APPLICATION_DBUS_OBJECT_PATH', '/@0@/Evince'.format(ev_namespace.replace('.', '/')))
+    config_h.set_quoted('APPLICATION_DBUS_INTERFACE', '@0@.Application'.format(ev_namespace))
+    config_h.set_quoted('EVINCE_DAEMON_SERVICE', '@0@.Daemon'.format(application_id))
+    config_h.set_quoted('EVINCE_DAEMON_OBJECT_PATH', '/@0@/Daemon'.format(application_id.replace('.', '/')))
+    config_h.set_quoted('EVINCE_DAEMON_INTERFACE', '@0@.Daemon'.format(application_id))
 
-    config_h.set_quoted('APPLICATION_DBUS_OBJECT_PATH', dbus_app_path)
-    config_h.set_quoted('APPLICATION_DBUS_INTERFACE', dbus_app_interface)
-    config_h.set_quoted('EVINCE_DAEMON_SERVICE', dbus_evince_daemon)
-    config_h.set_quoted('EVINCE_DAEMON_OBJECT_PATH', dbus_evince_daemon_path)
-    config_h.set_quoted('EVINCE_DAEMON_INTERFACE', dbus_evince_daemon)
+    # ev-daemon
+    config_h.set_quoted('EV_DBUS_DAEMON_NAME', '@0@.Daemon'.format(ev_namespace))
+    config_h.set_quoted('EV_DBUS_DAEMON_INTERFACE_NAME', '@0@.Daemon'.format(ev_namespace))
+    config_h.set_quoted('EV_DBUS_DAEMON_OBJECT_PATH', '/@0@/Daemon'.format(application_id.replace('.', '/')))
+    config_h.set_quoted('EV_DBUS_WINDOW_INTERFACE_NAME', '@0@.Window'.format(ev_namespace))
+
+    # ev-window
+    config_h.set_quoted('EV_WINDOW_DBUS_OBJECT_PATH', '/@0@/Window/%d'.format(ev_namespace.replace('.', '/')))
   endif
   config_h.set('ENABLE_DBUS', enable_dbus)
 
@@ -443,7 +443,7 @@ endif
 
 mime_types_conf = configuration_data()
 mime_types_conf.set('EVINCE_MIME_TYPES', ';'.join(evince_mime_types))
-mime_types_conf.set('app_id', ev_app_id)
+mime_types_conf.set('app_id', application_id)
 
 subdir('cut-n-paste')
 subdir('libdocument')

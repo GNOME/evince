@@ -293,7 +293,7 @@ main (int argc, char *argv[])
 
 	/* Manually set name and icon */
 	g_set_application_name (_("Document Viewer"));
-	gtk_window_set_default_icon_name (PACKAGE_ICON_NAME);
+	gtk_window_set_default_icon_name (APPLICATION_ID);
 
         application = ev_application_new ();
         if (!g_application_register (G_APPLICATION (application), NULL, &error)) {

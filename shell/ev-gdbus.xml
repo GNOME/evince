@@ -2,7 +2,7 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Introspection 0.1//EN"
                       "http://www.freedesktop.org/software/dbus/introspection.dtd">
 <node>
-  <interface name='org.gnome.evince.Application'>
+  <interface name='org.gnome.Evince.Application'>
     <annotation name="org.gtk.GDBus.C.Name" value="EvinceApplication" />
     <method name='Reload'>
       <arg type='a{sv}' name='args' direction='in'/>
@@ -12,7 +12,7 @@
       <arg type='ao' name='window_list' direction='out'/>
     </method>
   </interface>
-  <interface name='org.gnome.evince.Window'>
+  <interface name='org.gnome.Evince.Window'>
     <annotation name="org.gtk.GDBus.C.Name" value="EvinceWindow" />
     <method name='SyncView'>
       <arg type='s' name='source_file' direction='in'/>
