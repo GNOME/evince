@@ -41,8 +41,8 @@ static guint ev_page_cache_signals[LAST_SIGNAL] = {0};
 
 typedef struct _EvPageCacheData {
 	EvJob             *job;
-	gboolean           done : 1;
-	gboolean           dirty : 1;
+	gboolean           done;
+	gboolean           dirty;
 	EvJobPageDataFlags flags;
 
 	EvMappingList     *link_mapping;
