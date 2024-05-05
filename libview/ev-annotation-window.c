@@ -257,9 +257,6 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	g_signal_connect_swapped (window->close_button, "clicked",
 				  G_CALLBACK (ev_annotation_window_close),
 				  window);
-	/* Handle case when window is closed from outside Evince e.g. by desktop compositor */
-	g_signal_connect (GTK_WIDGET (window), "delete-event",
-			  G_CALLBACK (ev_annotation_window_close), NULL);
 
 	gtk_box_pack_start (GTK_BOX (window->titlebar), window->close_button, FALSE, FALSE, 0);
 	gtk_widget_show (window->close_button);
