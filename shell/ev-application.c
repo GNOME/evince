@@ -30,9 +30,9 @@
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
-#include <handy.h>
+#include <adwaita.h>
 #ifdef GDK_WINDOWING_X11
-#include <gdk/gdkx.h>
+#include <gdk/x11/gdkx.h>
 #endif
 #include <unistd.h>
 
@@ -44,7 +44,7 @@
 #endif /* ENABLE_DBUS */
 
 struct _EvApplication {
-	GtkApplication base_instance;
+	AdwApplication base_instance;
 
 	gchar *uri;
 
@@ -57,14 +57,14 @@ struct _EvApplication {
 };
 
 struct _EvApplicationClass {
-	GtkApplicationClass base_class;
+	AdwApplicationClass base_class;
 };
 
-G_DEFINE_TYPE (EvApplication, ev_application, GTK_TYPE_APPLICATION)
+G_DEFINE_TYPE (EvApplication, ev_application, ADW_TYPE_APPLICATION)
 
 static void _ev_application_open_uri_at_dest (EvApplication  *application,
 					      const gchar    *uri,
-					      GdkScreen      *screen,
+					      GdkDisplay     *display,
 					      EvLinkDest     *dest,
 					      EvWindowRunMode mode,
 					      const gchar    *search_string,
@@ -72,7 +72,7 @@ static void _ev_application_open_uri_at_dest (EvApplication  *application,
 static void ev_application_open_uri_in_window (EvApplication  *application,
 					       const char     *uri,
 					       EvWindow       *ev_window,
-					       GdkScreen      *screen,
+					       GdkDisplay     *display,
 					       EvLinkDest     *dest,
 					       EvWindowRunMode mode,
 					       const gchar    *search_string,
@@ -135,7 +135,7 @@ ev_display_open_if_needed (const gchar *name)
 
 static void
 ev_spawn (const char     *uri,
-	  GdkScreen      *screen,
+	  GdkDisplay     *display,
 	  EvLinkDest     *dest,
 	  EvWindowRunMode mode,
 	  const gchar    *search_string,
@@ -214,8 +214,7 @@ ev_spawn (const char     *uri,
                 GList *uris = NULL;
 		GdkAppLaunchContext *ctx;
 
-		ctx = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
-		gdk_app_launch_context_set_screen (ctx, screen);
+		ctx = gdk_display_get_app_launch_context (display);
 		gdk_app_launch_context_set_timestamp (ctx, timestamp);
 
                 /* Some URIs can be changed when passed through a GFile
@@ -245,7 +244,7 @@ ev_spawn (const char     *uri,
 
 static EvWindow *
 ev_application_get_empty_window (EvApplication *application,
-				 GdkScreen     *screen)
+				 GdkDisplay    *display)
 {
 	EvWindow *empty_window = NULL;
 	GList    *windows, *l;
@@ -259,8 +258,7 @@ ev_application_get_empty_window (EvApplication *application,
 
                 window = EV_WINDOW (l->data);
 
-		if (ev_window_is_empty (window) &&
-		    gtk_window_get_screen (GTK_WINDOW (window)) == screen) {
+		if (ev_window_is_empty (window)) {
 			empty_window = window;
 			break;
 		}
@@ -273,7 +271,7 @@ ev_application_get_empty_window (EvApplication *application,
 #ifdef ENABLE_DBUS
 typedef struct {
 	gchar          *uri;
-	GdkScreen      *screen;
+	GdkDisplay     *display;
 	EvLinkDest     *dest;
 	EvWindowRunMode mode;
 	gchar          *search_string;
@@ -311,10 +309,6 @@ on_reload_cb (GObject      *source_object,
 		g_printerr ("Failed to Reload: %s\n", error->message);
 		g_error_free (error);
 	}
-
-	/* We did not open a window, so manually clear the startup
-	 * notification. */
-	gdk_notify_startup_complete ();
 }
 
 static void
@@ -339,7 +333,7 @@ on_register_uri_cb (GObject      *source_object,
 
 		_ev_application_open_uri_at_dest (application,
 						  data->uri,
-						  data->screen,
+						  data->display,
 						  data->dest,
 						  data->mode,
 						  data->search_string,
@@ -361,7 +355,7 @@ on_register_uri_cb (GObject      *source_object,
 
 		_ev_application_open_uri_at_dest (application,
 						  data->uri,
-						  data->screen,
+						  data->display,
 						  data->dest,
 						  data->mode,
 						  data->search_string,
@@ -376,7 +370,7 @@ on_register_uri_cb (GObject      *source_object,
         g_variant_builder_open (&builder, G_VARIANT_TYPE ("a{sv}"));
         g_variant_builder_add (&builder, "{sv}",
                                "display",
-                               g_variant_new_string (gdk_display_get_name (gdk_screen_get_display (data->screen))));
+                               g_variant_new_string (gdk_display_get_name (gdk_display_get_default())));
 	if (data->dest) {
                 switch (ev_link_dest_get_dest_type (data->dest)) {
                 case EV_LINK_DEST_TYPE_PAGE_LABEL:
@@ -442,7 +436,7 @@ on_register_uri_cb (GObject      *source_object,
 static void
 ev_application_register_uri (EvApplication  *application,
 			     const gchar    *uri,
-                             GdkScreen      *screen,
+                             GdkDisplay     *display,
                              EvLinkDest     *dest,
                              EvWindowRunMode mode,
                              const gchar    *search_string,
@@ -452,7 +446,7 @@ ev_application_register_uri (EvApplication  *application,
 
 	/* If connection hasn't been made fall back to opening without D-BUS features */
 	if (!application->skeleton) {
-		_ev_application_open_uri_at_dest (application, uri, screen, dest, mode, search_string, timestamp);
+		_ev_application_open_uri_at_dest (application, uri, display, dest, mode, search_string, timestamp);
 		return;
 	}
 
@@ -467,7 +461,7 @@ ev_application_register_uri (EvApplication  *application,
 
 			ev_application_open_uri_in_window (application, uri,
                                                            EV_WINDOW (l->data),
-							   screen, dest, mode,
+							   display, dest, mode,
 							   search_string,
 							   timestamp);
 		}
@@ -475,9 +469,9 @@ ev_application_register_uri (EvApplication  *application,
 		return;
 	}
 
-	data = g_new (EvRegisterDocData, 1);
+	data = g_new0 (EvRegisterDocData, 1);
 	data->uri = g_strdup (uri);
-	data->screen = screen;
+	data->display = display;
 	data->dest = dest ? g_object_ref (dest) : NULL;
 	data->mode = mode;
 	data->search_string = search_string ? g_strdup (search_string) : NULL;
@@ -538,21 +532,22 @@ static void
 ev_application_open_uri_in_window (EvApplication  *application,
 				   const char     *uri,
 				   EvWindow       *ev_window,
-				   GdkScreen      *screen,
+				   GdkDisplay     *display,
 				   EvLinkDest     *dest,
 				   EvWindowRunMode mode,
 				   const gchar    *search_string,
 				   guint           timestamp)
 {
 #ifdef GDK_WINDOWING_X11
-	GdkWindow *gdk_window;
+	GdkSurface *gdk_surface;
+	GtkNative *native;
 #endif
 
         if (uri == NULL)
                 uri = application->uri;
 
-	if (screen)
-		gtk_window_set_screen (GTK_WINDOW (ev_window), screen);
+	if (display)
+		gtk_window_set_display (GTK_WINDOW (ev_window), display);
 
 	/* We need to load uri before showing the window, so
 	   we can restore window size without flickering */
@@ -560,13 +555,13 @@ ev_application_open_uri_in_window (EvApplication  *application,
 
 	if (!gtk_widget_get_realized (GTK_WIDGET (ev_window)))
 		gtk_widget_realize (GTK_WIDGET (ev_window));
-
 #ifdef GDK_WINDOWING_X11
-	gdk_window = gtk_widget_get_window (GTK_WIDGET (ev_window));
-	if (GDK_IS_X11_WINDOW (gdk_window)) {
+	native = gtk_widget_get_native (GTK_WIDGET (ev_window));
+	gdk_surface = gtk_native_get_surface (native);
+	if (GDK_IS_X11_SURFACE (gdk_surface)) {
 		if (timestamp <= 0)
-			timestamp = gdk_x11_get_server_time (gdk_window);
-		gdk_x11_window_set_user_time (gdk_window, timestamp);
+			timestamp = gdk_x11_get_server_time (gdk_surface);
+		gdk_x11_surface_set_user_time (gdk_surface, timestamp);
 
 		gtk_window_present (GTK_WINDOW (ev_window));
 	} else
@@ -579,7 +574,7 @@ ev_application_open_uri_in_window (EvApplication  *application,
 static void
 _ev_application_open_uri_at_dest (EvApplication  *application,
 				  const gchar    *uri,
-				  GdkScreen      *screen,
+				  GdkDisplay     *display,
 				  EvLinkDest     *dest,
 				  EvWindowRunMode mode,
 				  const gchar    *search_string,
@@ -587,12 +582,12 @@ _ev_application_open_uri_at_dest (EvApplication  *application,
 {
 	EvWindow *ev_window;
 
-	ev_window = ev_application_get_empty_window (application, screen);
+	ev_window = ev_application_get_empty_window (application, display);
 	if (!ev_window)
 		ev_window = EV_WINDOW (ev_window_new ());
 
 	ev_application_open_uri_in_window (application, uri, ev_window,
-					   screen, dest, mode,
+					   display, dest, mode,
 					   search_string,
 					   timestamp);
 }
@@ -610,7 +605,7 @@ _ev_application_open_uri_at_dest (EvApplication  *application,
 void
 ev_application_open_uri_at_dest (EvApplication  *application,
 				 const char     *uri,
-				 GdkScreen      *screen,
+				 GdkDisplay     *display,
 				 EvLinkDest     *dest,
 				 EvWindowRunMode mode,
 				 const gchar    *search_string,
@@ -620,7 +615,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 
 	if (application->uri && strcmp (application->uri, uri) != 0) {
 		/* spawn a new evince process */
-		ev_spawn (uri, screen, dest, mode, search_string, timestamp);
+		ev_spawn (uri, display, dest, mode, search_string, timestamp);
 		return;
 	} else if (!application->uri) {
 		application->uri = g_strdup (uri);
@@ -630,19 +625,19 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	/* Register the uri or send Reload to
 	 * remote instance if already registered
 	 */
-	ev_application_register_uri (application, uri, screen, dest, mode, search_string, timestamp);
+	ev_application_register_uri (application, uri, display, dest, mode, search_string, timestamp);
 #else
-	_ev_application_open_uri_at_dest (application, uri, screen, dest, mode, search_string, timestamp);
+	_ev_application_open_uri_at_dest (application, uri, display, dest, mode, search_string, timestamp);
 #endif /* ENABLE_DBUS */
 }
 
 void
 ev_application_new_window (EvApplication *application,
-			   GdkScreen     *screen,
+			   GdkDisplay    *display,
 			   guint32        timestamp)
 {
         /* spawn an empty window */
-	ev_spawn (NULL, screen, NULL, EV_WINDOW_MODE_NORMAL, NULL, timestamp);
+	ev_spawn (NULL, display, NULL, EV_WINDOW_MODE_NORMAL, NULL, timestamp);
 }
 
 /**
@@ -654,7 +649,7 @@ ev_application_new_window (EvApplication *application,
  */
 void
 ev_application_open_recent_view (EvApplication *application,
-                                 GdkScreen     *screen,
+                                 GdkDisplay    *display,
                                  guint32        timestamp)
 {
 	GtkWidget *new_window = ev_window_new ();
@@ -662,23 +657,27 @@ ev_application_open_recent_view (EvApplication *application,
 	ev_window_open_recent_view (EV_WINDOW (new_window));
 
 #ifdef GDK_WINDOWING_X11
-	GdkWindow *gdk_window;
+	GdkSurface *gdk_surface;
+	GtkNative *native;
 #endif
 
-	if (screen)
-		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
+	if (display)
+		gtk_window_set_display (GTK_WINDOW (new_window), display);
+
 
 	if (!gtk_widget_get_realized (new_window))
 		gtk_widget_realize (new_window);
 
 #ifdef GDK_WINDOWING_X11
-	gdk_window = gtk_widget_get_window (GTK_WIDGET (new_window));
-	if (GDK_IS_X11_WINDOW (gdk_window)) {
-		if (timestamp <= 0)
-			timestamp = gdk_x11_get_server_time (gdk_window);
-		gdk_x11_window_set_user_time (gdk_window, timestamp);
-
-		gtk_window_present (GTK_WINDOW (new_window));
+	native = gtk_widget_get_native (GTK_WIDGET (new_window));
+	if (native) {
+		gdk_surface = gtk_native_get_surface (native);
+		if (GDK_IS_X11_SURFACE (gdk_surface)) {
+			if (timestamp <= 0)
+				timestamp = gdk_x11_get_server_time (gdk_surface);
+			gdk_x11_surface_set_user_time (gdk_surface, timestamp);
+			gtk_window_present (GTK_WINDOW (new_window));
+		}
 	} else
 #endif /* GDK_WINDOWING_X11 */
 	{
@@ -729,7 +728,6 @@ handle_reload_cb (EvEvinceApplication   *object,
         EvLinkDest      *dest = NULL;
         EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
         const gchar     *search_string = NULL;
-        GdkScreen       *screen = NULL;
 
         g_variant_iter_init (&iter, args);
 
@@ -749,11 +747,6 @@ handle_reload_cb (EvEvinceApplication   *object,
                 }
         }
 
-        if (display != NULL)
-                screen = gdk_display_get_default_screen (display);
-        else
-                screen = gdk_screen_get_default ();
-
         windows = gtk_application_get_windows (GTK_APPLICATION ((application)));
         for (l = windows; l != NULL; l = g_list_next (l)) {
                 if (!EV_IS_WINDOW (l->data))
@@ -761,7 +754,7 @@ handle_reload_cb (EvEvinceApplication   *object,
 
                 ev_application_open_uri_in_window (application, NULL,
                                                    EV_WINDOW (l->data),
-                                                   screen, dest, mode,
+                                                   display, dest, mode,
                                                    search_string,
                                                    timestamp);
         }
@@ -777,15 +770,21 @@ handle_reload_cb (EvEvinceApplication   *object,
 
 void
 ev_application_open_uri_list (EvApplication *application,
-			      GSList        *uri_list,
-			      GdkScreen     *screen,
+			      GListModel    *files,
+			      GdkDisplay    *display,
 			      guint          timestamp)
 {
-	GSList *l;
+	GFile *file;
+	guint pos = 0;
+	const char *uri;
 
-	for (l = uri_list; l != NULL; l = l->next) {
-		ev_application_open_uri_at_dest (application, (char *)l->data,
-						 screen, NULL, 0, NULL,
+	while ((file = g_list_model_get_item (files, pos++)) != NULL) {
+		uri = g_file_get_uri(file);
+		if (!uri)
+			continue;
+
+		ev_application_open_uri_at_dest (application, uri,
+						 display, NULL, 0, NULL,
 						 timestamp);
 	}
 }
@@ -805,35 +804,23 @@ ev_application_startup (GApplication *gapplication)
           "win.delete-bookmark",        "<Ctrl><Shift>D", NULL,
           "win.close",                  "<Ctrl>W", NULL,
           "win.escape",                 "Escape", NULL,
-          "win.find",                   "<Ctrl>F", "slash", "KP_Divide", NULL,
           "win.find-next",              "<Ctrl>G", "F3", NULL,
           "win.find-previous",          "<Ctrl><Shift>G", "<Shift>F3", NULL,
           "win.select-page",            "<Ctrl>L", NULL,
           "win.go-backwards",           "<Shift>Page_Up", NULL,
           "win.go-forward",             "<Shift>Page_Down", NULL,
-          "win.go-next-page",           "n", "<Ctrl>Page_Down", NULL,
-          "win.go-previous-page",       "p", "<Ctrl>Page_Up", NULL,
           "win.go-back-history",        "<alt>P", "Back", NULL,
           "win.go-forward-history",     "<alt>N", "Forward", NULL,
-          "win.sizing-mode::fit-page",  "f", NULL,
-          "win.sizing-mode::fit-width", "w", NULL,
-          "win.sizing-mode::automatic", "a", NULL,
           "win.default-zoom",           "<Ctrl>0", "<Ctrl>KP_0", NULL,
           "win.toggle-menu",            "F10", NULL,
           "win.caret-navigation",       "F7", NULL,
-          "win.zoom-in",                "plus", "<Ctrl>plus", "KP_Add", "<Ctrl>KP_Add", "equal", "<Ctrl>equal", NULL,
-          "win.zoom-out",               "minus", "<Ctrl>minus", "KP_Subtract", "<Ctrl>KP_Subtract", NULL,
           "win.show-side-pane",         "F9", NULL,
           "win.fullscreen",             "F11", NULL,
           "win.presentation",           "F5", "<Shift>F5", NULL,
-          "win.continuous",             "c", NULL,
-          "win.dual-page",              "d", NULL,
-          "win.dual-odd-left",          "o", NULL,
           "win.rotate-left",            "<Ctrl>Left", NULL,
           "win.rotate-right",           "<Ctrl>Right", NULL,
           "win.inverted-colors",        "<Ctrl>I", NULL,
           "win.reload",                 "<Ctrl>R", NULL,
-          "win.add-annotation",         "s", NULL,
           "win.highlight-annotation",   "<Ctrl>H", NULL,
           "win.help",                   "F1", NULL,
           "win.about",                  NULL, NULL,
@@ -846,10 +833,6 @@ ev_application_startup (GApplication *gapplication)
 	g_application_set_resource_base_path (gapplication, "/org/gnome/evince");
 
         G_APPLICATION_CLASS (ev_application_parent_class)->startup (gapplication);
-
-        hdy_init ();
-        hdy_style_manager_set_color_scheme (hdy_style_manager_get_default (),
-                                            HDY_COLOR_SCHEME_PREFER_LIGHT);
 
         for (it = action_accels; it[0]; it += g_strv_length ((gchar **)it) + 1)
                 gtk_application_set_accels_for_action (GTK_APPLICATION (application), it[0], &it[1]);

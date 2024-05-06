@@ -49,19 +49,19 @@ GType	          ev_application_get_type	     (void) G_GNUC_CONST;
 EvApplication    *ev_application_new                 (void);
 
 void              ev_application_open_recent_view    (EvApplication   *application,
-						      GdkScreen       *screen,
+						      GdkDisplay      *display,
 						      guint32          timestamp);
 void              ev_application_open_uri_at_dest    (EvApplication   *application,
 						      const char      *uri,
-						      GdkScreen       *screen,
+						      GdkDisplay      *display,
 						      EvLinkDest      *dest,
 						      EvWindowRunMode  mode,
 						      const gchar     *search_string,
 						      guint32          timestamp);
 void	          ev_application_open_uri_list       (EvApplication   *application,
-		  			              GSList          *uri_list,
-						      GdkScreen       *screen,
-    						      guint32          timestamp);
+						      GListModel      *files,
+						      GdkDisplay      *display,
+						      guint32          timestamp);
 gboolean	  ev_application_has_window	     (EvApplication   *application);
 guint             ev_application_get_n_windows       (EvApplication   *application);
 const gchar *     ev_application_get_uri             (EvApplication   *application);
@@ -71,7 +71,7 @@ GObject		 *ev_application_get_media_keys	     (EvApplication   *application);
 const gchar      *ev_application_get_dot_dir         (EvApplication   *application,
                                                       gboolean         create);
 void              ev_application_new_window          (EvApplication *application,
-                                                      GdkScreen     *screen,
-                                                      guint32        timestamp);
+						      GdkDisplay      *display,
+						      guint32        timestamp);
 
 G_END_DECLS
