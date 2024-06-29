@@ -2390,10 +2390,18 @@ open_uri_check_local_cb (GObject      *object,
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFile *source_file = G_FILE (object);
 	g_autoptr (GFileInputStream) source_stream = NULL;
+	GSeekable *seekable;
 
 	source_stream = g_file_read_finish (source_file, res, NULL);
+	seekable = G_SEEKABLE (source_stream);
 
-	if (source_stream && !g_seekable_can_seek (G_SEEKABLE (source_stream))) {
+	/* PDF backend needs support to seek pdf file from the end, i.e. G_SEEK_END support,
+	 * but there are some GVFSD-FUSE filesystems (like dav(s)://) that advertise
+	 * can-seek:TRUE while they don't support seeking from G_SEEK_END, so we need to
+	 * actually check that with a g_seekable_seek() call. See issue #2037
+	 */
+	if (source_stream && (!g_seekable_can_seek (seekable) ||
+	    !g_seekable_seek (seekable, 0, G_SEEK_END, NULL, NULL))) {
 		ev_window_load_file_remote (ev_window, source_file);
 	} else {
 		ev_window_show_loading_message (ev_window);
