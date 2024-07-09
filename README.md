@@ -46,4 +46,4 @@ git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main
 [xps]: https://wiki.gnome.org/Projects/libgxps
 [license]: COPYING
 [evince-logo]: data/icons/scalable/apps/org.gnome.Evince.svg
-[flatpak]: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Flathub-badge-en.svg/240px-Flathub-badge-en.svg.png
+[flatpak]: https://flathub.org/api/badge?svg&locale=en
