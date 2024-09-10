@@ -10,9 +10,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-12-05 15:13+0000\n"
-"PO-Revision-Date: 2023-12-19 18:23+0100\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
+"POT-Creation-Date: 2024-08-31 10:11+0000\n"
+"PO-Revision-Date: 2024-09-10 12:07+0200\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: slovenčina <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -21,31 +21,31 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
 "X-DamnedLies-Scope: partial\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.5\n"
 
-#: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
+#: backend/comics/comics-document.c:190 backend/comics/comics-document.c:262
 msgid "File is corrupted"
 msgstr "Súbor je poškodený"
 
-#: backend/comics/comics-document.c:251
+#: backend/comics/comics-document.c:252
 msgid "Archive is encrypted"
 msgstr "Archív je zašifrovaný"
 
-#: backend/comics/comics-document.c:256
+#: backend/comics/comics-document.c:257
 msgid "No supported images in archive"
 msgstr "V archíve nie sú žiadne podporované obrázky"
 
-#: backend/comics/comics-document.c:266
+#: backend/comics/comics-document.c:267
 msgid "No files in archive"
 msgstr "V archíve nie sú žiadne súbory"
 
 # %s je mime_type
-#: backend/comics/comics-document.c:315
+#: backend/comics/comics-document.c:316
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Typ MIME nezodpovedá komiksu: %s"
 
-#: backend/comics/comics-document.c:322
+#: backend/comics/comics-document.c:323
 msgid ""
 "libarchive lacks support for this comic book’s compression, please contact "
 "your distributor"
@@ -53,7 +53,7 @@ msgstr ""
 "Knižnici libarchive chýba podpora pre komprimáciu tohto komiksu. Prosím, "
 "kontaktujte vášho dodávateľa"
 
-#: backend/comics/comics-document.c:362
+#: backend/comics/comics-document.c:363
 msgid "Can not get local path for archive"
 msgstr "Nedá sa získať miesta cesta k archívu"
 
@@ -68,11 +68,11 @@ msgstr "Komiksy"
 msgid "Adds support for reading comic books"
 msgstr "Pridá podporu na čítanie komiksov"
 
-#: backend/djvu/djvu-document.c:179
+#: backend/djvu/djvu-document.c:184
 msgid "DjVu document has incorrect format"
 msgstr "DjVu dokument nemá správny formát"
 
-#: backend/djvu/djvu-document.c:266
+#: backend/djvu/djvu-document.c:271
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -90,7 +90,7 @@ msgstr "Dokumenty typu DjVu"
 msgid "Adds support for reading DjVu documents"
 msgstr "Pridá podporu na čítanie dokumentov typu DjVu"
 
-#: backend/dvi/dvi-document.c:110
+#: backend/dvi/dvi-document.c:109
 msgid "DVI document has incorrect format"
 msgstr "Dokument DVI nemá správny formát"
 
@@ -198,7 +198,7 @@ msgstr "Bez názvu"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:970 libview/ev-print-operation.c:2691
+#: backend/pdf/ev-poppler.c:970 libview/ev-print-operation.c:2690
 #: properties/ev-properties-view.c:230
 msgid "None"
 msgstr "Žiadne"
@@ -291,12 +291,12 @@ msgstr "Dokumenty typu PostScript"
 msgid "Adds support for reading PostScript documents"
 msgstr "Pridá podporu na čítanie dokumentov typu PostScript"
 
-#: backend/ps/ev-spectre.c:98
+#: backend/ps/ev-spectre.c:96
 #, c-format
 msgid "Failed to load document “%s”"
 msgstr "Zlyhalo načítanie dokumentu „%s“"
 
-#: backend/ps/ev-spectre.c:131
+#: backend/ps/ev-spectre.c:129
 #, c-format
 msgid "Failed to save document “%s”"
 msgstr "Zlyhalo uloženie dokumentu „%s“"
@@ -311,7 +311,7 @@ msgstr "Dokumenty typu TIFF"
 msgid "Adds support for reading TIFF documents"
 msgstr "Pridá podporu na čítanie dokumentov typu TIFF"
 
-#: backend/tiff/tiff-document.c:124
+#: backend/tiff/tiff-document.c:122
 msgid "Invalid document"
 msgstr "Neplatný dokument"
 
@@ -328,8 +328,8 @@ msgstr "Pridá podporu na čítanie dokumentov typu XPS"
 # desktop entry name
 #. Manually set name and icon
 #: data/org.gnome.Evince.desktop.in.in:3
-#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
-#: shell/main.c:300
+#: data/org.gnome.Evince.metainfo.xml.in.in:23 shell/ev-window-title.c:131
+#: shell/main.c:295
 msgid "Document Viewer"
 msgstr "Prehliadač dokumentov"
 
@@ -435,11 +435,11 @@ msgid ""
 "by side)"
 msgstr ""
 
-#: data/org.gnome.Evince.metainfo.xml.in:24
+#: data/org.gnome.Evince.metainfo.xml.in.in:24
 msgid "Document viewer for popular document formats"
 msgstr "Prehliadač dokumentov pre obľúbené formáty dokumentov"
 
-#: data/org.gnome.Evince.metainfo.xml.in:26
+#: data/org.gnome.Evince.metainfo.xml.in.in:26
 msgid ""
 "A document viewer for the GNOME desktop. You can view, search or annotate "
 "documents in many different formats."
@@ -447,7 +447,7 @@ msgstr ""
 "Prehliadač dokumentov pre prostredie GNOME. Môžete zobrazovať, vyhľadávať "
 "alebo pridávať poznámky do dokumentov v mnohých rozličných formátoch."
 
-#: data/org.gnome.Evince.metainfo.xml.in:27
+#: data/org.gnome.Evince.metainfo.xml.in.in:27
 msgid ""
 "Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
 "SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
@@ -455,56 +455,61 @@ msgstr ""
 "Aplikácia Evince podporuje dokumenty: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (s "
 "funkciou SyncTeX) a archívy komiksov (CBR, CBT, CBZ, CB7)."
 
-#: data/org.gnome.Evince.metainfo.xml.in:35
+#: data/org.gnome.Evince.metainfo.xml.in.in:35
 msgid "A clear, simple UI"
 msgstr "Čisté, jednoduché rozhranie"
 
 # tooltip
-#: data/org.gnome.Evince.metainfo.xml.in:39
+#: data/org.gnome.Evince.metainfo.xml.in.in:39
 msgid "Advanced highlighting and annotation"
 msgstr "Pokročilé zvýrazňovanie a pridávanie poznámok"
 
-#: data/org.gnome.Evince-previewer.desktop.in.in:3
+#. developer_name tag deprecated with Appstream 1.0
+#: data/org.gnome.Evince.metainfo.xml.in.in:50
+msgid "The GNOME Project"
+msgstr "Projekt GNOME"
+
+#: data/org.gnome.Evince-previewer.desktop.in:3
 msgid "Print Preview"
 msgstr "Náhľad pred tlačou"
 
-#: data/org.gnome.Evince-previewer.desktop.in.in:4
+#: data/org.gnome.Evince-previewer.desktop.in:4
 msgid "Preview before printing"
 msgstr "Zobrazuje náhľad pred vytlačením dokumentu"
 
-#: libdocument/ev-attachment.c:310 libdocument/ev-attachment.c:331
+#: libdocument/ev-attachment.c:305 libdocument/ev-attachment.c:326
 #, c-format
 msgid "Couldn’t save attachment “%s”: %s"
 msgstr "Nepodarilo sa uložiť prílohu „%s“: %s"
 
-#: libdocument/ev-attachment.c:378
+#: libdocument/ev-attachment.c:373
 #, c-format
 msgid "Couldn’t open attachment “%s”: %s"
 msgstr "Nepodarilo sa otvoriť prílohu „%s“: %s"
 
-#: libdocument/ev-attachment.c:417
+#: libdocument/ev-attachment.c:412
 #, c-format
 msgid "Couldn’t open attachment “%s”"
 msgstr "Nepodarilo sa otvoriť prílohu „%s“"
 
-#: libdocument/ev-document-factory.c:105
+#: libdocument/ev-document-factory.c:104
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "Typ súboru %s (%s) nie je podporovaný"
 
-#: libdocument/ev-document-factory.c:370 libdocument/ev-file-helpers.c:417
+#: libdocument/ev-document-factory.c:387 libdocument/ev-file-helpers.c:417
 #: libdocument/ev-file-helpers.c:463 libdocument/ev-file-helpers.c:482
 #: libdocument/ev-file-helpers.c:563 libdocument/ev-file-helpers.c:572
 msgid "Unknown MIME Type"
 msgstr "Neznámy typ MIME"
 
 # file filter
-#: libdocument/ev-document-factory.c:637
+#: libdocument/ev-document-factory.c:654
 msgid "All Documents"
 msgstr "Všetky dokumenty"
 
 # file filter
-#: libdocument/ev-document-factory.c:664 shell/ev-utils.c:272
+#: libdocument/ev-document-factory.c:681 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Všetky súbory"
 
@@ -518,74 +523,49 @@ msgstr "Zlyhalo vytvorenie dočasného súboru: %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Zlyhalo vytvorenie dočasného adresára: %s"
 
-#: libdocument/ev-xmp.c:350
+#: libdocument/ev-xmp.c:202
 msgid "This work is in the Public Domain"
 msgstr "Toto dielo je vo verejnom vlastníctve"
 
-#: libmisc/ev-page-action-widget.c:90 libmisc/ev-page-action-widget.c:129
+#: libmisc/ev-page-action-widget.c:89 libmisc/ev-page-action-widget.c:128
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d. z %d)"
 
 # PM: toto sa mi dajako nevidí podľa zdrojáku sa to zobrazuje ked dokument nemá page labels - čo je potom pred "z"
 # PK: nalavo mas input box kde mozes zadat cislo
-#: libmisc/ev-page-action-widget.c:92 libmisc/ev-page-action-widget.c:133
+#: libmisc/ev-page-action-widget.c:91 libmisc/ev-page-action-widget.c:132
 #, c-format
 msgid "of %d"
 msgstr "z %d"
 
-#: libmisc/ev-page-action-widget.c:201 shell/ev-history.c:454
-#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:954
-#: shell/ev-window.c:5159
+#: libmisc/ev-page-action-widget.c:252 shell/ev-history.c:454
+#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:892
+#: shell/ev-window.c:5057
 #, c-format
 msgid "Page %s"
 msgstr "Stránka %s"
 
-#: libmisc/ev-search-box.c:112
-msgid "Not found, click to change search options"
-msgstr "Nič sa nenašlo. Kliknutím zmeníte voľby vyhľadávania."
+#: libmisc/ev-page-action-widget.ui:21
+msgid "page-label-entry"
+msgstr ""
 
-# tooltip
-#: libmisc/ev-search-box.c:186 libmisc/ev-search-box.c:242
-msgid "Search options"
-msgstr "Voľby vyhľadávania"
-
-# menu item
-#: libmisc/ev-search-box.c:318
-msgid "_Whole Words Only"
-msgstr "_Len celé slová"
-
-# menu item
-#: libmisc/ev-search-box.c:331
-msgid "C_ase Sensitive"
-msgstr "_Rozlišovať veľkosť písmen"
-
-# tooltip
-#: libmisc/ev-search-box.c:600
-msgid "Find previous occurrence of the search string"
-msgstr "Nájde predchádzajúci výskyt slova alebo frázy"
-
-# tooltip
-#: libmisc/ev-search-box.c:607
-msgid "Find next occurrence of the search string"
-msgstr "Nájde následujúci výskyt slova alebo frázy"
-
-#: libview/ev-jobs.c:625
+#: libview/ev-jobs.c:626
 #, c-format
 msgid "Failed to render page %d: %s"
 msgstr "Zlyhalo vykreslenie %d. stránky: %s"
 
-#: libview/ev-jobs.c:632
+#: libview/ev-jobs.c:633
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Zlyhalo vykreslenie %d. stránky"
 
-#: libview/ev-jobs.c:878
+#: libview/ev-jobs.c:868
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Zlyhalo vytvorenie miniatúry %d. stránky"
 
-#: libview/ev-jobs.c:2288
+#: libview/ev-jobs.c:2221
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Zlyhala tlač stránky %d. stránky: %s"
@@ -619,7 +599,7 @@ msgstr "Pripravuje sa na tlač…"
 msgid "Printing page %d of %d…"
 msgstr "Tlačí sa %d. stránka z %d…"
 
-#: libview/ev-print-operation.c:1561 libview/ev-print-operation.c:2028
+#: libview/ev-print-operation.c:1560 libview/ev-print-operation.c:2027
 msgid "Your print range selection does not include any pages"
 msgstr "Váš rozsah výberu na tlač neobsahuje žiadne stránky"
 
@@ -627,41 +607,41 @@ msgstr "Váš rozsah výberu na tlač neobsahuje žiadne stránky"
 # * https://bugzilla.gnome.org/show_bug.cgi?id=693095
 #  1. dialog title; 2. action entry
 #. translators: Title of the print dialog
-#: libview/ev-print-operation.c:1702 libview/ev-print-operation.c:1800
-#: libview/ev-print-operation.c:2079
+#: libview/ev-print-operation.c:1701 libview/ev-print-operation.c:1799
+#: libview/ev-print-operation.c:2078
 msgid "Print"
 msgstr "Tlač"
 
-#: libview/ev-print-operation.c:2002
+#: libview/ev-print-operation.c:2001
 msgid "Requested format is not supported by this printer."
 msgstr "Požadovaný formát nie je podporovaný touto tlačiarňou."
 
-#: libview/ev-print-operation.c:2025
+#: libview/ev-print-operation.c:2024
 msgid "Invalid page selection"
 msgstr "Neplatný výber stránky"
 
 # windows title
-#: libview/ev-print-operation.c:2026
+#: libview/ev-print-operation.c:2025
 msgid "Warning"
 msgstr "Upozornenie"
 
 # label
-#: libview/ev-print-operation.c:2685
+#: libview/ev-print-operation.c:2684
 msgid "Page Scaling:"
 msgstr "Zmeny rozmerov stránky:"
 
 # combobox item
-#: libview/ev-print-operation.c:2692
+#: libview/ev-print-operation.c:2691
 msgid "Shrink to Printable Area"
 msgstr "Zmenšiť na tlačiteľnú oblasť"
 
 # combobox item
-#: libview/ev-print-operation.c:2693
+#: libview/ev-print-operation.c:2692
 msgid "Fit to Printable Area"
 msgstr "Prispôsobiť na tlačiteľnú oblasť"
 
 # tooltip
-#: libview/ev-print-operation.c:2696
+#: libview/ev-print-operation.c:2695
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -686,12 +666,12 @@ msgstr ""
 "tlačiteľnej oblasti zväčšené alebo zmenšené.\n"
 
 # checkbutton
-#: libview/ev-print-operation.c:2708
+#: libview/ev-print-operation.c:2707
 msgid "Auto Rotate and Center"
 msgstr "Automaticky otočiť a vycentrovať"
 
 # tooltip
-#: libview/ev-print-operation.c:2711
+#: libview/ev-print-operation.c:2710
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -700,12 +680,12 @@ msgstr ""
 "dokumente. Stránky dokumentu budú pri tlačení vycentrované."
 
 # checkbutton
-#: libview/ev-print-operation.c:2716
+#: libview/ev-print-operation.c:2715
 msgid "Select page size using document page size"
 msgstr "Vybrať veľkosť stránky použitím veľkosti stránky dokumentu"
 
 # tooltip
-#: libview/ev-print-operation.c:2718
+#: libview/ev-print-operation.c:2717
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -713,16 +693,16 @@ msgstr ""
 "Keď je povolené, tak každá stránka bude vytlačená na papier v rovnakej "
 "veľkosti aká je v dokumente."
 
-#: libview/ev-print-operation.c:2723
+#: libview/ev-print-operation.c:2722
 msgid "Draw border around pages"
 msgstr "Vykresliť okraj okolo stránok"
 
-#: libview/ev-print-operation.c:2725
+#: libview/ev-print-operation.c:2724
 msgid "When enabled, a border will be drawn around each page."
 msgstr "Keď je voľba povolená, bude vykreslený okraj okolo každej stránky."
 
 # tab label
-#: libview/ev-print-operation.c:2819
+#: libview/ev-print-operation.c:2818
 msgid "Page Handling"
 msgstr "Manipulácia so stránkou"
 
@@ -752,69 +732,70 @@ msgid "Document View"
 msgstr "Zobrazenie dokumentu"
 
 # tooltip
-#: libview/ev-view.c:2138
+#: libview/ev-view.c:2183
 msgid "Go to first page"
 msgstr "Prejde na prvú stránku"
 
 # tooltip
-#: libview/ev-view.c:2140
+#: libview/ev-view.c:2185
 msgid "Go to previous page"
 msgstr "Prejde na predchádzajúcu stránku"
 
 # tooltip
-#: libview/ev-view.c:2142
+#: libview/ev-view.c:2187
 msgid "Go to next page"
 msgstr "Prejde na nasledujúcu stránku"
 
 # tooltip
-#: libview/ev-view.c:2144
+#: libview/ev-view.c:2189
 msgid "Go to last page"
 msgstr "Prejde na poslednú stránku"
 
 # tooltip
-#: libview/ev-view.c:2146
+#: libview/ev-view.c:2191
 msgid "Go to page"
 msgstr "Prejde na stránku"
 
 # tooltip
-#: libview/ev-view.c:2148
+#: libview/ev-view.c:2193
 msgid "Find"
 msgstr "Nájde"
 
 # tooltip
-#: libview/ev-view.c:2176
+#: libview/ev-view.c:2221
 #, c-format
 msgid "Go to page %s"
 msgstr "Prejde na stránku %s"
 
 # tooltip
-#: libview/ev-view.c:2182
+#: libview/ev-view.c:2227
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Prejde na %s v súbore „%s“"
 
 # tooltip
-#: libview/ev-view.c:2185
+#: libview/ev-view.c:2230
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Prejde na súbor „%s“"
 
 # tooltip
-#: libview/ev-view.c:2193
+#: libview/ev-view.c:2238
 #, c-format
 msgid "Launch %s"
 msgstr "Spustí %s"
 
-#: libview/ev-view.c:2200
+#: libview/ev-view.c:2245
+#, c-format
 msgid "Reset form"
 msgstr "Vynuluje formulár"
 
 # label
-#: libview/ev-view-presentation.c:726
+#: libview/ev-view-presentation.c:727
 msgid "Jump to page:"
 msgstr "Skočiť na stránku:"
 
-#: libview/ev-view-presentation.c:1010
+#: libview/ev-view-presentation.c:1009
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Koniec prezentácie. Stlačením klávesy Esc alebo kliknutím ju ukončíte."
 
@@ -851,77 +832,77 @@ msgstr "TYP"
 msgid "File descriptor of print settings file"
 msgstr "Popisovač súboru nastavení tlače"
 
-#: previewer/ev-previewer.c:295 previewer/ev-previewer.c:315
+#: previewer/ev-previewer.c:293 previewer/ev-previewer.c:311
 msgid "GNOME Document Previewer"
 msgstr "Prehliadač dokumentov GNOME"
 
-# tooltip
-#: previewer/ev-previewer-toolbar.c:112 shell/evince-toolbar.ui:35
-msgid "Select page or search in the outline"
-msgstr "Vyberie stránku alebo vyhľadá za okrajom"
-
-# action tooltip
-#: previewer/ev-previewer-toolbar.c:114 shell/evince-toolbar.ui:38
-msgid "Select page"
-msgstr "Vybrať stránku"
-
-#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3636
+#: previewer/ev-previewer-window.c:77 shell/ev-window.c:3571
 msgid "Failed to print document"
 msgstr "Zlyhala tlač dokumentu"
 
 # desktop entry name
-#: previewer/ev-previewer-window.c:193 previewer/ev-previewer-window.c:558
+#: previewer/ev-previewer-window.c:190 previewer/ev-previewer-window.c:539
 msgid "Evince Document Viewer"
 msgstr "Prehliadač dokumentov Evince"
 
-#: previewer/ev-previewer-window.c:229
+#: previewer/ev-previewer-window.c:226
 #, c-format
 msgid "The selected printer “%s” could not be found"
 msgstr "Vybranú tlačiareň „%s“ sa nepodarilo nájsť"
 
-#: previewer/ev-previewer-window.c:536 shell/ev-window.c:4227
+#: previewer/ev-previewer-window.c:517 shell/ev-window.c:4158
 msgid "Evince"
 msgstr "Evince"
 
-# PM: V prvom prípade by to mala byť asi Tlač
-# * https://bugzilla.gnome.org/show_bug.cgi?id=693095
-#  1. dialog title; 2. action entry
-#: previewer/previewer.ui:7
-msgid "_Print"
-msgstr "_Tlač"
-
-# action entry tooltip
-#: previewer/previewer.ui:10
-msgid "Print this document"
-msgstr "Vytlačí tento dokument"
-
 # action entry
-#: previewer/previewer.ui:20 shell/evince-menus.ui:129
+#: previewer/previewer-window.ui:21 shell/evince-menus.ui:29
 msgid "Previous Page"
 msgstr "Predchádzajúca stránka"
 
 # action entry
-#: previewer/previewer.ui:27 shell/evince-menus.ui:133
+#: previewer/previewer-window.ui:34 shell/evince-menus.ui:33
 msgid "Next Page"
 msgstr "Nasledujúca stránka"
 
-# action entry tooltip
-#: previewer/previewer.ui:34
-msgid "Enlarge the document"
-msgstr "Zväčší dokument"
+# tooltip
+#: previewer/previewer-window.ui:52
+msgid "Select Page or Search in the Outline"
+msgstr "Vyberie stránku alebo vyhľadá za okrajom"
 
-# action entry tooltip
-#: previewer/previewer.ui:42
-msgid "Shrink the document"
+# action tooltip
+#: previewer/previewer-window.ui:55 shell/evince-toolbar.ui:39
+msgid "Select page"
+msgstr "Vybrať stránku"
+
+# PM: V prvom prípade by to mala byť asi Tlač
+# * https://bugzilla.gnome.org/show_bug.cgi?id=693095
+#  1. dialog title; 2. action entry
+#: previewer/previewer-window.ui:66
+msgid "_Print"
+msgstr "_Tlač"
+
+# tooltip
+#: previewer/previewer-window.ui:67
+msgid "Print this Document"
+msgstr "Vytlačí tento dokument"
+
+# tooltip
+#: previewer/previewer-window.ui:88
+msgid "Shrink the Document"
 msgstr "Zmenší dokument"
 
 # tooltip
-#: previewer/previewer.ui:49
-msgid "Reset zoom and make the page fit in the window"
+#: previewer/previewer-window.ui:101
+msgid "Reset Zoom and Make the Page Fit in the Window"
 msgstr "Obnoví priblíženie a prispôsobí stránku oknu"
 
+# tooltip
+#: previewer/previewer-window.ui:114
+msgid "Enlarge the Document"
+msgstr "Zväčší dokument"
+
 # label
-#: properties/ev-properties-main.c:116
+#: properties/ev-properties-main.c:108
 msgid "Document"
 msgstr "Dokument"
 
@@ -1102,7 +1083,7 @@ msgid "Squiggly"
 msgstr "Vlnovka"
 
 #  window title
-#: shell/ev-annotation-properties-dialog.c:150 shell/evince-menus.ui:170
+#: shell/ev-annotation-properties-dialog.c:150 shell/evince-menus.ui:57
 msgid "Annotation Properties"
 msgstr "Vlastnosti poznámky"
 
@@ -1158,158 +1139,81 @@ msgstr "Zvýrazniť text"
 msgid "Add highlight annotation"
 msgstr "Pridá zvýraznenú poznámku"
 
-# action entry
-#: shell/evince-menus.ui:24
-msgid "_Open Link"
-msgstr "_Otvoriť odkaz"
-
-# action entry
-#: shell/evince-menus.ui:29
-msgid "_Copy Link Address"
-msgstr "_Kopírovať adresu odkazu"
-
-# action entry
-#: shell/evince-menus.ui:34
-msgid "_Go To"
-msgstr "Prejsť _na"
-
-# action entry
-#: shell/evince-menus.ui:39
-msgid "Open in New _Window"
-msgstr "Otvoriť v novom _okne"
-
-# action entry
-#: shell/evince-menus.ui:46
-msgid "_Previous Page"
-msgstr "P_redchádzajúca stránka"
-
-# action entry
-#: shell/evince-menus.ui:50
-msgid "_Next Page"
-msgstr "_Nasledujúca stránka"
-
-# action entry
-#: shell/evince-menus.ui:54 shell/ev-window.c:3935
-msgid "_Reload"
-msgstr "_Znovu načítať"
-
-# action entry
-#: shell/evince-menus.ui:58
-msgid "Auto_scroll"
-msgstr "_Automaticky posúvať"
-
-#: shell/evince-menus.ui:64
-msgid "_Copy"
-msgstr "_Kopírovať"
-
-# action entry
-#: shell/evince-menus.ui:68
-msgid "Select _All"
-msgstr "Vybrať _všetko"
-
-# action entry
-#: shell/evince-menus.ui:74
-msgid "_Save Image As…"
-msgstr "_Uložiť obrázok ako…"
-
-# action entry
-#: shell/evince-menus.ui:79
-msgid "Copy _Image"
-msgstr "Kopírovať _obrázok"
-
-# action entry
-#: shell/evince-menus.ui:86 shell/evince-menus.ui:157 shell/evince-menus.ui:180
-msgid "_Open Attachment"
-msgstr "_Otvoriť prílohu"
-
-# action entry
-#: shell/evince-menus.ui:91 shell/evince-menus.ui:161 shell/evince-menus.ui:185
-msgid "_Save Attachment As…"
-msgstr "_Uložiť prílohu ako…"
-
-#  window title
-#: shell/evince-menus.ui:98
-msgid "Annotation _Properties"
-msgstr "Vlastnosti _poznámky"
-
-# menu item
-#: shell/evince-menus.ui:103
-msgid "R_emove Annotation"
-msgstr "O_dstrániť poznámku"
-
-#: shell/evince-menus.ui:110
-msgid "_Highlight Selected Text"
-msgstr "Zvý_razniť vybraný text"
-
-# action entry
-#: shell/evince-menus.ui:115 shell/evince-toolbar.ui:153
-msgid "Open Containing _Folder"
-msgstr "Otvoriť _priečinok so súborom"
-
-#: shell/evince-menus.ui:123
+#: shell/evince-menus.ui:23
 msgid "Navigation"
 msgstr "Navigácia"
 
 # action entry
-#: shell/evince-menus.ui:125
+#: shell/evince-menus.ui:25
 msgid "First Page"
 msgstr "Prvá stránka"
 
 # menu item
-#: shell/evince-menus.ui:137
+#: shell/evince-menus.ui:37
 msgid "Last Page"
 msgstr "Posledná stránka"
 
-#: shell/evince-menus.ui:142
+#: shell/evince-menus.ui:42
 msgid "History"
 msgstr "História"
 
-#: shell/evince-menus.ui:144
+#: shell/evince-menus.ui:44
 msgid "Back"
 msgstr "Späť"
 
-#: shell/evince-menus.ui:148
+#: shell/evince-menus.ui:48
 msgid "Forward"
 msgstr "Dopredu"
 
 # menu item
-#: shell/evince-menus.ui:175
+#: shell/evince-menus.ui:62
 msgid "Remove Annotation"
 msgstr "Odstrániť poznámku"
 
 # action entry
-#: shell/evince-menus.ui:195
+#: shell/evince-menus.ui:67 shell/evince-window.ui:81
+#: shell/evince-window.ui:119
+msgid "_Open Attachment"
+msgstr "_Otvoriť prílohu"
+
+# action entry
+#: shell/evince-menus.ui:72 shell/evince-window.ui:86
+#: shell/evince-window.ui:123
+msgid "_Save Attachment As…"
+msgstr "_Uložiť prílohu ako…"
+
+# action entry
+#: shell/evince-menus.ui:82
 msgid "_Open Bookmark"
 msgstr "_Otvoriť záložku"
 
 # action entry
-#: shell/evince-menus.ui:201
+#: shell/evince-menus.ui:88
 msgid "_Rename Bookmark"
 msgstr "P_remenovať záložku"
 
 # action entry
-#: shell/evince-menus.ui:205
+#: shell/evince-menus.ui:92
 msgid "_Delete Bookmark"
 msgstr "O_dstrániť záložku"
 
-#: shell/evince-menus.ui:214
+#: shell/evince-menus.ui:101
 msgid "Search in the outline…"
 msgstr "Hľadať za okrajom…"
 
-#: shell/evince-menus.ui:218
-#| msgid "Print this document"
+#: shell/evince-menus.ui:105
 msgid "Print this section…"
 msgstr "Vytlačiť túto časť…"
 
-#: shell/evince-menus.ui:222
+#: shell/evince-menus.ui:109
 msgid "Collapse all tree"
 msgstr "Zbaliť celý strom"
 
-#: shell/evince-menus.ui:226
+#: shell/evince-menus.ui:113
 msgid "Expand all tree"
 msgstr "Rozbaliť celý strom"
 
-#: shell/evince-menus.ui:230
+#: shell/evince-menus.ui:117
 msgid "Expand all under this element"
 msgstr "Rozbaliť všetko pod týmto prvkom"
 
@@ -1341,116 +1245,199 @@ msgstr "Pridá záložku"
 msgid "Remove bookmark"
 msgstr "Odstráni záložku"
 
-#: shell/evince-toolbar.ui:10
+#: shell/evince-toolbar.ui:11
 msgid "Open…"
 msgstr "Otvoriť…"
 
 # action entry tooltip
-#: shell/evince-toolbar.ui:11
+#: shell/evince-toolbar.ui:12
 msgid "Open an existing document"
 msgstr "Otvorí existujúci dokument"
 
 # action entry
-#: shell/evince-toolbar.ui:20
+#: shell/evince-toolbar.ui:21
 msgid "Side pane"
 msgstr "Bočný panel"
 
 # tooltip
-#: shell/evince-toolbar.ui:49
+#: shell/evince-toolbar.ui:36
+msgid "Select page or search in the outline"
+msgstr "Vyberie stránku alebo vyhľadá za okrajom"
+
+# tooltip
+#: shell/evince-toolbar.ui:50
 msgid "Annotate the document"
 msgstr "Pridá poznámku k dokumentu"
 
 # tooltip
-#: shell/evince-toolbar.ui:59
+#: shell/evince-toolbar.ui:60
 msgid "Annotate document"
 msgstr "Pridá poznámku k dokumentu"
 
 # tooltip
-#: shell/evince-toolbar.ui:70 shell/evince-toolbar.ui:81
+#: shell/evince-toolbar.ui:71 shell/evince-toolbar.ui:82
 msgid "File options"
 msgstr "Voľby súboru"
 
-#: shell/evince-toolbar.ui:110
+#: shell/evince-toolbar.ui:111
 msgid "Set zoom level"
 msgstr "Nastaviť úroveň priblíženia"
 
-#: shell/evince-toolbar.ui:126
+#: shell/evince-toolbar.ui:127
 msgid "Print…"
 msgstr "Tlačiť…"
 
 # action entry
-#: shell/evince-toolbar.ui:131
+#: shell/evince-toolbar.ui:132
 msgid "Fullscreen"
 msgstr "Na celú obrazovku"
 
-#: shell/evince-toolbar.ui:136
+#: shell/evince-toolbar.ui:137
 msgid "Send To…"
 msgstr "Odoslať do…"
 
 # action entry
-#: shell/evince-toolbar.ui:143
+#: shell/evince-toolbar.ui:144
 msgid "New _Window"
 msgstr "_Nové okno"
 
-#: shell/evince-toolbar.ui:149
+#: shell/evince-toolbar.ui:150
 msgid "Open a C_opy"
 msgstr "Otvoriť _kópiu"
 
 # action entry
-#: shell/evince-toolbar.ui:159
+#: shell/evince-toolbar.ui:154 shell/evince-window.ui:110
+msgid "Open Containing _Folder"
+msgstr "Otvoriť _priečinok so súborom"
+
+# action entry
+#: shell/evince-toolbar.ui:160
 msgid "_Save As…"
 msgstr "_Uložiť ako…"
 
-#: shell/evince-toolbar.ui:165
+#: shell/evince-toolbar.ui:166
 msgid "Present as _Slideshow"
 msgstr "Zobraziť ako _prezentáciu"
 
 # action entry
-#: shell/evince-toolbar.ui:171
+#: shell/evince-toolbar.ui:172
 msgid "_Continuous"
 msgstr "_Súvisle"
 
-#: shell/evince-toolbar.ui:175
+#: shell/evince-toolbar.ui:176
 msgid "_Dual"
 msgstr "_Dvojito"
 
 # action entry
-#: shell/evince-toolbar.ui:179
+#: shell/evince-toolbar.ui:180
 msgid "_Odd Pages Left"
 msgstr "_Nepárne stránky vľavo"
 
 # filechooser dialog title
-#: shell/evince-toolbar.ui:183
+#: shell/evince-toolbar.ui:184
 msgid "Right to Left Document"
 msgstr "Dokument sprava doľava"
 
 # action entry
-#: shell/evince-toolbar.ui:189
+#: shell/evince-toolbar.ui:190
 msgid "Ro_tate ⤵"
 msgstr "O_točiť ⤵"
 
-#: shell/evince-toolbar.ui:195
+#: shell/evince-toolbar.ui:196
 msgid "Ni_ght Mode"
 msgstr "_Nočný režim"
 
 # window title
-#: shell/evince-toolbar.ui:201
+#: shell/evince-toolbar.ui:202
 msgid "Prop_erties"
 msgstr "Vlast_nosti"
 
-#: shell/evince-toolbar.ui:207
+#: shell/evince-toolbar.ui:208
 msgid "_Keyboard Shortcuts"
 msgstr "_Klávesové skratky"
 
 # action entry
-#: shell/evince-toolbar.ui:211
+#: shell/evince-toolbar.ui:212
 msgid "_Help"
 msgstr "_Pomocník"
 
 # desktop entry name
-#: shell/evince-toolbar.ui:215
+#: shell/evince-toolbar.ui:216
 msgid "_About Document Viewer"
 msgstr "_O aplikácii Prehliadač dokumentov"
+
+# action entry
+#: shell/evince-window.ui:19
+msgid "_Open Link"
+msgstr "_Otvoriť odkaz"
+
+# action entry
+#: shell/evince-window.ui:24
+msgid "_Copy Link Address"
+msgstr "_Kopírovať adresu odkazu"
+
+# action entry
+#: shell/evince-window.ui:29
+msgid "_Go To"
+msgstr "Prejsť _na"
+
+# action entry
+#: shell/evince-window.ui:34
+msgid "Open in New _Window"
+msgstr "Otvoriť v novom _okne"
+
+# action entry
+#: shell/evince-window.ui:41
+msgid "_Previous Page"
+msgstr "P_redchádzajúca stránka"
+
+# action entry
+#: shell/evince-window.ui:45
+msgid "_Next Page"
+msgstr "_Nasledujúca stránka"
+
+# action entry
+#: shell/evince-window.ui:49 shell/ev-window.c:3870
+msgid "_Reload"
+msgstr "_Znovu načítať"
+
+# action entry
+#: shell/evince-window.ui:53
+msgid "Auto_scroll"
+msgstr "_Automaticky posúvať"
+
+#: shell/evince-window.ui:59
+msgid "_Copy"
+msgstr "_Kopírovať"
+
+# action entry
+#: shell/evince-window.ui:63
+msgid "Select _All"
+msgstr "Vybrať _všetko"
+
+# action entry
+#: shell/evince-window.ui:69
+msgid "_Save Image As…"
+msgstr "_Uložiť obrázok ako…"
+
+# action entry
+#: shell/evince-window.ui:74
+msgid "Copy _Image"
+msgstr "Kopírovať _obrázok"
+
+# action entry
+#: shell/evince-window.ui:93
+msgid "Annotation _Properties…"
+msgstr "Vlastnosti _poznámky…"
+
+# menu item
+#: shell/evince-window.ui:98
+msgid "R_emove Annotation"
+msgstr "O_dstrániť poznámku"
+
+#: shell/evince-window.ui:105
+msgid "_Highlight Selected Text"
+msgstr "Zvý_razniť vybraný text"
 
 #: shell/evince-zoom-action.ui:5
 msgid "Select or set the zoom level of the document"
@@ -1476,8 +1463,8 @@ msgstr "_Automatické"
 msgid "Password for document %s"
 msgstr "Heslo pre dokument %s"
 
-#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:140
-#: shell/ev-sidebar-layers.c:119 shell/ev-sidebar-links.c:274
+#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:139
+#: shell/ev-sidebar-layers.c:118 shell/ev-sidebar-links.c:274
 msgid "Loading…"
 msgstr "Načítava sa…"
 
@@ -1492,8 +1479,8 @@ msgid "Password required"
 msgstr "Vyžaduje sa heslo"
 
 #: shell/ev-password-view.c:238 shell/ev-sidebar-attachments.c:493
-#: shell/ev-window.c:2877 shell/ev-window.c:3174 shell/ev-window.c:4059
-#: shell/ev-window.c:6987 shell/ev-window.c:7213
+#: shell/ev-window.c:2823 shell/ev-window.c:3109 shell/ev-window.c:3994
+#: shell/ev-window.c:6872 shell/ev-window.c:7098
 msgid "_Cancel"
 msgstr "_Zrušiť"
 
@@ -1559,23 +1546,52 @@ msgstr "Text licencie"
 msgid "Further Information"
 msgstr "Ďalšie informácie"
 
-#: shell/ev-sidebar-annotations.c:341
+#: shell/ev-search-box.c:112
+msgid "Not found, click to change search options"
+msgstr "Nič sa nenašlo. Kliknutím zmeníte voľby vyhľadávania."
+
+# tooltip
+#: shell/ev-search-box.c:186 shell/ev-search-box.c:241
+msgid "Search options"
+msgstr "Voľby vyhľadávania"
+
+# menu item
+#: shell/ev-search-box.c:317
+msgid "_Whole Words Only"
+msgstr "_Len celé slová"
+
+# menu item
+#: shell/ev-search-box.c:330
+msgid "C_ase Sensitive"
+msgstr "_Rozlišovať veľkosť písmen"
+
+# tooltip
+#: shell/ev-search-box.c:599
+msgid "Find previous occurrence of the search string"
+msgstr "Nájde predchádzajúci výskyt slova alebo frázy"
+
+# tooltip
+#: shell/ev-search-box.c:606
+msgid "Find next occurrence of the search string"
+msgstr "Nájde následujúci výskyt slova alebo frázy"
+
+#: shell/ev-sidebar-annotations.c:340
 msgid "Document contains no annotations"
 msgstr "Dokument neobsahuje poznámky"
 
 # page label
-#: shell/ev-sidebar-annotations.c:369
+#: shell/ev-sidebar-annotations.c:370
 #, c-format
 msgid "Page %d"
 msgstr "%d. stránka"
 
 # cobmbobox item
-#: shell/ev-sidebar-annotations.c:403
+#: shell/ev-sidebar-annotations.c:404
 msgid "No Comment"
 msgstr "Bez komentára"
 
 # toolbutton group; sidebar page label
-#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7596
+#: shell/ev-sidebar-annotations.c:565 shell/ev-window.c:7430
 msgid "Annotations"
 msgstr "Poznámky"
 
@@ -1594,38 +1610,38 @@ msgid "_Replace"
 msgstr "_Nahradiť"
 
 # sidebar page label
-#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7620
+#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7452
 msgid "Attachments"
 msgstr "Prílohy"
 
 # sidebar page label
-#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7604
+#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7437
 msgid "Bookmarks"
 msgstr "Záložky"
 
 # sidebar page label
-#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7632
+#: shell/ev-sidebar-layers.c:438 shell/ev-window.c:7463
 msgid "Layers"
 msgstr "Vrstvy"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7584
+#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7419
 msgid "Outline"
 msgstr "Okraj"
 
 # sidebar page label
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7567
+#: shell/ev-sidebar-thumbnails.c:1003 shell/ev-window.c:7404
 msgid "Thumbnails"
 msgstr "Miniatúry"
 
 # action entry tooltip
-#: shell/ev-toolbar.c:98
+#: shell/ev-toolbar.c:97
 msgid "Find a word or phrase in the document"
 msgstr "Nájde v dokumente slovo alebo frázu"
 
-#: shell/ev-toolbar.c:104
+#: shell/ev-toolbar.c:103
 msgid "Search not available for this document"
 msgstr "Pre tento dokument nie je dostupné vyhľadávanie"
 
@@ -1634,107 +1650,107 @@ msgstr "Pre tento dokument nie je dostupné vyhľadávanie"
 msgid "Supported Image Files"
 msgstr "Podporované súbory obrázkov"
 
-#: shell/ev-window.c:1753
+#: shell/ev-window.c:1668
 msgid "The document contains no pages"
 msgstr "Dokument neobsahuje žiadne stránky"
 
-#: shell/ev-window.c:1756
+#: shell/ev-window.c:1671
 msgid "The document contains only empty pages"
 msgstr "Dokument obsahuje len prázdne stránky"
 
-#: shell/ev-window.c:1997 shell/ev-window.c:2171
+#: shell/ev-window.c:1911 shell/ev-window.c:2085
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Nepodarilo sa otvoriť dokument „%s“."
 
-#: shell/ev-window.c:2136
+#: shell/ev-window.c:2050
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Načítava sa dokument z „%s“"
 
-#: shell/ev-window.c:2141 shell/ev-window.c:2599 shell/ev-window.c:2965
-#: shell/ev-window.c:3700 shell/ev-window.c:3948
+#: shell/ev-window.c:2055 shell/ev-window.c:2545 shell/ev-window.c:2912
+#: shell/ev-window.c:3635 shell/ev-window.c:3883
 msgid "C_ancel"
 msgstr "Z_rušiť"
 
-#: shell/ev-window.c:2293 shell/ev-window.c:2650
+#: shell/ev-window.c:2207 shell/ev-window.c:2596
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Preberá sa dokument (%d %%)"
 
-#: shell/ev-window.c:2326
+#: shell/ev-window.c:2240
 msgid "Failed to load remote file."
 msgstr "Zlyhalo načítanie vzdialeného súboru."
 
-#: shell/ev-window.c:2595
+#: shell/ev-window.c:2541
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Znovu sa načítava dokument z %s"
 
-#: shell/ev-window.c:2625
+#: shell/ev-window.c:2571
 msgid "Failed to reload document."
 msgstr "Zlyhalo znovunačítanie dokumentu."
 
 # filechooser dialog title
-#: shell/ev-window.c:2873
+#: shell/ev-window.c:2819
 msgid "Open Document"
 msgstr "Otvorenie dokumentu"
 
 # stav okna
-#: shell/ev-window.c:2876
+#: shell/ev-window.c:2822
 msgid "_Open"
 msgstr "_Otvoriť"
 
-#: shell/ev-window.c:2951
+#: shell/ev-window.c:2898
 #, c-format
 msgid "Saving document to %s"
 msgstr "Ukladá sa dokument do %s"
 
-#: shell/ev-window.c:2954
+#: shell/ev-window.c:2901
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Ukladá sa príloha do %s"
 
-#: shell/ev-window.c:2957
+#: shell/ev-window.c:2904
 #, c-format
 msgid "Saving image to %s"
 msgstr "Ukladá sa obrázok do %s"
 
-#: shell/ev-window.c:2999 shell/ev-window.c:3113
+#: shell/ev-window.c:2944 shell/ev-window.c:3048
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Súbor sa nepodarilo uložiť ako „%s“."
 
-#: shell/ev-window.c:3031
+#: shell/ev-window.c:2976
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Nahráva sa dokument (%d %%)"
 
-#: shell/ev-window.c:3035
+#: shell/ev-window.c:2980
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Nahráva sa príloha (%d %%)"
 
-#: shell/ev-window.c:3039
+#: shell/ev-window.c:2984
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Nahráva sa obrázok (%d %%)"
 
 # Dialog title
-#: shell/ev-window.c:3171
+#: shell/ev-window.c:3106
 msgid "Save As…"
 msgstr "Uloženie ako…"
 
 # action entry
-#: shell/ev-window.c:3173 shell/ev-window.c:6986 shell/ev-window.c:7212
+#: shell/ev-window.c:3108 shell/ev-window.c:6871 shell/ev-window.c:7097
 msgid "_Save"
 msgstr "_Uložiť"
 
-#: shell/ev-window.c:3260
+#: shell/ev-window.c:3195
 msgid "Could not send current document"
 msgstr "Nepodarilo sa poslať aktuálny dokument"
 
-#: shell/ev-window.c:3587
+#: shell/ev-window.c:3522
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1742,52 +1758,52 @@ msgstr[0] "%d zostávajúcich úloh na spracovanie"
 msgstr[1] "%d zostávajúca úloha na spracovanie"
 msgstr[2] "%d zostávajúce úlohy na spracovanie"
 
-#: shell/ev-window.c:3696
+#: shell/ev-window.c:3631
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Tlačová úloha „%s“"
 
-#: shell/ev-window.c:3914
+#: shell/ev-window.c:3849
 msgid "Document contains form fields that have been filled out."
 msgstr "Dokument obsahuje vyplnené formulárové polia."
 
-#: shell/ev-window.c:3917
+#: shell/ev-window.c:3852
 msgid "Document contains new or modified annotations."
 msgstr "Dokument obsahuje nové alebo zmenené poznámky."
 
-#: shell/ev-window.c:3929
+#: shell/ev-window.c:3864
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Znovu načítať dokument „%s“?"
 
-#: shell/ev-window.c:3931
+#: shell/ev-window.c:3866
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Ak znovu načítate dokument, tak sa zmeny natrvalo stratia."
 
-#: shell/ev-window.c:3933
+#: shell/ev-window.c:3868
 msgid "_No"
 msgstr "_Nie"
 
-#: shell/ev-window.c:3942
+#: shell/ev-window.c:3877
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Uložiť kópiu dokumentu „%s“ pred zatvorením?"
 
-#: shell/ev-window.c:3944
+#: shell/ev-window.c:3879
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Ak neuložíte jeho kópiu, tak sa zmeny natrvalo stratia."
 
 # button
-#: shell/ev-window.c:3946
+#: shell/ev-window.c:3881
 msgid "Close _without Saving"
 msgstr "Zavrieť _bez uloženia"
 
 # button
-#: shell/ev-window.c:3950
+#: shell/ev-window.c:3885
 msgid "Save a _Copy"
 msgstr "Uložiť _kópiu"
 
-#: shell/ev-window.c:4032
+#: shell/ev-window.c:3967
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Počkať pred zatvorením na dokončenie tlačovej úlohy „%s“?"
@@ -1795,7 +1811,7 @@ msgstr "Počkať pred zatvorením na dokončenie tlačovej úlohy „%s“?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:4038
+#: shell/ev-window.c:3973
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1807,29 +1823,29 @@ msgstr[1] ""
 msgstr[2] ""
 "%d tlačové úlohy sú aktívne. Počkať pred zatvorením kým sa tlač dokončí?"
 
-#: shell/ev-window.c:4053
+#: shell/ev-window.c:3988
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Ak zatvoríte okno, tak sa zostávajúce tlačové úlohy nevytlačia."
 
 # button
-#: shell/ev-window.c:4057
+#: shell/ev-window.c:3992
 msgid "Cancel _print and Close"
 msgstr "Zrušiť _tlač a zavrieť"
 
 # button
-#: shell/ev-window.c:4061
+#: shell/ev-window.c:3996
 msgid "Close _after Printing"
 msgstr "Zavrieť _po vytlačení"
 
-#: shell/ev-window.c:4229
+#: shell/ev-window.c:4160
 msgid "© 1996–2023 The Evince document viewer authors"
 msgstr "© 1996–2023 autori aplikácie Evince"
 
-#: shell/ev-window.c:4232
+#: shell/ev-window.c:4163
 msgid "Evince is a simple document viewer for GNOME"
 msgstr "Evince je jednoduchý prehliadač dokumentov pre prostredie GNOME"
 
-#: shell/ev-window.c:4235
+#: shell/ev-window.c:4166
 msgid "translator-credits"
 msgstr ""
 "Mário Vrablanský <vrablansky@gmail.com>\n"
@@ -1838,23 +1854,23 @@ msgstr ""
 "Pavol Klačanský <pavol@klacansky.com>\n"
 "Dušan Kazik <prescott66@gmail.com>"
 
-#: shell/ev-window.c:4717
+#: shell/ev-window.c:4615
 msgid "Running in presentation mode"
 msgstr "Beží v režime prezentácie"
 
-#: shell/ev-window.c:5704
+#: shell/ev-window.c:5600
 msgid "The attachment could not be saved."
 msgstr "Prílohu sa nepodarilo uložiť."
 
-#: shell/ev-window.c:6026
+#: shell/ev-window.c:5922
 msgid "Enable caret navigation?"
 msgstr "Povoliť navigáciu kurzorom?"
 
-#: shell/ev-window.c:6027
+#: shell/ev-window.c:5923
 msgid "_Enable"
 msgstr "_Povoliť"
 
-#: shell/ev-window.c:6030
+#: shell/ev-window.c:5926
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1864,11 +1880,11 @@ msgstr ""
 "umiestni pohyblivý kurzor do textu a umožní vám pohyb a výber textu pomocou "
 "vašej klávesnice. Chcete povoliť navigáciu kurzorom?"
 
-#: shell/ev-window.c:6035
+#: shell/ev-window.c:5931
 msgid "Don’t show this message again"
 msgstr "Túto správu viac nezobrazovať"
 
-#: shell/ev-window.c:6624
+#: shell/ev-window.c:6509
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
@@ -1876,29 +1892,29 @@ msgstr ""
 "Bezpečnostná výstraha: tomuto dokumentu bolo zabránené otvorenie súboru „%s“"
 
 # m: nepodarilo sa
-#: shell/ev-window.c:6689
+#: shell/ev-window.c:6574
 msgid "Unable to open external link"
 msgstr "Nepodarilo sa otvoriť externý odkaz"
 
-#: shell/ev-window.c:6915
+#: shell/ev-window.c:6800
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Nepodarilo sa nájsť vhodný formát na uloženie obrázku"
 
-#: shell/ev-window.c:6947
+#: shell/ev-window.c:6832
 msgid "The image could not be saved."
 msgstr "Obrázok sa nepodarilo uložiť."
 
 # filechooser dialog title
-#: shell/ev-window.c:6983
+#: shell/ev-window.c:6868
 msgid "Save Image"
 msgstr "Uloženie obrázka"
 
-#: shell/ev-window.c:7141
+#: shell/ev-window.c:7026
 msgid "Unable to open attachment"
 msgstr "Nepodarilo sa otvoriť prílohu"
 
 # filechooser dialog title
-#: shell/ev-window.c:7209
+#: shell/ev-window.c:7094
 msgid "Save Attachment"
 msgstr "Uloženie prílohy"
 
@@ -2304,77 +2320,77 @@ msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Gestá touchpadu"
 
-#: shell/main.c:64 shell/main.c:271
+#: shell/main.c:63 shell/main.c:268
 msgid "GNOME Document Viewer"
 msgstr "Prehliadač dokumentov GNOME"
 
 # cmdline desc
-#: shell/main.c:72
+#: shell/main.c:71
 msgid "Open a new window."
 msgstr "Otvorí v novom okne."
 
 # cmd desc
-#: shell/main.c:73
+#: shell/main.c:72
 msgid "The page label of the document to display."
 msgstr "Označenie stránky dokumentu, ktorá sa má zobraziť."
 
-#: shell/main.c:73
+#: shell/main.c:72
 msgid "PAGE"
 msgstr "STRÁNKA"
 
 # cmd desc
-#: shell/main.c:74
+#: shell/main.c:73
 msgid "The page number of the document to display."
 msgstr "Číslo stránky dokumentu, ktorá sa má zobraziť."
 
-#: shell/main.c:74
+#: shell/main.c:73
 msgid "NUMBER"
 msgstr "ČÍSLO"
 
 # cmd desc
-#: shell/main.c:75
+#: shell/main.c:74
 msgid "Named destination to display."
 msgstr "Pomenovaný cieľ, ktorý sa má zobraziť."
 
-#: shell/main.c:75
+#: shell/main.c:74
 msgid "DEST"
 msgstr "CIEĽ"
 
 # cmd desc
-#: shell/main.c:76
+#: shell/main.c:75
 msgid "Run evince in fullscreen mode"
 msgstr "Spustí evince v celoobrazovkovom režime"
 
 # cmd desc
-#: shell/main.c:77
+#: shell/main.c:76
 msgid "Run evince in presentation mode"
 msgstr "Spustí aplikáciu Evince v prezentačnom režime"
 
 # cmd desc
-#: shell/main.c:78
+#: shell/main.c:77
 msgid "Run evince as a previewer"
 msgstr "Spustí evince v režime náhľadov"
 
 # cmd desc
-#: shell/main.c:79
+#: shell/main.c:78
 msgid "The word or phrase to find in the document"
 msgstr "Slovo alebo fráza, ktorá sa má nájsť v dokumente"
 
-#: shell/main.c:79
+#: shell/main.c:78
 msgid "STRING"
 msgstr "REŤAZEC"
 
-#: shell/main.c:83
+#: shell/main.c:82
 msgid "[FILE…]"
 msgstr "[SÚBOR…]"
+
+#  window title
+#~ msgid "Annotation _Properties"
+#~ msgstr "Vlastnosti _poznámky"
 
 # action entry
 #~ msgid "Save Current Settings as Defa_ult"
 #~ msgstr "_Uložiť aktuálne nastavenia ako predvolené"
-
-# action entry
-#~ msgid "Annotation _Properties…"
-#~ msgstr "Vlastnosti _poznámky…"
 
 # action entry
 #~ msgid "Annotation Properties…"
