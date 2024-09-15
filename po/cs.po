@@ -18,9 +18,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2024-01-21 13:44+0000\n"
-"PO-Revision-Date: 2024-01-21 21:26+0100\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
+"POT-Creation-Date: 2024-08-31 10:11+0000\n"
+"PO-Revision-Date: 2024-09-15 22:38+0200\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
@@ -447,7 +447,7 @@ msgid "Advanced highlighting and annotation"
 msgstr "Pokročilé zvýrazňování a psaní poznámek"
 
 #. developer_name tag deprecated with Appstream 1.0
-#: data/org.gnome.Evince.metainfo.xml.in:49
+#: data/org.gnome.Evince.metainfo.xml.in:50
 msgid "The GNOME Project"
 msgstr "Projekt GNOME"
 
@@ -507,19 +507,19 @@ msgstr "Nepodařilo se vytvořit dočasný adresář: %s"
 msgid "This work is in the Public Domain"
 msgstr "Toto je volné dílo (Public Domain)"
 
-#: libmisc/ev-page-action-widget.c:90 libmisc/ev-page-action-widget.c:129
+#: libmisc/ev-page-action-widget.c:91 libmisc/ev-page-action-widget.c:130
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d z %d)"
 
-#: libmisc/ev-page-action-widget.c:92 libmisc/ev-page-action-widget.c:133
+#: libmisc/ev-page-action-widget.c:93 libmisc/ev-page-action-widget.c:134
 #, c-format
 msgid "of %d"
 msgstr "z %d"
 
-#: libmisc/ev-page-action-widget.c:201 shell/ev-history.c:454
+#: libmisc/ev-page-action-widget.c:254 shell/ev-history.c:454
 #: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:954
-#: shell/ev-window.c:5159
+#: shell/ev-window.c:5191
 #, c-format
 msgid "Page %s"
 msgstr "Stránka %s"
@@ -755,11 +755,11 @@ msgstr "Spustit %s"
 msgid "Reset form"
 msgstr "Čistý formulář"
 
-#: libview/ev-view-presentation.c:726
+#: libview/ev-view-presentation.c:737
 msgid "Jump to page:"
 msgstr "Přejít na stránku:"
 
-#: libview/ev-view-presentation.c:1010
+#: libview/ev-view-presentation.c:1021
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Konec prezentace. Opustíte ji kliknutím nebo klávesou Esc."
 
@@ -807,7 +807,7 @@ msgstr "Zvolit stránku nebo ji vyhledat v obsahu"
 msgid "Select page"
 msgstr "Zvolit stránku"
 
-#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3636
+#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3668
 msgid "Failed to print document"
 msgstr "Nepodařilo se vytisknout dokument"
 
@@ -820,7 +820,7 @@ msgstr "Prohlížeč dokumentů Evince"
 msgid "The selected printer “%s” could not be found"
 msgstr "Vybraná tiskárna „%s“ nebyla nalezena"
 
-#: previewer/ev-previewer-window.c:536 shell/ev-window.c:4227
+#: previewer/ev-previewer-window.c:536 shell/ev-window.c:4259
 msgid "Evince"
 msgstr "Evince"
 
@@ -1093,7 +1093,7 @@ msgstr "_Předchozí stránka"
 msgid "_Next Page"
 msgstr "_Následující stránka"
 
-#: shell/evince-menus.ui:54 shell/ev-window.c:3935
+#: shell/evince-menus.ui:54 shell/ev-window.c:3967
 msgid "_Reload"
 msgstr "Z_novu načíst"
 
@@ -1357,8 +1357,8 @@ msgid "Password required"
 msgstr "Je vyžadováno heslo"
 
 #: shell/ev-password-view.c:238 shell/ev-sidebar-attachments.c:493
-#: shell/ev-window.c:2877 shell/ev-window.c:3174 shell/ev-window.c:4059
-#: shell/ev-window.c:6987 shell/ev-window.c:7213
+#: shell/ev-window.c:2909 shell/ev-window.c:3206 shell/ev-window.c:4091
+#: shell/ev-window.c:7019 shell/ev-window.c:7245
 msgid "_Cancel"
 msgstr "_Zrušit"
 
@@ -1419,16 +1419,16 @@ msgstr "Další informace"
 msgid "Document contains no annotations"
 msgstr "Dokument neobsahuje žádné poznámky"
 
-#: shell/ev-sidebar-annotations.c:369
+#: shell/ev-sidebar-annotations.c:371
 #, c-format
 msgid "Page %d"
 msgstr "Stránka %d"
 
-#: shell/ev-sidebar-annotations.c:403
+#: shell/ev-sidebar-annotations.c:405
 msgid "No Comment"
 msgstr "Žádný komentář"
 
-#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7596
+#: shell/ev-sidebar-annotations.c:566 shell/ev-window.c:7628
 msgid "Annotations"
 msgstr "Poznámky"
 
@@ -1446,15 +1446,15 @@ msgstr "Soubor „%s“ již existuje. Nahrazením se přepíše jeho obsah."
 msgid "_Replace"
 msgstr "Nah_radit"
 
-#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7620
+#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7652
 msgid "Attachments"
 msgstr "Přílohy"
 
-#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7604
+#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7636
 msgid "Bookmarks"
 msgstr "Záložky"
 
-#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7632
+#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7664
 msgid "Layers"
 msgstr "Vrstvy"
 
@@ -1462,11 +1462,11 @@ msgstr "Vrstvy"
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7584
+#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7616
 msgid "Outline"
 msgstr "Obsah"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7567
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7599
 msgid "Thumbnails"
 msgstr "Náhledy"
 
@@ -1500,12 +1500,12 @@ msgstr "Nelze otevřít dokument „%s“."
 msgid "Loading document from “%s”"
 msgstr "Načítá se dokument z %s"
 
-#: shell/ev-window.c:2141 shell/ev-window.c:2599 shell/ev-window.c:2965
-#: shell/ev-window.c:3700 shell/ev-window.c:3948
+#: shell/ev-window.c:2141 shell/ev-window.c:2631 shell/ev-window.c:2997
+#: shell/ev-window.c:3732 shell/ev-window.c:3980
 msgid "C_ancel"
 msgstr "_Zrušit"
 
-#: shell/ev-window.c:2293 shell/ev-window.c:2650
+#: shell/ev-window.c:2293 shell/ev-window.c:2682
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Stahuje se dokument (%d %%)"
@@ -1514,71 +1514,71 @@ msgstr "Stahuje se dokument (%d %%)"
 msgid "Failed to load remote file."
 msgstr "Nepodařilo se nahrát vzdálený soubor"
 
-#: shell/ev-window.c:2595
+#: shell/ev-window.c:2627
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Opětovně se načítá dokument z %s"
 
-#: shell/ev-window.c:2625
+#: shell/ev-window.c:2657
 msgid "Failed to reload document."
 msgstr "Nezdařilo se znovu načíst dokument"
 
-#: shell/ev-window.c:2873
+#: shell/ev-window.c:2905
 msgid "Open Document"
 msgstr "Otevřít dokument"
 
-#: shell/ev-window.c:2876
+#: shell/ev-window.c:2908
 msgid "_Open"
 msgstr "_Otevřít"
 
-#: shell/ev-window.c:2951
+#: shell/ev-window.c:2983
 #, c-format
 msgid "Saving document to %s"
 msgstr "Dokument se ukládá do %s"
 
-#: shell/ev-window.c:2954
+#: shell/ev-window.c:2986
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Příloha se ukládá do %s"
 
-#: shell/ev-window.c:2957
+#: shell/ev-window.c:2989
 #, c-format
 msgid "Saving image to %s"
 msgstr "Obrázek se ukládá do %s"
 
-#: shell/ev-window.c:2999 shell/ev-window.c:3113
+#: shell/ev-window.c:3031 shell/ev-window.c:3145
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Soubor nelze uložit jako „%s“."
 
-#: shell/ev-window.c:3031
+#: shell/ev-window.c:3063
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Nahrává se dokument (%d %%)"
 
-#: shell/ev-window.c:3035
+#: shell/ev-window.c:3067
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Nahrává se příloha (%d %%)"
 
-#: shell/ev-window.c:3039
+#: shell/ev-window.c:3071
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Nahrává se obrázek (%d %%)"
 
-#: shell/ev-window.c:3171
+#: shell/ev-window.c:3203
 msgid "Save As…"
 msgstr "Uložení jako…"
 
-#: shell/ev-window.c:3173 shell/ev-window.c:6986 shell/ev-window.c:7212
+#: shell/ev-window.c:3205 shell/ev-window.c:7018 shell/ev-window.c:7244
 msgid "_Save"
 msgstr "_Uložit"
 
-#: shell/ev-window.c:3260
+#: shell/ev-window.c:3292
 msgid "Could not send current document"
 msgstr "Dokument se nepodařilo odeslat"
 
-#: shell/ev-window.c:3587
+#: shell/ev-window.c:3619
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1586,50 +1586,50 @@ msgstr[0] "%d nevyřízená úloha ve frontě"
 msgstr[1] "%d nevyřízené úlohy ve frontě"
 msgstr[2] "%d nevyřízených úloh ve frontě"
 
-#: shell/ev-window.c:3696
+#: shell/ev-window.c:3728
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Tiskne se úloha „%s“"
 
-#: shell/ev-window.c:3914
+#: shell/ev-window.c:3946
 msgid "Document contains form fields that have been filled out."
 msgstr "Dokument obsahuje pole, která byla vyplněna. "
 
-#: shell/ev-window.c:3917
+#: shell/ev-window.c:3949
 msgid "Document contains new or modified annotations."
 msgstr "Dokument obsahuje nové nebo změněné poznámky. "
 
-#: shell/ev-window.c:3929
+#: shell/ev-window.c:3961
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Načíst dokument „%s“ znovu?"
 
-#: shell/ev-window.c:3931
+#: shell/ev-window.c:3963
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Jestliže dokument znovu načtete, o změny nevratně příjdete."
 
-#: shell/ev-window.c:3933
+#: shell/ev-window.c:3965
 msgid "_No"
 msgstr "_Ne"
 
-#: shell/ev-window.c:3942
+#: shell/ev-window.c:3974
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Uložit před zavřením kopii dokumentu „%s“?"
 
-#: shell/ev-window.c:3944
+#: shell/ev-window.c:3976
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Pokud neuložíte kopii, budou změny nenávratně ztraceny."
 
-#: shell/ev-window.c:3946
+#: shell/ev-window.c:3978
 msgid "Close _without Saving"
 msgstr "Zavřít _bez uložení"
 
-#: shell/ev-window.c:3950
+#: shell/ev-window.c:3982
 msgid "Save a _Copy"
 msgstr "Uložit _kopii"
 
-#: shell/ev-window.c:4032
+#: shell/ev-window.c:4064
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Odložit uzavření, dokud se nedokončí tisková úloha „%s“?"
@@ -1637,7 +1637,7 @@ msgstr "Odložit uzavření, dokud se nedokončí tisková úloha „%s“?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:4038
+#: shell/ev-window.c:4070
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1649,27 +1649,27 @@ msgstr[1] ""
 msgstr[2] ""
 "%d tiskových úloh je aktivních. Odložit uzavření, dokud se nedokončí tisk?"
 
-#: shell/ev-window.c:4053
+#: shell/ev-window.c:4085
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Pokud zavřete okno, nebudou vytištěny nevyřízené tiskové úlohy."
 
-#: shell/ev-window.c:4057
+#: shell/ev-window.c:4089
 msgid "Cancel _print and Close"
 msgstr "Zrušit _tisk a zavřít"
 
-#: shell/ev-window.c:4061
+#: shell/ev-window.c:4093
 msgid "Close _after Printing"
 msgstr "Zavřít _po vytištění"
 
-#: shell/ev-window.c:4229
+#: shell/ev-window.c:4261
 msgid "© 1996–2023 The Evince document viewer authors"
 msgstr "© 1996 — 2023 autoři prohlížeče dokumentů Evince"
 
-#: shell/ev-window.c:4232
+#: shell/ev-window.c:4264
 msgid "Evince is a simple document viewer for GNOME"
 msgstr "Evince je jednoduchý prohlížeč dokumentů pro GNOME"
 
-#: shell/ev-window.c:4235
+#: shell/ev-window.c:4267
 msgid "translator-credits"
 msgstr ""
 "Miloslav Trmač <mitr@volny.cz>\n"
@@ -1683,37 +1683,37 @@ msgstr ""
 "Lucas Lommer <llommer@svn.gnome.org>\n"
 "Adam Matoušek <adydas95@gmail.com>"
 
-#: shell/ev-window.c:4717
+#: shell/ev-window.c:4749
 msgid "Running in presentation mode"
 msgstr "Běží v režimu prezentace"
 
-#: shell/ev-window.c:5704
+#: shell/ev-window.c:5736
 msgid "The attachment could not be saved."
 msgstr "Nepodařilo se uložit přílohu."
 
-#: shell/ev-window.c:6026
+#: shell/ev-window.c:6058
 msgid "Enable caret navigation?"
 msgstr "Zapnout kurzorovou navigaci?"
 
-#: shell/ev-window.c:6027
+#: shell/ev-window.c:6059
 msgid "_Enable"
 msgstr "Z_apnout"
 
-#: shell/ev-window.c:6030
+#: shell/ev-window.c:6062
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
 "with your keyboard. Do you want to enable the caret navigation?"
 msgstr ""
 "Zmáčknutím F7 zapnete/vypnete kurzorovou navigaci. Tato funkce umístí do "
-"stránek textový kurzor, kterým se mužete pomocí klávesnice po dokumentu "
+"stránek textový kurzor, kterým se můžete pomocí klávesnice po dokumentu "
 "pohybovat a vybírat text. Chcete kurzorovou navigaci zapnout?"
 
-#: shell/ev-window.c:6035
+#: shell/ev-window.c:6067
 msgid "Don’t show this message again"
 msgstr "Tuto zprávu znovu nezobrazovat"
 
-#: shell/ev-window.c:6624
+#: shell/ev-window.c:6656
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
@@ -1721,27 +1721,27 @@ msgstr ""
 "Bezpečnostní upozornění: tomuto dokumentu bylo zabráněno v otevření souboru "
 "„%s“."
 
-#: shell/ev-window.c:6689
+#: shell/ev-window.c:6721
 msgid "Unable to open external link"
 msgstr "Nepodařilo se otevřít externí odkaz"
 
-#: shell/ev-window.c:6915
+#: shell/ev-window.c:6947
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Nepodařilo se najít vhodný formát pro uložení obrázku"
 
-#: shell/ev-window.c:6947
+#: shell/ev-window.c:6979
 msgid "The image could not be saved."
 msgstr "Nepodařilo se uložit obrázek."
 
-#: shell/ev-window.c:6983
+#: shell/ev-window.c:7015
 msgid "Save Image"
 msgstr "Uložit obrázek"
 
-#: shell/ev-window.c:7141
+#: shell/ev-window.c:7173
 msgid "Unable to open attachment"
 msgstr "Nepodařilo se otevřít přílohu"
 
-#: shell/ev-window.c:7209
+#: shell/ev-window.c:7241
 msgid "Save Attachment"
 msgstr "Uložit přílohu"
 
