@@ -343,6 +343,9 @@ ev_xfer_uri_simple (const char *from,
 
 	result = g_file_copy (source_file, target_file,
 			      G_FILE_COPY_TARGET_DEFAULT_PERMS |
+#if GLIB_CHECK_VERSION(2, 80, 0)
+			      G_FILE_COPY_TARGET_DEFAULT_MODIFIED_TIME |
+#endif
 			      G_FILE_COPY_OVERWRITE,
 			      NULL, NULL, NULL, error);
 
@@ -382,6 +385,9 @@ ev_file_copy_metadata (const char *from,
 
         result = g_file_copy_attributes (source_file, target_file,
                                          G_FILE_COPY_ALL_METADATA |
+#if GLIB_CHECK_VERSION(2, 80, 0)
+                                         G_FILE_COPY_TARGET_DEFAULT_MODIFIED_TIME |
+#endif
                                          G_FILE_COPY_TARGET_DEFAULT_PERMS,
                                          NULL, error);
 
