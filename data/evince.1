@@ -14,14 +14,14 @@ The Evince Document Viewer application for the GNOME desktop environment
 .RI [--presentation]
 .RI [--preview]
 .RI [--find=STRING]
-.RI [filename(s)...]
+.RI [filename(s)...\ OR\ uri(s)...]
 .SH DESCRIPTION
 .B evince
 
 Evince is a document viewer capable of displaying multiple and single
 page document formats like PDF and Postscript.  For more general
 information about Evince please visit our website at
-http://www.gnome.org/projects/evince/
+https://apps.gnome.org/Evince/
 
 .LP
 .SH OPTIONS
@@ -49,17 +49,33 @@ Run evince in presentation mode.
 You can pass a word or phrase here. If it exists, evince will display
 the document and the first match.
 .TP
-\fBfilename(s)...\fR
+\fBfilename(s)... OR uri(s)...\fR
 Specifies the file to open when Evince starts. If this is not
-specified, Evince will open a blank window. Multiple files can be loaded
+specified, Evince will open with the Recent Files view. Multiple files can be loaded
 if they are separated by spaces.  Evince also supports handling of
 remote files.  For example, you can pass the location on the web or load
-a file from a FTP server, like "ftp://adobe.com/sample.pdf".
+a file from a FTP server, like "ftp://adobe.com/sample.pdf". File uri's are
+also allowed eg. "file:///home/user/Documents/sample.pdf"
+
+We partially support the Adobe PDF open parameters, specifically the
+"page" and "nameddest" parameters, which are similar to our \-\-named\-dest
+and \-\-page\-label options respectively. Some examples below:
+  - file:///home/user/Documents/sample.pdf#page=12
+  - https://arxiv.org/pdf/2310.01425#nameddest=section.3
+  - sample.pdf#Page=5
+  - sample.pdf#NamedDest=Chapter4
+
+  Tip: you can obtain the list of all named destinations in a pdf file
+       with the "pdfinfo -dests" command of poppler-utils package.
+
+Evince also treats a numeric solely parameter as the "page" number, eg:
+  - sample.pdf#5
+  - https://arxiv.org/pdf/2310.01425#7
 
 .SH Print preview options
 These options are primarily intended for use with the GTK+ print
 preview function. For more information about these options see
-http://developer.gnome.org/gtk3/stable/GtkSettings.html#GtkSettings--gtk-print-preview-command
+https://docs.gtk.org/gtk3/property.Settings.gtk-print-preview-command.html
 .TP
 \fB\-w, \-\-preview\fR
 Run evince as a previewer.
