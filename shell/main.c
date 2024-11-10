@@ -140,8 +140,8 @@ launch_previewer (void)
 	return retval;
 }
 
-static gchar *
-get_label_from_filename (const gchar *filename)
+static const gchar *
+get_fragment_from_filename (const gchar *filename)
 {
 	GFile   *file;
 	gchar   *label;
@@ -159,7 +159,79 @@ get_label_from_filename (const gchar *filename)
 	exists = g_file_query_exists (file, NULL);
 	g_object_unref (file);
 
-	return exists ? NULL : label;
+	if (exists)
+		return NULL;
+
+	/* skip past '#' char */
+	*label = '\0';
+	label++;
+
+	return label;
+}
+
+/* Returns TRUE if all characters of @str are digits, FALSE otherwise */
+static gboolean
+is_number (const gchar *str)
+{
+	int len = strlen (str);
+	if (!len)
+		return FALSE;
+
+	for (gint i = 0; i < len; i++) {
+		if (!g_ascii_isdigit (str[i]))
+			return FALSE;
+	}
+	return TRUE;
+}
+
+/* Searches in @fragment for the passed @key, search is case insensitive.
+ *
+ *    If found, TRUE is returned and @value (if provided) will contain the
+ *              value of key. The caller should free @value with g_free().
+ *    If not found, FALSE is returned.
+ */
+static gboolean
+fragment_extract_key (const gchar *fragment,
+		      const gchar *key,
+		      gchar **value)
+{
+	g_autoptr(GHashTable) params = NULL;
+	g_autoptr(GList) keys = NULL;
+
+	if (!fragment || !key)
+		return FALSE;
+
+	/* Evince interprets a fragment of solely a number (like 'doc.pdf#12')
+	 * as page number, so we handle it here when asked for the 'page' key */
+	if (strcmp (key, "page") == 0) {
+		if (is_number (fragment)) {
+			if (value)
+				*value = g_strdup (fragment);
+
+			return TRUE;
+		}
+	}
+
+	params = g_uri_parse_params (fragment, -1, "&", G_URI_PARAMS_CASE_INSENSITIVE, NULL);
+	if (!params)
+		return FALSE;
+
+	keys = g_hash_table_get_keys (params);
+
+	GList* iter = keys;
+	while (iter) {
+		gchar* cur_key = iter->data;
+		if (g_ascii_strcasecmp (key, cur_key) == 0) {
+			gpointer tmp = g_hash_table_lookup (params, cur_key);
+			if (value && tmp)
+				*value = g_strdup (tmp);
+
+			return TRUE;
+		}
+		iter = g_list_next (iter);
+	}
+
+	return FALSE;
 }
 
 static void
@@ -191,20 +263,28 @@ load_files (const char **files)
 	for (i = 0; files[i]; i++) {
 		const gchar *filename;
 		gchar       *uri;
-		gchar       *label;
+		const gchar *fragment;
 		GFile       *file;
 		EvLinkDest  *dest = NULL;
 		const gchar *app_uri;
+		g_autoptr(GUri) try_uri = NULL;
 
 		filename = files[i];
-		label = get_label_from_filename (filename);
-		if (label) {
-			*label = 0;
-			label++;
-			dest = ev_link_dest_new_page_label (label);
-		} else if (global_dest) {
+		/* We may receive a URI when eg. opening a link to external pdf from inside Evince itself */
+		try_uri = g_uri_parse (filename, G_URI_FLAGS_ENCODED | G_URI_FLAGS_NON_DNS, NULL);
+		if (try_uri && g_uri_get_fragment (try_uri))
+			fragment = g_uri_get_fragment (try_uri);
+		else
+			fragment = get_fragment_from_filename (filename);
+
+		if (fragment) {
+			g_autofree gchar *val = NULL;
+			if (fragment_extract_key (fragment, "nameddest", &val))
+				dest = ev_link_dest_new_named (val);
+			else if (fragment_extract_key (fragment, "page", &val))
+				dest = ev_link_dest_new_page_label (val);
+		} else if (global_dest)
 			dest = g_object_ref (global_dest);
-		}
 
 		file = g_file_new_for_commandline_arg (filename);
 		uri = g_file_get_uri (file);
@@ -222,8 +302,7 @@ load_files (const char **files)
 						 mode, ev_find_string,
 						 GDK_CURRENT_TIME);
 
-		if (dest)
-			g_object_unref (dest);
+		g_clear_object (&dest);
 		g_free (uri);
         }
 }
