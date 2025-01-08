@@ -1,4 +1,10 @@
-include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml'
+include:
+  - project: 'gnome/citemplates'
+    file: 'flatpak/flatpak_ci_initiative.yml'
+  - component: gitlab.gnome.org/GNOME/citemplates/release-service@master
+    inputs:
+      dist-job-name: "flatpak"
+      tarball-artifact-path: "${TARBALL_ARTIFACT_PATH}"
 
 stages:
     - lint
@@ -8,6 +14,13 @@ stages:
 
 variables:
     BUNDLE: "org.gnome.Evince.flatpak"
+    MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
+    MESON_ARGS: "-Dnautilus=false -Dgtk_doc=false"
+    FLATPAK_MODULE: "evince"
+    APP_ID: "org.gnome.Evince"
+    RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
+    TARBALL_ARTIFACT_PATH: ".flatpak-builder/build/${FLATPAK_MODULE}/_flatpak_build/meson-dist/${CI_PROJECT_NAME}-${CI_COMMIT_TAG}.tar.xz"
+    MESON_BUILD_DIR: _build
 
 editorconfig:
     stage: lint
@@ -26,13 +39,13 @@ meson:
             meson
             -Dlibhandy:examples=false -Dlibhandy:tests=false -Dlibhandy:vapi=false
             -Dlibhandy:glade_catalog=disabled -Dlibhandy:introspection=disabled
-            _build
-        - ninja -C _build all
+            "${MESON_BUILD_DIR}"
+        - ninja -C "${MESON_BUILD_DIR}" all
 
     artifacts:
         when: on_failure
         paths:
-        - _build/meson-logs/meson-log.txt
+        - "${MESON_BUILD_DIR}/meson-logs/meson-log.txt"
         expire_in: 2 days
 
 meson-internal-synctex:
@@ -40,39 +53,24 @@ meson-internal-synctex:
     stage: build
 
     script:
-        - meson -Dinternal_synctex=true _build
-        - ninja -C _build all
+        - meson -Dinternal_synctex=true "${MESON_BUILD_DIR}"
+        - ninja -C "${MESON_BUILD_DIR}" all
 
     artifacts:
         when: on_failure
         paths:
-        - _build/meson-logs/meson-log.txt
+        - "${MESON_BUILD_DIR}/meson-logs/meson-log.txt"
         expire_in: 2 days
 
 flatpak:
     extends: .flatpak
     stage: build
 
-    variables:
-        MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
-        RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
-        FLATPAK_MODULE: "evince"
-        MESON_ARGS: "-Dnautilus=false -Dgtk_doc=false"
-        APP_ID: "org.gnome.Evince"
-    artifacts:
-        # Rewrite paths and reports to "remove" testlog.txt and junit files,
-        # which do not exists in evince build, yet.
-        paths:
-            - "${BUNDLE}"
-            - 'repo.tar'
-            - '.flatpak-builder/build/${FLATPAK_MODULE}/_flatpak_build/meson-logs/meson-log.txt'
-        reports:
-            junit: []
-
 nightly:
-    dependencies:
-        - flatpak
     extends: .publish_nightly
+    dependencies: ['flatpak']
+    needs: ['flatpak']
+
 
 pages:
     image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3
@@ -80,11 +78,11 @@ pages:
     rules:
         - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PROJECT_NAMESPACE == "GNOME"
     script:
-        - meson setup _build
-        - ninja -C _build
+        - meson setup "${MESON_BUILD_DIR}"
+        - ninja -C "${MESON_BUILD_DIR}"
         - mkdir public
-        - mv _build/help/reference/libdocument/libevdocument public/document/
-        - mv _build/help/reference/libview/libevview public/view/
+        - mv "${MESON_BUILD_DIR}"/help/reference/libdocument/libevdocument public/document/
+        - mv "${MESON_BUILD_DIR}"/help/reference/libview/libevview public/view/
     artifacts:
         paths:
             - public/
