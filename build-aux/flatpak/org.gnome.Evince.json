@@ -108,8 +108,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://poppler.freedesktop.org/poppler-23.07.0.tar.xz",
-                    "sha256": "f29b4b4bf47572611176454c8f21506d71d27eca5011a39aa44038b30b957db0",
+                    "url": "https://poppler.freedesktop.org/poppler-24.12.0.tar.xz",
+                    "sha256": "1cf374c3146f3f685d9257701bf0c2866c61d6c202c14d1f5c01a1f3a089028a",
                     "x-checker-data": {
                         "type": "anitya",
                         "project-id": 3686,
@@ -159,14 +159,23 @@
         },
         {
             "name": "gspell",
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Dgspell_app=false",
+                "-Dgobject_introspection=false",
+                "-Dvapi=false",
+                "-Dgtk_doc=false",
+                "-Dtests=false",
+                "-Dinstall_tests=false"
+            ],
             "cleanup": [
                 "/bin"
             ],
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://download.gnome.org/sources/gspell/1.12/gspell-1.12.1.tar.xz",
-                    "sha256": "8ec44f32052e896fcdd4926eb814a326e39a5047e251eec7b9056fbd9444b0f1",
+                    "url": "https://download.gnome.org/sources/gspell/1.14/gspell-1.14.0.tar.xz",
+                    "sha256": "64ea1d8e9edc1c25b45a920e80daf67559d1866ffcd7f8432fecfea6d0fe8897",
                     "x-checker-data": {
                         "type": "gnome",
                         "name": "gspell"
@@ -188,8 +197,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://download.gnome.org/sources/gnome-desktop/44/gnome-desktop-44.0.tar.xz",
-                    "sha256": "42c773745d84ba14bc1cf1c4c6f4606148803a5cd337941c63964795f3c59d42",
+                    "url": "https://download.gnome.org/sources/gnome-desktop/44/gnome-desktop-44.1.tar.xz",
+                    "sha256": "ae7ca55dc9e08914999741523a17d29ce223915626bd2462a120bf96f47a79ab",
                     "x-checker-data": {
                         "type": "gnome",
                         "name": "gnome-desktop"
