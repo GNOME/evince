@@ -1,6 +1,6 @@
 project(
   'evince', ['c'],
-  version: '46.3.1',
+  version: '48.rc',
   license: 'GPL-2.0-or-later',
   meson_version: '>= 0.59.0',
   default_options: [
