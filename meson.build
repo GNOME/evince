@@ -1,6 +1,6 @@
 project(
   'evince', ['c'],
-  version: '48.alpha',
+  version: '49.alpha.0',
   license: 'GPL-2.0-or-later',
   meson_version: '>= 0.59.0',
   default_options: [
@@ -46,14 +46,14 @@ ev_appstreamdir = join_paths(ev_datadir, 'metainfo')
 # - If the interface is the same as the previous version, change to C:R+1:A
 
 # Libtool version of the backend library
-ev_document_current = 5
+ev_document_current = 6
 ev_document_revision = 0
 ev_document_age = 0
 ev_document_version = '@0@.@1@.@2@'.format(ev_document_current, ev_document_revision, ev_document_age)
 ev_document_current_minus_age = ev_document_current - ev_document_age
 
 # Libtool version of the view library
-ev_view_current = 4
+ev_view_current = 5
 ev_view_revision = 0
 ev_view_age = 0
 ev_view_version = '@0@.@1@.@2@'.format(ev_view_current, ev_view_revision, ev_view_age)
