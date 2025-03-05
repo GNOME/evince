@@ -6167,14 +6167,6 @@ ev_window_dispose (GObject *object)
 		g_clear_object (&priv->default_settings);
 	}
 	g_clear_object (&priv->lockdown_settings);
-
-	if (priv->model) {
-		g_signal_handlers_disconnect_by_func (priv->model,
-						      ev_window_page_changed_cb,
-						      window);
-		g_clear_object (&priv->model);
-	}
-
 	g_clear_object (&priv->document);
 	g_clear_object (&priv->view);
 	g_clear_object (&priv->password_view);
