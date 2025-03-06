@@ -376,7 +376,7 @@ main (int argc, char *argv[])
 	ev_stock_icons_init ();
 
 	/* Manually set name and icon */
-	g_set_application_name (_("Document Viewer"));
+	g_set_application_name (_("Evince"));
 	gtk_window_set_default_icon_name (PACKAGE_ICON_NAME);
 
         application = ev_application_new ();

@@ -128,7 +128,7 @@ ev_window_title_update (EvWindowTitle *window_title)
 	} else if (window_title->filename) {
 		title = g_strdup (window_title->filename);
 	} else {
-		title = g_strdup (_("Document Viewer"));
+		title = g_strdup (_("Evince"));
 	}
 
 	switch (window_title->type) {
