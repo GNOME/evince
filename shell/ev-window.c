@@ -6496,7 +6496,9 @@ launch_action (EvWindow *ev_window, EvLinkAction *action)
 	uri = get_uri (filename, ev_window);
 	view = EV_VIEW (priv->view);
 
-	if (!file_is_pdf (uri) || !ev_view_current_event_is_type (view, GDK_BUTTON_RELEASE)) {
+	if (!file_is_pdf (uri) ||
+	    !(ev_view_current_event_is_type (view, GDK_BUTTON_PRESS) ||
+	      ev_view_current_event_is_type (view, GDK_BUTTON_RELEASE))) {
 		ev_window_warning_message (ev_window,
 			_("Security alert: this document has been prevented from opening the file “%s”"),
 			filename);
