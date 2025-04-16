@@ -290,8 +290,6 @@ main (gint argc, gchar **argv)
 	textdomain (GETTEXT_PACKAGE);
 #endif
 
-        g_set_prgname ("evince-previewer");
-
 	context = g_option_context_new (_("GNOME Document Previewer"));
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, goption_options, GETTEXT_PACKAGE);
@@ -313,9 +311,10 @@ main (gint argc, gchar **argv)
 	ev_stock_icons_init ();
 
 	g_set_application_name (_("GNOME Document Previewer"));
+	g_set_prgname (APPLICATION_ID "-previewer");
 	gtk_window_set_default_icon_name (PACKAGE_ICON_NAME);
 
-        application = gtk_application_new (NULL, G_APPLICATION_NON_UNIQUE);
+        application = gtk_application_new (APPLICATION_ID "-previewer", G_APPLICATION_NON_UNIQUE);
         g_signal_connect (application, "startup", G_CALLBACK (startup_cb), NULL);
         g_signal_connect (application, "activate", G_CALLBACK (activate_cb), NULL);
 
