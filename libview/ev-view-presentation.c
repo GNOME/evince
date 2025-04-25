@@ -1267,7 +1267,7 @@ ev_view_presentation_update_monitor_geometry (EvViewPresentation *pview)
 	pview->monitor_width = geometry.width;
 	pview->monitor_height = geometry.height;
 
-#if GTK_CHECK_VERSION(3, 24, 9) && defined (GDK_WINDOWING_WAYLAND)
+#if GTK_CHECK_VERSION(3, 24, 9) && !GTK_CHECK_VERSION(3, 24, 42) && defined (GDK_WINDOWING_WAYLAND)
 	if (GDK_IS_WAYLAND_DISPLAY (display)) {
 		/* See Evince issue #1365 and GTK regression gtk#2599 */
 		int scale_factor = gdk_monitor_get_scale_factor (monitor);
