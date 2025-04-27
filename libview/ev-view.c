@@ -5217,7 +5217,7 @@ ev_view_query_tooltip (GtkWidget  *widget,
 	EvLink       *link;
 	EvAnnotation *annot;
 	gchar        *text;
-	if (ev_view_is_loading(view))
+	if (ev_view_is_loading (view))
 		return FALSE;
 
 	annot = ev_view_get_annotation_at_location (view, x, y);
