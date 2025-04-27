@@ -4388,7 +4388,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 					allocation->width,
 					allocation->height);
 
-	if (!view->document)
+	if (!view->document || ev_view_is_loading (view))
 		return;
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
@@ -5217,6 +5217,8 @@ ev_view_query_tooltip (GtkWidget  *widget,
 	EvLink       *link;
 	EvAnnotation *annot;
 	gchar        *text;
+	if (ev_view_is_loading (view))
+		return FALSE;
 
 	annot = ev_view_get_annotation_at_location (view, x, y);
 	if (annot) {
