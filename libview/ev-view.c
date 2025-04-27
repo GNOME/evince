@@ -4388,7 +4388,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 					allocation->width,
 					allocation->height);
 
-	if (!view->document || ev_view_is_loading(view))
+	if (!view->document || ev_view_is_loading (view))
 		return;
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
