@@ -4590,14 +4590,19 @@ ev_window_cmd_view_fullscreen (GSimpleAction *action,
 			       gpointer       user_data)
 {
 	EvWindow *window = user_data;
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (g_variant_get_boolean (state)) {
-		ev_window_run_fullscreen (window);
+		if (ev_toolbar_action_menu_popover_is_visible (EV_TOOLBAR (priv->toolbar))) {
+			/* Popover menu is opened, so launch after a small delay
+			 * to avoid interfering with the popover closing - Issue #2088 */
+			g_timeout_add_once (200, (GSourceOnceFunc) ev_window_run_fullscreen, window);
+		} else {
+			ev_window_run_fullscreen (window);
+		}
 	} else {
 		ev_window_stop_fullscreen (window, TRUE);
 	}
-
-	g_simple_action_set_state (action, state);
 }
 
 static void
@@ -4763,8 +4768,15 @@ ev_window_cmd_view_presentation (GSimpleAction *action,
 	EvWindow *window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
-	if (!EV_WINDOW_IS_PRESENTATION (priv))
-		ev_window_run_presentation (window);
+	if (!EV_WINDOW_IS_PRESENTATION (priv)) {
+		if (ev_toolbar_action_menu_popover_is_visible (EV_TOOLBAR (priv->toolbar))) {
+			/* Popover menu is opened, so launch after a small delay
+			 * to avoid interfering with the popover closing - Issue #2088 */
+			g_timeout_add_once (200, (GSourceOnceFunc) ev_window_run_presentation, window);
+		} else {
+			ev_window_run_presentation (window);
+		}
+	}
 	/* We don't exit presentation when action is toggled because it conflicts with some
 	 * remote controls. The behaviour is also consistent with libreoffice and other
 	 * presentation tools. See https://bugzilla.gnome.org/show_bug.cgi?id=556162

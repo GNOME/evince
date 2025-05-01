@@ -191,6 +191,24 @@ ev_toolbar_action_menu_toggle (EvToolbar *ev_toolbar)
                                       !is_active);
 }
 
+gboolean
+ev_toolbar_action_menu_popover_is_visible (EvToolbar *ev_toolbar)
+{
+	EvToolbarPrivate *priv;
+	GtkPopover *popover;
+
+	g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), FALSE);
+
+	priv = GET_PRIVATE (ev_toolbar);
+
+	popover = gtk_menu_button_get_popover (GTK_MENU_BUTTON (priv->action_menu_button));
+
+	if (popover)
+		return gtk_widget_get_visible (GTK_WIDGET (popover));
+
+	return FALSE;
+}
+
 GtkWidget *
 ev_toolbar_get_page_selector (EvToolbar *ev_toolbar)
 {
