@@ -4826,11 +4826,19 @@ draw_caret_cursor (EvView  *view,
 {
 	GdkRectangle view_rect;
 	GdkRGBA      cursor_color;
+	GtkStyleContext *context;
 
 	if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &view_rect))
 		return;
 
-	get_cursor_color (gtk_widget_get_style_context (GTK_WIDGET (view)), &cursor_color);
+	context = gtk_widget_get_style_context (GTK_WIDGET (view));
+	gtk_style_context_save (context);
+	gtk_style_context_add_class (context, EV_STYLE_CLASS_DOCUMENT_PAGE);
+	if (ev_document_model_get_inverted_colors (view->model))
+		gtk_style_context_add_class (context, EV_STYLE_CLASS_INVERTED);
+
+	get_cursor_color (context, &cursor_color);
+	gtk_style_context_restore (context);
 
 	cairo_save (cr);
 	gdk_cairo_set_source_rgba (cr, &cursor_color);
