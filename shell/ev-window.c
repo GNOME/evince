@@ -6499,9 +6499,15 @@ launch_action (EvWindow *ev_window, EvLinkAction *action)
 	if (!file_is_pdf (uri) ||
 	    !(ev_view_current_event_is_type (view, GDK_BUTTON_PRESS) ||
 	      ev_view_current_event_is_type (view, GDK_BUTTON_RELEASE))) {
-		ev_window_warning_message (ev_window,
-			_("Security alert: this document has been prevented from opening the file “%s”"),
-			filename);
+		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
+			ev_window_warning_message (ev_window,
+				_("Security alert: this document has been prevented from opening the file “%s”"),
+				filename);
+		} else {
+			ev_window_warning_message (ev_window,
+				_("Unable to open file “%s”"),
+				filename);
+		}
 		return;
 	}
 	/* We are asked to open a PDF file, from a click event, proceed with that - Issue #48
