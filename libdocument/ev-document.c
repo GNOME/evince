@@ -299,6 +299,10 @@ ev_document_setup_cache (EvDocument *document)
                         /* It's a different page size.  Backfill the array. */
                         int j;
 
+                        /* Check for potential integer overflow in allocation - Issue #2094 */
+                        if ((gsize)priv->n_pages > G_MAXSIZE / sizeof(EvPageSize))
+                                g_error ("Exiting program due to abnormal page count detected: %d", priv->n_pages);
+
                         priv->page_sizes = g_new0 (EvPageSize, priv->n_pages);
 
                         for (j = 0; j < i; j++) {

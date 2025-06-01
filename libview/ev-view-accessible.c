@@ -392,6 +392,10 @@ initialize_children (EvViewAccessible *self)
 	ev_document = ev_document_model_get_document (self->priv->model);
 	n_pages = ev_document_get_n_pages (ev_document);
 
+	/* Check for potential integer overflow in allocation - Issue #2094 */
+	if ((gsize)n_pages > G_MAXSIZE / sizeof(EvPageAccessible))
+		g_error ("Exiting program due to abnormal page count detected: %d", n_pages);
+
 	self->priv->children = g_ptr_array_new_full (n_pages, (GDestroyNotify) g_object_unref);
 	for (i = 0; i < n_pages; i++) {
 		child = ev_page_accessible_new (self, i);

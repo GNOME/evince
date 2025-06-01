@@ -150,6 +150,11 @@ ev_thumbnails_size_cache_new (EvDocument *document)
 	}
 
 	n_pages = ev_document_get_n_pages (document);
+
+	/* Check for potential integer overflow in allocation - Issue #2094 */
+	if ((gsize)n_pages > G_MAXSIZE / sizeof(EvThumbsSize))
+		g_error ("Exiting program due to abnormal page count detected: %d", n_pages);
+
 	cache->sizes = g_new0 (EvThumbsSize, n_pages);
 
 	for (i = 0; i < n_pages; i++) {
