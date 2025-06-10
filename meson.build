@@ -121,8 +121,6 @@ if ev_debug
     '-Werror=pointer-arith',
     '-Werror=return-type',
   ])
-  libsysprof_capture_dep = dependency('sysprof-4')
-  common_flags += ['-DHAVE_SYSPROF']
 endif
 
 add_project_arguments(common_flags, language: 'c')
@@ -258,6 +256,18 @@ else
 
   if not external_synctex and get_option('internal_synctex') == 'false'
     error('External synctex requested but not found')
+  endif
+endif
+
+# *** libsysprof ***
+if get_option('internal_sysprof') == 'true'
+  external_sysprof = false
+else
+  libsysprof_capture_dep = dependency('sysprof-capture-4')
+  external_sysprof = libsysprof_capture_dep.found()
+
+  if not external_sysprof and get_option('internal_sysprof') == 'false'
+    error('External sysprof-capture requested but not found')
   endif
 endif
 
@@ -541,4 +551,5 @@ summary({'Gtk-doc reference..........': enable_gtk_doc,
          'GTK+ Unix print ...........': enable_gtk_unix_print,
          'Thumbnail cache ...........': enable_thumbnail_cache,
          'SyncTex ...................': external_synctex.to_string('external', 'internal'),
+         'Sysprof ...................': external_sysprof.to_string('external', 'internal'),
         }, section: 'Features', bool_yn: true)

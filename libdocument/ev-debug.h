@@ -93,8 +93,6 @@ EvDebugBorders ev_debug_get_debug_borders (void);
 
 #endif /* EV_ENABLE_DEBUG */
 
-#ifdef HAVE_SYSPROF
-
 #include <sysprof-capture.h>
 
 #define EV_PROFILER_START(job_type) \
@@ -106,12 +104,5 @@ EvDebugBorders ev_debug_get_debug_borders (void);
 			       "evince",                                     \
 			       sysprof_name, \
 			       NULL);
-
-#else /* HAVE_SYSPROF */
-
-#define EV_PROFILER_START(job_type)
-#define EV_PROFILER_STOP()
-
-#endif /* HAVE_SYSPROF */
 
 G_END_DECLS

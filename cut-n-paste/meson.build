@@ -7,3 +7,7 @@ subdir('libgd')
 if not external_synctex
   subdir('synctex')
 endif
+
+if not external_sysprof
+  subdir('libsysprof-capture')
+endif

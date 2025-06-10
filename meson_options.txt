@@ -23,5 +23,6 @@ option('gtk_unix_print', type: 'feature', value: 'auto', description: 'whether g
 option('thumbnail_cache', type: 'feature', value: 'auto', description: 'whether GNOME Desktop (Thumbnail cache) is requested')
 
 option('internal_synctex', type: 'combo', value: 'auto', choices : ['auto', 'true', 'false'], description: 'whether to use the internal synctex')
+option('internal_sysprof', type: 'combo', value: 'true', choices : ['auto', 'true', 'false'], description: 'whether to use the internal copy of sysprof')
 
 option('systemduserunitdir', type: 'string', value: '', description: 'custom directory for systemd user units, or \'no\' to disable')
