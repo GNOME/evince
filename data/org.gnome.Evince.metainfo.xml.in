@@ -46,8 +46,6 @@
   <url type="donation">https://www.gnome.org/donate/</url>
   <url type="vcs-browser">https://gitlab.gnome.org/GNOME/evince/</url>
   <project_group>GNOME</project_group>
-  <!-- developer_name tag deprecated with Appstream 1.0 -->
-  <developer_name>The GNOME Project</developer_name>
   <developer id="org.gnome">
     <name>The GNOME Project</name>
   </developer>
@@ -60,6 +58,17 @@
   <translation type="gettext">evince</translation>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="48.1" type="stable" date="2025-06-16">
+      <description>
+        <p>Bug fixes and improvements.</p>
+      </description>
+      <issues>
+        <issue url="https://gitlab.gnome.org/GNOME/evince/issues/1399">#1399</issue>
+        <issue url="https://gitlab.gnome.org/GNOME/evince/issues/1600">#1600</issue>
+        <issue url="https://gitlab.gnome.org/GNOME/evince/issues/2093">#2093</issue>
+        <issue url="https://gitlab.gnome.org/GNOME/evince/issues/2094">#2094</issue>
+      </issues>
+    </release>
     <release version="48.0" type="stable" date="2025-03-15">
       <description>
         <p>Improves support for Adobe PDF open parameters, and fixes the modification time when saving a document.</p>

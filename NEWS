@@ -1,4 +1,24 @@
 =============
+Evince   48.1
+=============
+
+general:
+  * Avoid potential heap overflow when allocating from n_pages (#2094, Nelson Benítez León)
+
+libview:
+  * Confine monitor fix to affected gtk versions (#1600, Nelson Benítez León)
+  * Fix caret-color when using system dark mode (#2093, Nelson Benítez León)
+  * Make annotation popup window always opaque (#1399, Casey Jao)
+
+shell/previwer:
+  * Set application ID to match with .desktop (Balló György)
+
+Developers:
+  * Balló GyöNinpwnrgy, Casey Jao, Nelson Benítez León
+
+Special thanks to Ninpwn for reporting potential heap overflow.
+
+=============
 Evince   48.0
 =============
 
