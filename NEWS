@@ -2,10 +2,43 @@
 Evince 49.alpha.0
 =================
 
-libdocument:
+general:
+  * Avoid potential heap overflow when allocating from n_pages (#2094, Nelson Benítez León)
+  * Make annotation popup window always opaque (#1399, Casey Jao)
+  * Port Evince to Gtk4 (Qiu Wenbo, Pablo Correa Gómez, Germán Poo-Caamaño)
+
+profiling:
+  * Usage of sysprof for profiling (Pablo Correa Gómez)
   * EV_PROFILE and EV_PROFILE_JOBS environment variables for profiling are now
     ignored. Anybody wishing to profile evince can now use sysprof, which
     provides a far better interface.
+
+libview:
+  * Fix caret-color when using system dark mode (#2093, Nelson Benítez León)
+  * Avoid view events while view is still loading (Nelson Ben)
+
+shell:
+  * Fix crash when exiting (#2074, Nelson Benítez León)
+  * Fix opening of linked PDFs (Marek Kasik)
+  * Confine monitor fix to affected gtk versions (#1600, Nelson Benítez León)
+  * Warn about nonexisting launch target file (Marek Kasik)
+
+Developers:
+  * Casey Jao, Germán Poo-Caamaño, Marek Kasik, Nelson Ben, Nelson Benítez León, Pablo Correa Gómez, Qiu Wenbo
+
+Translations:
+  * Emilio Sepúlveda (Add Interlingua)
+  * Baxrom Raxmatov (Add Uzbek (Latin))
+  * Amar Al-Janabi (Arabic)
+  * Vasil Pupkin (Belarusian)
+  * Jordi Mas (Catalan)
+  * Jordi Mas i Hernandez (Catalan)
+  * Yi-Jyun Pan (Chinese (Taiwan))
+  * Daniel Rusek (Czech)
+  * Takayuki Kusano (Japanese)
+  * Pawan Chitrakar (Nepali)
+  * A S Alam (Punjabi)
+  * Martin (Slovenian)
 
 ===============
 Evince 48.alpha
