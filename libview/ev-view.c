@@ -5850,7 +5850,7 @@ selection_update_idle_cb (EvView *view)
 static gboolean
 selection_scroll_timeout_cb (EvView *view)
 {
-	gint x, y, shift = 0;
+	gint x, y, shift_x = 0, shift_y = 0;
 	GtkWidget *widget = GTK_WIDGET (view);
 	EvViewPrivate *priv = GET_PRIVATE (view);
 	int widget_width = gtk_widget_get_width (widget);
@@ -5860,27 +5860,27 @@ selection_scroll_timeout_cb (EvView *view)
 		return G_SOURCE_CONTINUE;
 
 	if ((y + SCROLL_SENSITIVITY_THRESHOLD) > widget_height) {
-		shift = (y + SCROLL_SENSITIVITY_THRESHOLD - widget_height) / 2;
+		shift_y = (y + SCROLL_SENSITIVITY_THRESHOLD - widget_height) / 2;
 	} else if (y < SCROLL_SENSITIVITY_THRESHOLD) {
-		shift = (y - SCROLL_SENSITIVITY_THRESHOLD) / 2;
+		shift_y = (y - SCROLL_SENSITIVITY_THRESHOLD) / 2;
 	}
 
-	if (shift)
+	if (shift_y)
 		gtk_adjustment_set_value (priv->vadjustment,
-					  CLAMP (gtk_adjustment_get_value (priv->vadjustment) + shift,
+					  CLAMP (gtk_adjustment_get_value (priv->vadjustment) + shift_y,
 						 gtk_adjustment_get_lower (priv->vadjustment),
 						 gtk_adjustment_get_upper (priv->vadjustment) -
 						 gtk_adjustment_get_page_size (priv->vadjustment)));
 
 	if ((x + SCROLL_SENSITIVITY_THRESHOLD) > widget_width) {
-		shift = (x + SCROLL_SENSITIVITY_THRESHOLD - widget_width) / 2;
+		shift_x = (x + SCROLL_SENSITIVITY_THRESHOLD - widget_width) / 2;
 	} else if (x < SCROLL_SENSITIVITY_THRESHOLD) {
-		shift = (x - SCROLL_SENSITIVITY_THRESHOLD) / 2;
+		shift_x = (x - SCROLL_SENSITIVITY_THRESHOLD) / 2;
 	}
 
-	if (shift)
+	if (shift_x)
 		gtk_adjustment_set_value (priv->hadjustment,
-					  CLAMP (gtk_adjustment_get_value (priv->hadjustment) + shift,
+					  CLAMP (gtk_adjustment_get_value (priv->hadjustment) + shift_x,
 						 gtk_adjustment_get_lower (priv->hadjustment),
 						 gtk_adjustment_get_upper (priv->hadjustment) -
 						 gtk_adjustment_get_page_size (priv->hadjustment)));
