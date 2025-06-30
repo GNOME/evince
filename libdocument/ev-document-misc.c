@@ -329,6 +329,14 @@ ev_document_misc_get_pointer_position (GtkWidget *widget,
                                        gint      *x,
                                        gint      *y)
 {
+	ev_document_misc_get_pointer_position_impl (widget, x, y);
+}
+
+gboolean
+ev_document_misc_get_pointer_position_impl (GtkWidget *widget,
+                                            gint      *x,
+                                            gint      *y)
+{
 	gdouble     dx, dy;
 	GdkSeat    *seat;
 	GtkNative  *native;
@@ -341,7 +349,7 @@ ev_document_misc_get_pointer_position (GtkWidget *widget,
 		*y = -1;
 
 	if (!gtk_widget_get_realized (widget))
-		return;
+		return FALSE;
 
 	seat = gdk_display_get_default_seat (gtk_widget_get_display (widget));
 
@@ -349,11 +357,11 @@ ev_document_misc_get_pointer_position (GtkWidget *widget,
 	native = gtk_widget_get_native (widget);
 
 	if (!native)
-		return;
+		return FALSE;
 
 	surface = gtk_native_get_surface (native);
 	if (!surface)
-		return;
+		return FALSE;
 
 	gdk_surface_get_device_position (surface,
 					 device_pointer,
@@ -370,4 +378,6 @@ ev_document_misc_get_pointer_position (GtkWidget *widget,
 		*x -= dx;
 	if (y)
 		*y -= dy;
+
+	return TRUE;
 }

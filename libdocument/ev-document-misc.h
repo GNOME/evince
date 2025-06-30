@@ -66,4 +66,9 @@ void             ev_document_misc_get_pointer_position (GtkWidget *widget,
 							gint      *x,
 							gint      *y);
 
+EV_PRIVATE
+gboolean         ev_document_misc_get_pointer_position_impl (GtkWidget *widget,
+							     gint      *x,
+							     gint      *y);
+
 G_END_DECLS

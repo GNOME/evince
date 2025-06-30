@@ -116,6 +116,8 @@ typedef struct {
 #define LINK_PREVIEW_VERTICAL_LINK_POS 0.3    /* as fraction of preview height */
 #define LINK_PREVIEW_DELAY_MS 300             /* Delay before showing preview in milliseconds */
 
+#define SCROLL_SENSITIVITY_THRESHOLD 5
+
 /*** Geometry computations ***/
 static void       compute_border                             (EvView             *view,
 							      GtkBorder          *border);
@@ -5854,12 +5856,13 @@ selection_scroll_timeout_cb (EvView *view)
 	int widget_width = gtk_widget_get_width (widget);
 	int widget_height = gtk_widget_get_height (widget);
 
-	ev_document_misc_get_pointer_position (widget, &x, &y);
+	if (!ev_document_misc_get_pointer_position_impl (widget, &x, &y))
+		return G_SOURCE_CONTINUE;
 
-	if (y > widget_height) {
-		shift = (y - widget_height) / 2;
-	} else if (y < 0) {
-		shift = y / 2;
+	if ((y + SCROLL_SENSITIVITY_THRESHOLD) > widget_height) {
+		shift = (y + SCROLL_SENSITIVITY_THRESHOLD - widget_height) / 2;
+	} else if (y < SCROLL_SENSITIVITY_THRESHOLD) {
+		shift = (y - SCROLL_SENSITIVITY_THRESHOLD) / 2;
 	}
 
 	if (shift)
@@ -5869,10 +5872,10 @@ selection_scroll_timeout_cb (EvView *view)
 						 gtk_adjustment_get_upper (priv->vadjustment) -
 						 gtk_adjustment_get_page_size (priv->vadjustment)));
 
-	if (x > widget_width) {
-		shift = (x - widget_width) / 2;
-	} else if (x < 0) {
-		shift = x / 2;
+	if ((x + SCROLL_SENSITIVITY_THRESHOLD) > widget_width) {
+		shift = (x + SCROLL_SENSITIVITY_THRESHOLD - widget_width) / 2;
+	} else if (x < SCROLL_SENSITIVITY_THRESHOLD) {
+		shift = (x - SCROLL_SENSITIVITY_THRESHOLD) / 2;
 	}
 
 	if (shift)
