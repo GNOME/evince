@@ -60,7 +60,7 @@ option_version_cb (const gchar *option_name,
                    gpointer     data,
                    GError     **error)
 {
-  g_print ("%s %s\n", _("GNOME Document Viewer"), VERSION);
+  g_print ("%s %s\n", "Evince", VERSION);
 
   exit (0);
   return FALSE;
@@ -344,7 +344,7 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	context = g_option_context_new (N_("GNOME Document Viewer"));
+	context = g_option_context_new ("Evince");
 	g_option_context_set_translation_domain(context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, goption_options, GETTEXT_PACKAGE);
 
@@ -371,7 +371,7 @@ main (int argc, char *argv[])
 	gtk_init ();
 
 	/* Manually set name and icon */
-	g_set_application_name (_("Document Viewer"));
+	g_set_application_name ("Evince");
 	gtk_window_set_default_icon_name (APPLICATION_ID);
 
         application = ev_application_new ();
