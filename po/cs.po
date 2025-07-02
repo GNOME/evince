@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
-"POT-Creation-Date: 2024-08-31 10:11+0000\n"
-"PO-Revision-Date: 2024-09-15 22:36+0200\n"
+"POT-Creation-Date: 2025-06-29 19:16+0000\n"
+"PO-Revision-Date: 2025-07-02 23:48+0200\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:262
@@ -313,7 +313,7 @@ msgstr "Přidává podporu pro čtení dokumentů XPS"
 #. Manually set name and icon
 #: data/org.gnome.Evince.desktop.in.in:3
 #: data/org.gnome.Evince.metainfo.xml.in.in:23 shell/ev-window-title.c:131
-#: shell/main.c:295
+#: shell/main.c:374
 msgid "Document Viewer"
 msgstr "Prohlížeč dokumentů"
 
@@ -323,11 +323,8 @@ msgstr "Zobrazovat dokumenty po více stránkách"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Evince.desktop.in.in:6
-msgid ""
-"pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
-msgstr ""
-"pdf;ps;postscript;postskript;dvi;xps;djvu;tiff;dokument;prezentace;prohlížeč;"
-"evince;"
+msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
+msgstr "pdf;ps;postscript;postskript;dvi;xps;djvu;tiff;dokument;prezentace;prohlížeč;evince;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
 msgid "New Window"
@@ -479,9 +476,9 @@ msgstr "Nepodařilo se otevřít přílohu „%s“"
 msgid "File type %s (%s) is not supported"
 msgstr "Typ souboru %s (%s) není podporován"
 
-#: libdocument/ev-document-factory.c:387 libdocument/ev-file-helpers.c:417
-#: libdocument/ev-file-helpers.c:463 libdocument/ev-file-helpers.c:482
-#: libdocument/ev-file-helpers.c:563 libdocument/ev-file-helpers.c:572
+#: libdocument/ev-document-factory.c:387 libdocument/ev-file-helpers.c:423
+#: libdocument/ev-file-helpers.c:469 libdocument/ev-file-helpers.c:488
+#: libdocument/ev-file-helpers.c:569 libdocument/ev-file-helpers.c:578
 msgid "Unknown MIME Type"
 msgstr "Neznámý typ MIME"
 
@@ -528,12 +525,12 @@ msgstr "Stránka %s"
 msgid "page-label-entry"
 msgstr ""
 
-#: libview/ev-jobs.c:626
+#: libview/ev-jobs.c:622
 #, c-format
 msgid "Failed to render page %d: %s"
 msgstr "Selhalo vykreslení stránky %d: %s"
 
-#: libview/ev-jobs.c:633
+#: libview/ev-jobs.c:629
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Selhalo vykreslení stránky %d"
@@ -543,7 +540,7 @@ msgstr "Selhalo vykreslení stránky %d"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Selhalo vytvoření náhledu pro stránku %d"
 
-#: libview/ev-jobs.c:2221
+#: libview/ev-jobs.c:2261
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Selhal tisk stránky %d: %s"
@@ -1477,7 +1474,7 @@ msgstr "Vrstvy"
 msgid "Outline"
 msgstr "Obsah"
 
-#: shell/ev-sidebar-thumbnails.c:1003 shell/ev-window.c:7404
+#: shell/ev-sidebar-thumbnails.c:1008 shell/ev-window.c:7404
 msgid "Thumbnails"
 msgstr "Náhledy"
 
@@ -1724,13 +1721,18 @@ msgstr ""
 msgid "Don’t show this message again"
 msgstr "Tuto zprávu znovu nezobrazovat"
 
-#: shell/ev-window.c:6509
+#: shell/ev-window.c:6504
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
 msgstr ""
 "Bezpečnostní upozornění: tomuto dokumentu bylo zabráněno v otevření souboru "
 "„%s“."
+
+#: shell/ev-window.c:6508
+#, c-format
+msgid "Unable to open file “%s”"
+msgstr "Nelze otevřít soubor „%s“"
 
 #: shell/ev-window.c:6574
 msgid "Unable to open external link"
@@ -2126,7 +2128,7 @@ msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Dotyková gesta"
 
-#: shell/main.c:63 shell/main.c:268
+#: shell/main.c:63 shell/main.c:347
 msgid "GNOME Document Viewer"
 msgstr "Prohlížeč dokumentů pro uživatelské prostředí GNOME"
 
