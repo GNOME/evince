@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"POT-Creation-Date: 2025-07-02 16:25+0000\n"
-"PO-Revision-Date: 2025-07-03 00:08+0200\n"
+"POT-Creation-Date: 2025-07-04 00:15+0000\n"
+"PO-Revision-Date: 2025-07-04 23:24+0200\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -94,14 +94,14 @@ msgstr "<app>gedit</app>"
 #: C/synctex-editors.page:23
 msgid ""
 "<link xref=\"synctex-search#forward-search\">Forward Search</link> (from "
-"<app>gedit</app> to the <app>document viewer</app>) and <link xref=\"synctex-"
-"search#backward-search\">Backward search</link> (from the <app>document "
-"viewer</app> to <app>gedit</app>) are both supported."
+"<app>gedit</app> to <app>Evince</app>) and <link xref=\"synctex-"
+"search#backward-search\">Backward search</link> (from <app>Evince</app> to "
+"<app>gedit</app>) are both supported."
 msgstr ""
 "Je podporováno jak <link xref=\"synctex-search#forward-search\">dopředné "
-"hledání</link> (z <app>gedit</app> do <app>prohlížeče dokumentů</app>), tak "
-"<link xref=\"synctex-search#backward-search\">zpětné hledání</link> (z "
-"<app>prohlížeče dokumentů</app> do <app>gedit</app>)."
+"hledání</link> (z <app>gedit</app> do <app>Evince</app>), tak <link "
+"xref=\"synctex-search#backward-search\">zpětné hledání</link> (z "
+"<app>Evince</app> do <app>gedit</app>)."
 
 #. (itstool) path: section/title
 #: C/synctex-editors.page:28
@@ -113,13 +113,12 @@ msgstr "Vim-latex"
 msgid ""
 "The <app>gedit</app> plugin contains a python script (<file>evince_dbus.py</"
 "file>) that can be used to get SyncTeX working with Vim. In order to use vim-"
-"latex together with the <app>document viewer</app> you need to follow the "
-"next steps:"
+"latex together with <app>Evince</app> you need to follow the next steps:"
 msgstr ""
 "Zásuvný modul aplikace <app>gedit</app> obsahuje skript v jazyce Python "
 "(<file>evince_dbus.py</file>), který lze použít ke zprovoznění SyncTeX spolu "
-"s editorem Vim. Aby vim-latex fungoval dohromady s <app>prohlížečem "
-"dokumentů</app>, musíte provést následující kroky:"
+"s editorem Vim. Aby vim-latex fungoval dohromady s <app>Evince</app>, musíte "
+"provést následující kroky:"
 
 #. (itstool) path: item/p
 #: C/synctex-editors.page:35
@@ -1206,10 +1205,9 @@ msgstr ""
 
 #. (itstool) path: info/desc
 #: C/synctex-search.page:7
-msgid "Flip between the <app>document viewer</app> and <app>gedit</app>."
+msgid "Flip between <app>Evince</app> and <app>gedit</app>."
 msgstr ""
-"Jak se přeskakovat mezi aplikacemi <app>prohlížeč dokumentů</app> a "
-"<app>gedit</app>."
+"Jak se přeskakovat mezi aplikacemi <app>Evince</app> a <app>gedit</app>."
 
 #. (itstool) path: page/title
 #: C/synctex-search.page:20
@@ -1230,11 +1228,9 @@ msgstr ""
 #. (itstool) path: section/title
 #: C/synctex-search.page:26
 msgid ""
-"Forward search: from TeX to PDF (from <app>gedit</app> to the <app>document "
-"viewer</app>)"
+"Forward search: from TeX to PDF (from <app>gedit</app> to <app>Evince</app>)"
 msgstr ""
-"Dopředné hledání: z TeX do PDF (z <app>gedit</app> do <app>prohlížeče "
-"dokumentů</app>)"
+"Dopředné hledání: z TeX do PDF (z <app>gedit</app> do <app>Evince</app>)"
 
 #. (itstool) path: section/p
 #: C/synctex-search.page:27
@@ -1275,10 +1271,10 @@ msgstr ""
 #: C/synctex-search.page:46
 msgid ""
 "If the corresponding PDF file is not open, performing a forward search will "
-"open the PDF in the <app>document viewer</app>."
+"open the PDF in <app>Evince</app>."
 msgstr ""
 "V případě, že odpovídající soubor PDF není otevřen, provádění dopředného "
-"hledán jej otevře v <app>prohlížeči dokumentů</app>."
+"hledání jej otevře v <app>Evince</app>."
 
 #. (itstool) path: section/p
 #: C/synctex-search.page:50
@@ -1305,11 +1301,8 @@ msgstr ""
 #. (itstool) path: section/title
 #: C/synctex-search.page:61
 msgid ""
-"Backward search: from PDF to TeX (from the <app>document viewer</app> to "
-"<app>gedit</app>)"
-msgstr ""
-"Zpětné hledání: z PDF do TeX (z <app>prohlížeče dokumentů</app> do "
-"<app>gedit</app>)"
+"Backward search: from PDF to TeX (from <app>Evince</app> to <app>gedit</app>)"
+msgstr "Zpětné hledání: z PDF do TeX (z <app>Evince</app> do <app>gedit</app>)"
 
 #. (itstool) path: section/p
 #: C/synctex-search.page:62
@@ -1324,12 +1317,12 @@ msgstr ""
 #: C/synctex-search.page:65
 msgid ""
 "You can perform a backward search by pressing <keyseq><key>Ctrl</key>left "
-"click</keyseq> in the <app>document viewer</app>. The corresponding line in "
-"the TeX source code will be highlighted."
+"click</keyseq> in <app>Evince</app>. The corresponding line in the TeX "
+"source code will be highlighted."
 msgstr ""
 "Zpětné hledání provedete zmáčknutím <keyseq><key>Ctrl</key>levé kliknutí</"
-"keyseq> v <app>prohlížeči dokumentů</app>. Odpovídající řádek ve zdrojovém "
-"kódu TeX se zvýrazní."
+"keyseq> v <app>Evince</app>. Odpovídající řádek ve zdrojovém kódu TeX se "
+"zvýrazní."
 
 #. (itstool) path: info/title
 #: C/duplex-8pages.page:7
@@ -1386,11 +1379,11 @@ msgstr ""
 #. (itstool) path: section/title
 #: C/synctex-beamer.page:27
 msgid ""
-"Forward search: from Beamer-LaTeX source to PDF (<app>gedit</app> to the "
-"<app>document viewer</app>)"
+"Forward search: from Beamer-LaTeX source to PDF (<app>gedit</app> to "
+"<app>Evince</app>)"
 msgstr ""
 "Dopředné hledání: z kódu Beamer-LaTeX do PDF (z <app>gedit</app> do "
-"<app>prohlížeče dokumentů</app>)"
+"<app>Evince</app>)"
 
 #. (itstool) path: section/p
 #: C/synctex-beamer.page:28
@@ -1408,11 +1401,11 @@ msgstr ""
 #. (itstool) path: section/title
 #: C/synctex-beamer.page:35
 msgid ""
-"Backward search: from PDF to Beamer-LaTeX source (from the <app>document "
-"viewer</app> to <app>gedit</app>)"
+"Backward search: from PDF to Beamer-LaTeX source (from <app>Evince</app> to "
+"<app>gedit</app>)"
 msgstr ""
-"Zpětné hledání: z PDF do kódu Beamer-LaTeX (z <app>prohlížeče dokumentů</"
-"app> do <app>gedit</app>)"
+"Zpětné hledání: z PDF do kódu Beamer-LaTeX (z <app>Evince</app> do "
+"<app>gedit</app>)"
 
 #. (itstool) path: section/p
 #: C/synctex-beamer.page:36
@@ -1490,9 +1483,8 @@ msgstr "Příkazový řádek"
 #. (itstool) path: page/p
 #: C/commandline.page:25
 msgid ""
-"To start the <app>Evince</app> from the command line, type <cmd>evince</"
-"cmd>. You can open a specific file by typing the filename after the evince "
-"command:"
+"To start <app>Evince</app> from the command line, type <cmd>evince</cmd>. "
+"You can open a specific file by typing the filename after the evince command:"
 msgstr ""
 "Pro spuštění <app>Evince</app> z příkazového řádku napište <cmd>evince</"
 "cmd>. Můžete také otevřít konkrétní soubor zadáním jeho názvu za příkaz "
@@ -1522,12 +1514,12 @@ msgstr "evince soubor1.pdf soubor2.pdf"
 #. (itstool) path: page/p
 #: C/commandline.page:35
 msgid ""
-"The <app>document viewer</app> also supports the handling of files on the "
-"web. For example, after the evince command you can give the location of a "
-"file on the web:"
+"<app>Evince</app> also supports the handling of files on the web. For "
+"example, after the evince command you can give the location of a file on the "
+"web:"
 msgstr ""
-"<app>Prohlížeč dokumentů</app> podporuje také práci se soubory z webu. "
-"Můžete například za příkaz evince zadat umístění souboru na webu:"
+"<app>Evince</app> podporuje také práci se soubory z webu. Můžete například "
+"za příkaz evince zadat umístění souboru na webu:"
 
 #. (itstool) path: page/screen
 #: C/commandline.page:38
@@ -1660,7 +1652,7 @@ msgstr "Proč se dokument sám znovu načetl?"
 #. (itstool) path: page/p
 #: C/reload.page:25
 msgid ""
-"If the <app>Evince</app> detects that the document you have open has changed "
+"If <app>Evince</app> detects that the document you have open has changed "
 "(perhaps because another program has modified it), it will automatically "
 "reload the document and display the most recent version for you."
 msgstr ""
@@ -1845,7 +1837,7 @@ msgstr "Zapište čísla stránek v tomto pořadí: <_:item-1/>"
 
 #. (itstool) path: info/desc
 #: C/develop.page:7
-msgid "Improve the <app>Evince</app>."
+msgid "Improve <app>Evince</app>."
 msgstr "Jak <app>Evince</app> vylepšovat."
 
 #. (itstool) path: credit/years
@@ -1861,8 +1853,8 @@ msgstr "Pomozte s vývojem"
 #. (itstool) path: page/p
 #: C/develop.page:20
 msgid ""
-"The <app>Evince</app> is developed and maintained by a volunteer community. "
-"You are welcome to participate."
+"<app>Evince</app> is developed and maintained by a volunteer community. You "
+"are welcome to participate."
 msgstr ""
 "<app>Evince</app> je vyvíjen a udržován komunitou dobrovolníků. Vaše "
 "případná účast bude vítána."
@@ -1871,12 +1863,12 @@ msgstr ""
 #: C/develop.page:23
 msgid ""
 "If you would like to <link href=\"https://wiki.gnome.org/Apps/Evince\">help "
-"develop</link> the <app>Evince</app>, you can get in touch with the "
-"developers at <link href=\"https://matrix.to/#/"
-"#evince:gnome.org\">#evince:gnome.org</link> on <link xref=\"help:gnome-help/"
-"help-matrix\">Matrix</link> or <link href=\"https://web.libera.chat/#gnome-"
-"evince\">#gnome-evince</link> on irc.libera.chat, or via <link "
-"href=\"https://discourse.gnome.org/tag/evince\">GNOME Discourse</link>."
+"develop</link> <app>Evince</app>, you can get in touch with the developers "
+"at <link href=\"https://matrix.to/#/#evince:gnome.org\">#evince:gnome.org</"
+"link> on <link xref=\"help:gnome-help/help-matrix\">Matrix</link> or <link "
+"href=\"https://web.libera.chat/#gnome-evince\">#gnome-evince</link> on "
+"irc.libera.chat, or via <link href=\"https://discourse.gnome.org/tag/"
+"evince\">GNOME Discourse</link>."
 msgstr ""
 "Jestli chcete <link href=\"https://wiki.gnome.org/Apps/Evince\">pomoci s "
 "vývojem</link> <app>Evince</app>, můžete se s vývojáři kontaktovat přes "
@@ -2082,17 +2074,15 @@ msgstr "Proč se označený text správně nezkopírovat?"
 #. (itstool) path: page/p
 #: C/textselection.page:23
 msgid ""
-"If you highlight and copy text from a document using the <app>document "
-"viewer</app> and then paste it into another application, the formatting may "
-"alter. It may also contain different characters than the original selection. "
-"This often happens when copying text from a PDF document with multiple "
-"columns."
+"If you highlight and copy text from a document using <app>Evince</app> and "
+"then paste it into another application, the formatting may alter. It may "
+"also contain different characters than the original selection. This often "
+"happens when copying text from a PDF document with multiple columns."
 msgstr ""
-"Když označíte a zkopírujete text z dokumentu pomocí <app>prohlížeče "
-"dokumentů</app> a následně jej vložíte do jiné aplikace, může se změnit "
-"formátování. Někdy také může vložený text obsahovat jiné znaky, než byly "
-"původně označeny. To se často stává, když kopírujete text z dokumentu PDF s "
-"více sloupci."
+"Když označíte a zkopírujete text z dokumentu pomocí <app>Evince</app> a "
+"následně jej vložíte do jiné aplikace, může se změnit formátování. Někdy "
+"také může vložený text obsahovat jiné znaky, než byly původně označeny. To "
+"se často stává, když kopírujete text z dokumentu PDF s více sloupci."
 
 #. (itstool) path: page/p
 #: C/textselection.page:29
@@ -2513,7 +2503,7 @@ msgstr ""
 
 #. (itstool) path: info/desc
 #: C/translate.page:7
-msgid "Localize the <app>Evince.</app>"
+msgid "Localize <app>Evince</app>."
 msgstr "Jak připravit <app>Evince</app> pro národní prostředí."
 
 #. (itstool) path: credit/name
@@ -2680,10 +2670,10 @@ msgstr "Přidání poznámky"
 #: C/annotations.page:27
 msgid ""
 "An annotation is a note or comment added to a PDF document. You can add "
-"annotations using the <app>document viewer</app>."
+"annotations using <app>Evince</app>."
 msgstr ""
-"Poznámka je forma komentáře přidaná do dokumentu PDF. Za pomocí "
-"<app>prohlížeče dokumentů</app> můžete poznámky do dokumentu přidávat."
+"Poznámka je forma komentáře přidaná do dokumentu PDF. Za pomocí <app>Evince</"
+"app> můžete poznámky do dokumentu přidávat."
 
 #. (itstool) path: page/p
 #: C/annotations.page:36
@@ -2847,13 +2837,12 @@ msgstr "Uložení kopie PDF s poznámkami"
 #. (itstool) path: page/p
 #: C/annotations-save.page:24
 msgid ""
-"To save a copy of your annotated PDF for future viewing using the "
-"<app>document viewer</app> or any other PDF viewer <em>that supports "
-"annotations</em>:"
+"To save a copy of your annotated PDF for future viewing using <app>Evince</"
+"app> or any other PDF viewer <em>that supports annotations</em>:"
 msgstr ""
 "Abyste kopii PDF se svými poznámkami uložili pro budoucí prohlížení pomocí "
-"<app>prohlížeče dokumentů</app> nebo některého jiného prohlížeče PDF, který "
-"<em>podporuje poznámky</em>:"
+"<app>Evince</app> nebo některého jiného prohlížeče PDF, který <em>podporuje "
+"poznámky</em>:"
 
 #. (itstool) path: item/p
 #: C/annotations-save.page:31
@@ -2906,14 +2895,13 @@ msgstr ""
 msgid ""
 "To quickly navigate to the location of a particular annotation, click on the "
 "arrow to the left of the page number. You will see a list of annotations on "
-"that page. Click on the annotation you are interested in, and the "
-"<app>document viewer</app> will navigate to the location of the annotation "
-"in the document."
+"that page. Click on the annotation you are interested in, and <app>Evince</"
+"app> will navigate to the location of the annotation in the document."
 msgstr ""
 "Abyste se rychle dostali na místo konkrétní poznámky, klikněte na šipku "
 "vlevo od čísla stránky. Uvidíte seznam poznámek na této stránce. Klikněte na "
-"poznámku, která vás zajímá a <app>prohlížeč dokumentů</app> vás přemístí na "
-"tuto poznámku v dokumentu."
+"poznámku, která vás zajímá a <app>Evince</app> vás přemístí na tuto poznámku "
+"v dokumentu."
 
 #. (itstool) path: page/media
 #. This is a reference to an external file such as an image or video. When
@@ -3072,14 +3060,14 @@ msgstr "Omezení tisku PDF"
 #: C/noprint.page:75
 msgid ""
 "Some PDF documents have a setting which prevents you from printing them. "
-"Authors can set this printing restriction when they write a document. The "
-"<app>document viewer</app> overrides this restriction by default, but you "
-"may want to check that it hasn't been disabled:"
+"Authors can set this printing restriction when they write a document. "
+"<app>Evince</app> overrides this restriction by default, but you may want to "
+"check that it hasn't been disabled:"
 msgstr ""
 "Některé dokumenty PDF mají nastavení, kterými můžete omezit jejich tisk. "
-"Autor může tato omezení tisku nastavit při vytváření dokumentu. "
-"<app>Prohlížeč dokumentů</app> tato omezení ve výchozím stavu nebere v "
-"úvahu, ale možná budete chtít zkontrolovat, zda toto chování nebylo vypnuto:"
+"Autor může tato omezení tisku nastavit při vytváření dokumentu. <app>Evince</"
+"app> tato omezení ve výchozím stavu nebere v úvahu, ale možná budete chtít "
+"zkontrolovat, zda toto chování nebylo vypnuto:"
 
 #. (itstool) path: note/p
 #: C/noprint.page:83
@@ -3127,7 +3115,7 @@ msgstr "Ujistěte se, že volba <gui>override-restrictions</gui> je zaškrtnutá
 
 #. (itstool) path: item/p
 #: C/noprint.page:108
-msgid "Go back to the <app>Evince</app> and try to print the document again."
+msgid "Go back to <app>Evince</app> and try to print the document again."
 msgstr "Vraťte se do <app>Evince</app> a zkuste dokument znovu vytisknout."
 
 #. (itstool) path: info/desc
@@ -3294,66 +3282,64 @@ msgstr "Prohlížeč dokumentů Evince"
 #. (itstool) path: info/desc
 #: C/index.page:24
 msgid ""
-"<app>Evince</app>, formally known as <app>Evince</app>, is made for viewing "
-"PDF documents. Learn how to get started with <app>Document Viewer</app> and "
-"its features."
+"<app>Evince</app> is made for viewing PDF documents. Learn how to get "
+"started with <app>Evince</app> and its features."
 msgstr ""
-"<app>Evince</app>, dříve známý jako <app>Evince</app> je stvořen k "
-"prohlížení dokumentů PDF. Podívejte se, jak se s ním pracuje a co všechno "
-"umí."
+"<app>Evince</app> je stvořen k prohlížení dokumentů PDF. Podívejte se, jak "
+"se s ním pracuje a co všechno umí."
 
 #. (itstool) path: page/title
-#: C/index.page:30
+#: C/index.page:29
 msgid "<_:media-1/> Evince Help"
 msgstr "<_:media-1/> Evince"
 
 #. (itstool) path: section/title
-#: C/index.page:36
+#: C/index.page:35
 msgid "Reading documents"
 msgstr "Čtení dokumentů"
 
 #. (itstool) path: section/title
-#: C/index.page:40
+#: C/index.page:39
 msgid "Presentations and other supported formats"
 msgstr "Prezentace a další podporované formáty"
 
 #. (itstool) path: section/title
-#: C/index.page:44
+#: C/index.page:43
 msgid "Printing"
 msgstr "Tisk"
 
 #. (itstool) path: section/title
-#: C/index.page:48
+#: C/index.page:47
 msgid "Annotations and bookmarks"
 msgstr "Poznámky a záložky"
 
 #. (itstool) path: section/title
-#: C/index.page:52
+#: C/index.page:51
 msgid "Interactive forms"
 msgstr "Interaktivní formuláře"
 
 #. (itstool) path: section/title
-#: C/index.page:56
+#: C/index.page:55
 msgid "Frequently asked questions"
 msgstr "Časté dotazy a odpovědi"
 
 #. (itstool) path: section/title
-#: C/index.page:60
+#: C/index.page:59
 msgid "Advanced"
 msgstr "Pokročilé"
 
 #. (itstool) path: section/title
-#: C/index.page:64
+#: C/index.page:63
 msgid "Tips and tricks"
 msgstr "Tipy a triky"
 
 #. (itstool) path: section/title
-#: C/index.page:68
+#: C/index.page:67
 msgid "SyncTeX"
 msgstr "SyncTeX"
 
 #. (itstool) path: section/title
-#: C/index.page:73
+#: C/index.page:72
 msgid "Get involved"
 msgstr "Zapojte se"
 
@@ -3618,7 +3604,7 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/opening.page:62
-msgid "If a document is already opened in a <app>Evince</app> window you can:"
+msgid "If a document is already opened in an <app>Evince</app> window you can:"
 msgstr "Pokud je dokument v okně <app>Evince</app> již otevřený, můžete:"
 
 #. (itstool) path: item/p
@@ -3753,13 +3739,13 @@ msgstr "Proč nemohu otevřít soubor?"
 #. (itstool) path: page/p
 #: C/openerror.page:24
 msgid ""
-"If you try to open a document of a format that the <app>document viewer</"
-"app> does not recognize, you will get an \"Unable to open document\" error "
-"message. Click <gui>Close</gui> to return to the <app>Evince</app> window."
+"If you try to open a document of a format that <app>Evince</app> does not "
+"recognize, you will get an \"Unable to open document\" error message. Click "
+"<gui>Close</gui> to return to the <app>Evince</app> window."
 msgstr ""
-"Když zkusíte otevřít dokument ve formátu, který <app>prohlížeč dokumentů</"
-"app> nerozpozná, obdržíte chybové hlášení „Nelze otevřít dokument“. "
-"Kliknutím na <gui>Zavřít</gui> se vrátíte do okna <app>Evince</app>."
+"Když zkusíte otevřít dokument ve formátu, který <app>Evince</app> "
+"nerozpozná, obdržíte chybové hlášení „Nelze otevřít dokument“. Kliknutím na "
+"<gui>Zavřít</gui> se vrátíte do okna <app>Evince</app>."
 
 #. (itstool) path: info/title
 #: C/singlesided-3-4pages.page:7
@@ -3871,8 +3857,8 @@ msgstr "Podporované formáty"
 
 #. (itstool) path: page/p
 #: C/formats.page:29
-msgid "The <app>document viewer</app> supports the following formats:"
-msgstr "<app>Prohlížeč dokumentů</app> podporuje následující formáty:"
+msgid "<app>Evince</app> supports the following formats:"
+msgstr "<app>Evince</app> podporuje následující formáty:"
 
 #. (itstool) path: item/p
 #: C/formats.page:33
@@ -4050,21 +4036,21 @@ msgstr "Jak a kde hlásit problémy."
 
 #. (itstool) path: page/title
 #: C/bug-filing.page:19
-msgid "File a bug against the <app>document viewer</app>"
-msgstr "Vyplňujte chybová hlášení o <app>prohlížeči dokumentů</app>"
+msgid "File a bug against <app>Evince</app>"
+msgstr "Vyplňujte chybová hlášení o <app>Evince</app>"
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:20
 msgid ""
-"The <app>document viewer</app> is maintained by a volunteer community. You "
-"are welcome to participate. If you notice a problem you can file a <em>bug "
-"report</em>. To file a bug, go to <link href=\"https://gitlab.gnome.org/"
-"GNOME/evince/issues/\"/>."
+"<app>Evince</app> is maintained by a volunteer community. You are welcome to "
+"participate. If you notice a problem you can file a <em>bug report</em>. To "
+"file a bug, go to <link href=\"https://gitlab.gnome.org/GNOME/evince/issues/"
+"\"/>."
 msgstr ""
-"O <app>Prohlížeč dokumentů</app> se stará komunita dobrovolníků. Vaše "
-"případná účast bude vítána. Pokud si povšimnete nějakého problému, můžete "
-"vyplnit <em>chybové hlášení</em> na <link href=\"https://gitlab.gnome.org/"
-"GNOME/evince/issues/\"/>."
+"O <app>Evince</app> se stará komunita dobrovolníků. Vaše případná účast bude "
+"vítána. Pokud si povšimnete nějakého problému, můžete vyplnit <em>chybové "
+"hlášení</em> na <link href=\"https://gitlab.gnome.org/GNOME/evince/issues/\"/"
+">."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:23
@@ -4164,24 +4150,23 @@ msgstr ""
 
 #. (itstool) path: info/desc
 #: C/editing.page:7
-msgid "You can't use the <app>document viewer</app> to edit files."
-msgstr "<app>Prohlížeč dokumentů</app> nelze používat k úpravám souborů."
+msgid "You can't use <app>Evince</app> to edit files."
+msgstr "<app>Evince</app> nelze používat k úpravám souborů."
 
 #. (itstool) path: page/title
 #: C/editing.page:21
-msgid "Can I edit documents in the document viewer?"
-msgstr "Mohu dokumenty v prohlížeči dokumentů upravovat?"
+msgid "Can I edit documents in Evince?"
+msgstr "Mohu dokumenty v Evince upravovat?"
 
 #. (itstool) path: page/p
 #: C/editing.page:24
 msgid ""
-"The <app>document viewer</app> can't be used to make changes to documents. "
-"You need to use the appropriate editing application for the type of file you "
-"want to change."
+"<app>Evince</app> can't be used to make changes to documents. You need to "
+"use the appropriate editing application for the type of file you want to "
+"change."
 msgstr ""
-"<app>Prohlížeč dokumentů</app> nelze použít k provádění změn v dokumentech. "
-"Na to musíte použít příslušný editor pro daný typ souboru, který chcete "
-"upravovat."
+"<app>Evince</app> nelze použít k provádění změn v dokumentech. Na to musíte "
+"použít příslušný editor pro daný typ souboru, který chcete upravovat."
 
 #. (itstool) path: note/p
 #: C/editing.page:30
