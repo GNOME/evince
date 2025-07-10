@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
-"POT-Creation-Date: 2024-08-31 10:11+0000\n"
-"PO-Revision-Date: 2024-09-15 22:38+0200\n"
+"POT-Creation-Date: 2025-07-04 21:55+0000\n"
+"PO-Revision-Date: 2025-07-10 11:16+0200\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
@@ -313,7 +313,7 @@ msgstr "Přidává podporu pro čtení dokumentů XPS"
 #. Manually set name and icon
 #: data/org.gnome.Evince.desktop.in.in:3
 #: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
-#: shell/main.c:300
+#: shell/main.c:379
 msgid "Document Viewer"
 msgstr "Prohlížeč dokumentů"
 
@@ -323,11 +323,8 @@ msgstr "Zobrazovat dokumenty po více stránkách"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Evince.desktop.in.in:6
-msgid ""
-"pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
-msgstr ""
-"pdf;ps;postscript;postskript;dvi;xps;djvu;tiff;dokument;prezentace;prohlížeč;"
-"evince;"
+msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
+msgstr "pdf;ps;postscript;postskript;dvi;xps;djvu;tiff;dokument;prezentace;prohlížeč;evince;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
 msgid "New Window"
@@ -446,11 +443,6 @@ msgstr "Čisté a jednoduché uživatelské rozhraní"
 msgid "Advanced highlighting and annotation"
 msgstr "Pokročilé zvýrazňování a psaní poznámek"
 
-#. developer_name tag deprecated with Appstream 1.0
-#: data/org.gnome.Evince.metainfo.xml.in:50
-msgid "The GNOME Project"
-msgstr "Projekt GNOME"
-
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
 msgstr "Náhled tisku"
@@ -479,9 +471,9 @@ msgstr "Nepodařilo se otevřít přílohu „%s“"
 msgid "File type %s (%s) is not supported"
 msgstr "Typ souboru %s (%s) není podporován"
 
-#: libdocument/ev-document-factory.c:370 libdocument/ev-file-helpers.c:417
-#: libdocument/ev-file-helpers.c:463 libdocument/ev-file-helpers.c:482
-#: libdocument/ev-file-helpers.c:563 libdocument/ev-file-helpers.c:572
+#: libdocument/ev-document-factory.c:370 libdocument/ev-file-helpers.c:423
+#: libdocument/ev-file-helpers.c:469 libdocument/ev-file-helpers.c:488
+#: libdocument/ev-file-helpers.c:569 libdocument/ev-file-helpers.c:578
 msgid "Unknown MIME Type"
 msgstr "Neznámý typ MIME"
 
@@ -795,9 +787,9 @@ msgstr "TYP"
 msgid "File descriptor of print settings file"
 msgstr "Popisovač souboru souboru s nastavením tisku"
 
-#: previewer/ev-previewer.c:295 previewer/ev-previewer.c:315
+#: previewer/ev-previewer.c:293 previewer/ev-previewer.c:313
 msgid "GNOME Document Previewer"
-msgstr "Prohlížeč dokumentů pro uživatelské prostředí GNOME"
+msgstr "Náhled dokumentů GNOME"
 
 #: previewer/ev-previewer-toolbar.c:112 shell/evince-toolbar.ui:35
 msgid "Select page or search in the outline"
@@ -1466,7 +1458,7 @@ msgstr "Vrstvy"
 msgid "Outline"
 msgstr "Obsah"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7599
+#: shell/ev-sidebar-thumbnails.c:1043 shell/ev-window.c:7599
 msgid "Thumbnails"
 msgstr "Náhledy"
 
@@ -2115,7 +2107,7 @@ msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Dotyková gesta"
 
-#: shell/main.c:64 shell/main.c:271
+#: shell/main.c:64 shell/main.c:350
 msgid "GNOME Document Viewer"
 msgstr "Prohlížeč dokumentů pro uživatelské prostředí GNOME"
 
@@ -2170,6 +2162,9 @@ msgstr "ŘETĚZEC"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[SOUBOR…]"
+
+#~ msgid "The GNOME Project"
+#~ msgstr "Projekt GNOME"
 
 #~ msgid "Save Current Settings as Defa_ult"
 #~ msgstr "Uložit současné nastavení jako _výchozí"
