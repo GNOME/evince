@@ -4718,6 +4718,15 @@ ev_window_stop_fullscreen (EvWindow *window,
 		ev_metadata_set_boolean (priv->metadata, "fullscreen", FALSE);
 }
 
+static gboolean
+ev_window_run_fullscreen_in_idle_cb (gpointer user_data)
+{
+	EvWindow *window = user_data;
+
+	ev_window_run_fullscreen (window);
+	return G_SOURCE_REMOVE;
+}
+
 static void
 ev_window_cmd_view_fullscreen (GSimpleAction *action,
 			       GVariant      *state,
@@ -4726,7 +4735,7 @@ ev_window_cmd_view_fullscreen (GSimpleAction *action,
 	EvWindow *window = user_data;
 
 	if (g_variant_get_boolean (state)) {
-		ev_window_run_fullscreen (window);
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, ev_window_run_fullscreen_in_idle_cb, g_object_ref (window), g_object_unref);
 	} else {
 		ev_window_stop_fullscreen (window, TRUE);
 	}
@@ -4889,16 +4898,26 @@ ev_window_stop_presentation (EvWindow *window,
 		ev_metadata_set_boolean (priv->metadata, "presentation", FALSE);
 }
 
-static void
-ev_window_cmd_view_presentation (GSimpleAction *action,
-				 GVariant      *state,
-				 gpointer       user_data)
+static gboolean
+ev_window_run_presentation_in_idle_cb (gpointer user_data)
 {
 	EvWindow *window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!EV_WINDOW_IS_PRESENTATION (priv))
 		ev_window_run_presentation (window);
+
+	return G_SOURCE_REMOVE;
+}
+
+static void
+ev_window_cmd_view_presentation (GSimpleAction *action,
+				 GVariant      *state,
+				 gpointer       user_data)
+{
+	EvWindow *window = user_data;
+
+	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, ev_window_run_presentation_in_idle_cb, g_object_ref (window), g_object_unref);
 	/* We don't exit presentation when action is toggled because it conflicts with some
 	 * remote controls. The behaviour is also consistent with libreoffice and other
 	 * presentation tools. See https://bugzilla.gnome.org/show_bug.cgi?id=556162
