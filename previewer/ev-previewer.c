@@ -305,7 +305,7 @@ main (gint argc, gchar **argv)
 	g_set_application_name (_("GNOME Document Previewer"));
 	gtk_window_set_default_icon_name (APPLICATION_ID);
 
-        application = adw_application_new (NULL, G_APPLICATION_NON_UNIQUE);
+        application = adw_application_new (APPLICATION_ID "-previewer", G_APPLICATION_NON_UNIQUE);
 	g_application_set_resource_base_path (G_APPLICATION (application),
 			"/org/gnome/evince/previewer");
         g_signal_connect (application, "startup", G_CALLBACK (startup_cb), NULL);
