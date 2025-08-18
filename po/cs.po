@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
-"POT-Creation-Date: 2025-07-04 22:57+0000\n"
-"PO-Revision-Date: 2025-07-10 11:12+0200\n"
+"POT-Creation-Date: 2025-08-12 20:31+0000\n"
+"PO-Revision-Date: 2025-08-19 00:52+0200\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -54,17 +54,16 @@ msgstr "Nejedná se o typ MIME pro komiks: %s"
 
 #: backend/comics/comics-document.c:323
 msgid ""
-"libarchive lacks support for this comic book’s compression, please contact "
-"your distributor"
+"libarchive lacks support for this comic book’s compression, please contact your distributor"
 msgstr ""
-"libarchive postrádá podporu pro tento typ komprimace komiksových knih, "
-"kontaktujte prosím svého distributora"
+"libarchive postrádá podporu pro tento typ komprimace komiksových knih, kontaktujte prosím "
+"svého distributora"
 
 #: backend/comics/comics-document.c:363
 msgid "Can not get local path for archive"
 msgstr "Nelze získat místní cestu k archivu"
 
-#: backend/comics/comicsdocument.evince-backend.desktop.in.in:4
+#: backend/comics/comicsdocument.evince-backend.desktop.in.in:3
 #: backend/comics/evince-comicsdocument.metainfo.xml.in.in:5
 msgid "Comic Books"
 msgstr "Komiksy"
@@ -79,13 +78,12 @@ msgstr "Dokument DjVu nemá správný formát"
 
 #: backend/djvu/djvu-document.c:271
 msgid ""
-"The document is composed of several files. One or more of these files cannot "
-"be accessed."
+"The document is composed of several files. One or more of these files cannot be accessed."
 msgstr ""
-"Dokument se skládá z několika souborů. K jednomu nebo více souborům se "
-"nepodařilo přistoupit."
+"Dokument se skládá z několika souborů. K jednomu nebo více souborům se nepodařilo "
+"přistoupit."
 
-#: backend/djvu/djvudocument.evince-backend.desktop.in.in:4
+#: backend/djvu/djvudocument.evince-backend.desktop.in.in:3
 #: backend/djvu/evince-djvudocument.metainfo.xml.in.in:5
 msgid "DjVu Documents"
 msgstr "Dokumenty DjVu"
@@ -98,7 +96,7 @@ msgstr "Přidává podporu pro čtení dokumentů DjVu"
 msgid "DVI document has incorrect format"
 msgstr "Dokument DVI nemá správný formát"
 
-#: backend/dvi/dvidocument.evince-backend.desktop.in.in:4
+#: backend/dvi/dvidocument.evince-backend.desktop.in.in:3
 #: backend/dvi/evince-dvidocument.metainfo.xml.in.in:5
 msgid "DVI Documents"
 msgstr "Dokumenty DVI"
@@ -108,7 +106,7 @@ msgid "Adds support for reading DVI documents"
 msgstr "Přidává podporu pro čtení dokumentů DVI"
 
 #: backend/pdf/evince-pdfdocument.metainfo.xml.in.in:5
-#: backend/pdf/pdfdocument.evince-backend.desktop.in.in:5
+#: backend/pdf/pdfdocument.evince-backend.desktop.in.in:4
 msgid "PDF Documents"
 msgstr "Dokumenty PDF"
 
@@ -162,14 +160,13 @@ msgstr "Neznámý řez písma"
 
 #: backend/pdf/ev-poppler.c:902
 msgid ""
-"This document contains non-embedded fonts that are not from the PDF Standard "
-"14 fonts. If the substitute fonts selected by fontconfig are not the same as "
-"the fonts used to create the PDF, the rendering may not be correct."
+"This document contains non-embedded fonts that are not from the PDF Standard 14 fonts. If "
+"the substitute fonts selected by fontconfig are not the same as the fonts used to create "
+"the PDF, the rendering may not be correct."
 msgstr ""
-"Tento dokument obsahuje písma, které v něm nejsou přibalená a ani nepatří "
-"mezi 14 standardních písem pro PDF. Pokud písma vybraná pomocí fontconfig "
-"nebudou stejná jako ta, která byla použita při vytváření PDF, nemusí být "
-"dokument správně vykreslen."
+"Tento dokument obsahuje písma, které v něm nejsou přibalená a ani nepatří mezi 14 "
+"standardních písem pro PDF. Pokud písma vybraná pomocí fontconfig nebudou stejná jako ta, "
+"která byla použita při vytváření PDF, nemusí být dokument správně vykreslen."
 
 #: backend/pdf/ev-poppler.c:907
 msgid "All fonts are either standard or embedded."
@@ -270,7 +267,7 @@ msgstr ""
 "%s"
 
 #: backend/ps/evince-psdocument.metainfo.xml.in.in:5
-#: backend/ps/psdocument.evince-backend.desktop.in.in:5
+#: backend/ps/psdocument.evince-backend.desktop.in.in:4
 msgid "PostScript Documents"
 msgstr "Dokumenty PostScript"
 
@@ -289,7 +286,7 @@ msgid "Failed to save document “%s”"
 msgstr "Nepodařilo se uložit dokument „%s“"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:5
-#: backend/tiff/tiffdocument.evince-backend.desktop.in.in:4
+#: backend/tiff/tiffdocument.evince-backend.desktop.in.in:3
 msgid "TIFF Documents"
 msgstr "Dokumenty TIFF"
 
@@ -302,7 +299,7 @@ msgid "Invalid document"
 msgstr "Neplatný dokument"
 
 #: backend/xps/evince-xpsdocument.metainfo.xml.in.in:5
-#: backend/xps/xpsdocument.evince-backend.desktop.in.in:5
+#: backend/xps/xpsdocument.evince-backend.desktop.in.in:4
 msgid "XPS Documents"
 msgstr "Dokumenty XPS"
 
@@ -310,22 +307,21 @@ msgstr "Dokumenty XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "Přidává podporu pro čtení dokumentů XPS"
 
-#: data/org.gnome.Evince.desktop.in.in:3
-#: data/org.gnome.Evince.metainfo.xml.in.in:23
+#: data/org.gnome.Evince.desktop.in.in:2 data/org.gnome.Evince.metainfo.xml.in.in:23
 #: previewer/ev-previewer-window.c:481 shell/ev-window.c:4093
 msgid "Evince"
 msgstr "Evince"
 
-#: data/org.gnome.Evince.desktop.in.in:4
+#: data/org.gnome.Evince.desktop.in.in:3
 msgid "View multi-page documents"
 msgstr "Zobrazovat dokumenty po více stránkách"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Evince.desktop.in.in:6
+#: data/org.gnome.Evince.desktop.in.in:5
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 msgstr "pdf;ps;postscript;postskript;dvi;xps;djvu;tiff;dokument;prezentace;prohlížeč;evince;"
 
-#: data/org.gnome.Evince.desktop.in.in:19
+#: data/org.gnome.Evince.desktop.in.in:18
 msgid "New Window"
 msgstr "Nové okno"
 
@@ -347,9 +343,7 @@ msgstr "Dokument se automaticky znovu načte při změně souboru."
 
 #: data/org.gnome.Evince.gschema.xml:24
 msgid "The URI of the directory last used to open or save a document"
-msgstr ""
-"URI složky, která byla použita jako poslední k otevření nebo uložení "
-"dokumentu"
+msgstr "URI složky, která byla použita jako poslední k otevření nebo uložení dokumentu"
 
 #: data/org.gnome.Evince.gschema.xml:28
 msgid "The URI of the directory last used to save a picture"
@@ -361,19 +355,16 @@ msgstr "Velikost stránky mezipaměti v MiB"
 
 #: data/org.gnome.Evince.gschema.xml:33
 msgid ""
-"The maximum size that will be used to cache rendered pages, limits maximum "
-"zoom level."
+"The maximum size that will be used to cache rendered pages, limits maximum zoom level."
 msgstr ""
-"Maximální velikost, která bude použita k ukládání vykreslených stránek do "
-"mezipaměti; omezuje maximální velikost přiblížení."
+"Maximální velikost, která bude použita k ukládání vykreslených stránek do mezipaměti; "
+"omezuje maximální velikost přiblížení."
 
 #: data/org.gnome.Evince.gschema.xml:37
-msgid ""
-"Show a dialog to confirm that the user wants to activate the caret "
-"navigation."
+msgid "Show a dialog to confirm that the user wants to activate the caret navigation."
 msgstr ""
-"Zobrazovat dialogové okno s žádostí o potvrzení, když chce uživatel zapnout "
-"kurzorovou navigaci."
+"Zobrazovat dialogové okno s žádostí o potvrzení, když chce uživatel zapnout kurzorovou "
+"navigaci."
 
 #: data/org.gnome.Evince.gschema.xml:41
 msgid "Allow links to change the zoom level."
@@ -381,38 +372,27 @@ msgstr "Umožnit odkazům měnit úroveň přiblížení."
 
 #: data/org.gnome.Evince.gschema.xml:49
 msgid "Check spelling when writing annotation notes or filling text forms."
-msgstr ""
-"Kontrolovat pravopis při psaní poznámek anotací nebo vyplňování textových "
-"formulářů."
+msgstr "Kontrolovat pravopis při psaní poznámek anotací nebo vyplňování textových formulářů."
 
 #: data/org.gnome.Evince.gschema.xml:53
 msgid "Show a side bar next to the document to help navigate the document."
-msgstr ""
-"Zobrazit postranní panel vedle dokumentu, který vám usnadní orientaci v "
-"dokumentu."
+msgstr "Zobrazit postranní panel vedle dokumentu, který vám usnadní orientaci v dokumentu."
 
 #: data/org.gnome.Evince.gschema.xml:63
 msgid "Set the default zoom level to display a document."
 msgstr "Nastavit výchozí úroveň přiblížení pro zobrazení dokumentu."
 
 #: data/org.gnome.Evince.gschema.xml:70
-msgid ""
-"Display the document as a continuous stream of pages instead of page at a "
-"time."
-msgstr ""
-"Zobrazit dokument jako souvislý proud stránek namísto jednotlivých stránek."
+msgid "Display the document as a continuous stream of pages instead of page at a time."
+msgstr "Zobrazit dokument jako souvislý proud stránek namísto jednotlivých stránek."
 
 #: data/org.gnome.Evince.gschema.xml:74
 msgid "Show two pages side by side."
 msgstr "Zobrazit dvě stránky vedle sebe."
 
 #: data/org.gnome.Evince.gschema.xml:78
-msgid ""
-"Show the first page (odd page) on the left (when displaying two pages side "
-"by side)"
-msgstr ""
-"Zobrazit první stránku (lichá stránka) vlevo (při zobrazení dvou stránek "
-"vedle sebe)"
+msgid "Show the first page (odd page) on the left (when displaying two pages side by side)"
+msgstr "Zobrazit první stránku (lichá stránka) vlevo (při zobrazení dvou stránek vedle sebe)"
 
 #: data/org.gnome.Evince.metainfo.xml.in.in:24
 msgid "Document viewer for popular document formats"
@@ -420,19 +400,19 @@ msgstr "Prohlížeč dokumentů pro populární formáty dokumentů"
 
 #: data/org.gnome.Evince.metainfo.xml.in.in:26
 msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
+"A document viewer for the GNOME desktop. You can view, search or annotate documents in "
+"many different formats."
 msgstr ""
-"Prohlížeč dokumentů pro uživatelské prostředí GNOME. Můžete si prohlížet, "
-"prohledávat a komentovat dokumenty v rozličných formátech."
+"Prohlížeč dokumentů pro uživatelské prostředí GNOME. Můžete si prohlížet, prohledávat a "
+"komentovat dokumenty v rozličných formátech."
 
 #: data/org.gnome.Evince.metainfo.xml.in.in:27
 msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with SyncTeX), and Comic "
+"Books archives (CBR, CBT, CBZ, CB7)."
 msgstr ""
-"Podporuje následující formáty dokumentů: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
-"(pomocí SyncTeX) a archivy s komiksy (CBR, CBT, CBZ, CB7)."
+"Podporuje následující formáty dokumentů: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (pomocí "
+"SyncTeX) a archivy s komiksy (CBR, CBT, CBZ, CB7)."
 
 #: data/org.gnome.Evince.metainfo.xml.in.in:35
 msgid "A clear, simple UI"
@@ -442,11 +422,11 @@ msgstr "Čisté a jednoduché uživatelské rozhraní"
 msgid "Advanced highlighting and annotation"
 msgstr "Pokročilé zvýrazňování a psaní poznámek"
 
-#: data/org.gnome.Evince-previewer.desktop.in:3
+#: data/org.gnome.Evince-previewer.desktop.in:2
 msgid "Print Preview"
 msgstr "Náhled tisku"
 
-#: data/org.gnome.Evince-previewer.desktop.in:4
+#: data/org.gnome.Evince-previewer.desktop.in:3
 msgid "Preview before printing"
 msgstr "Náhled před vytištěním"
 
@@ -509,8 +489,7 @@ msgid "of %d"
 msgstr "z %d"
 
 #: libmisc/ev-page-action-widget.c:258 shell/ev-history.c:454
-#: shell/ev-sidebar-bookmarks.c:350 shell/ev-window.c:857
-#: shell/ev-window.c:4936
+#: shell/ev-sidebar-bookmarks.c:350 shell/ev-window.c:857 shell/ev-window.c:4936
 #, c-format
 msgid "Page %s"
 msgstr "Stránka %s"
@@ -599,28 +578,26 @@ msgstr "Přizpůsobit tisknutelné oblasti"
 
 #: libview/ev-print-operation.c:2691
 msgid ""
-"Scale document pages to fit the selected printer page. Select from one of "
-"the following:\n"
+"Scale document pages to fit the selected printer page. Select from one of the following:\n"
 "\n"
 "• “None”: No page scaling is performed.\n"
 "\n"
-"• “Shrink to Printable Area”: Document pages larger than the printable area "
-"are reduced to fit the printable area of the printer page.\n"
+"• “Shrink to Printable Area”: Document pages larger than the printable area are reduced to "
+"fit the printable area of the printer page.\n"
 "\n"
-"• “Fit to Printable Area”: Document pages are enlarged or reduced as "
-"required to fit the printable area of the printer page.\n"
+"• “Fit to Printable Area”: Document pages are enlarged or reduced as required to fit the "
+"printable area of the printer page.\n"
 msgstr ""
-"Přizpůsobení stránky dokumentu tak, aby odpovídaly velikosti dle zvolené "
-"tiskárny. Vyberte jednu z následujících možností:\n"
+"Přizpůsobení stránky dokumentu tak, aby odpovídaly velikosti dle zvolené tiskárny. Vyberte "
+"jednu z následujících možností:\n"
 "\n"
 "• „Žádná“: Nebude provedena žádná změna velikosti.\n"
 "\n"
-"• „Zmenšit na tisknutelnou oblast“: Stránky dokumentu, které jsou větší než "
-"tisknutelná oblast budou zmenšeny tak, aby se vešly do tisknutelné oblasti "
-"tiskárny.\n"
+"• „Zmenšit na tisknutelnou oblast“: Stránky dokumentu, které jsou větší než tisknutelná "
+"oblast budou zmenšeny tak, aby se vešly do tisknutelné oblasti tiskárny.\n"
 "\n"
-"• „Přizpůsobit tisknutelné oblasti“: Stránky dokumentu budou podle potřeby "
-"zvětšeny nebo zmenšeny tak, aby odpovídaly tisknutelné oblasti tiskárny.\n"
+"• „Přizpůsobit tisknutelné oblasti“: Stránky dokumentu budou podle potřeby zvětšeny nebo "
+"zmenšeny tak, aby odpovídaly tisknutelné oblasti tiskárny.\n"
 
 #: libview/ev-print-operation.c:2703
 msgid "Auto Rotate and Center"
@@ -628,23 +605,20 @@ msgstr "Automaticky otočit a centrovat"
 
 #: libview/ev-print-operation.c:2706
 msgid ""
-"Rotate printer page orientation of each page to match orientation of each "
-"document page. Document pages will be centered within the printer page."
+"Rotate printer page orientation of each page to match orientation of each document page. "
+"Document pages will be centered within the printer page."
 msgstr ""
-"Otočí každou tisknutou stránku tak, aby odpovídala orientaci stránky v "
-"dokumentu. Stránky dokumentu budou vycentrovány."
+"Otočí každou tisknutou stránku tak, aby odpovídala orientaci stránky v dokumentu. Stránky "
+"dokumentu budou vycentrovány."
 
 #: libview/ev-print-operation.c:2711
 msgid "Select page size using document page size"
 msgstr "Velikost stránky dle velikosti v dokumentu"
 
 #: libview/ev-print-operation.c:2713
-msgid ""
-"When enabled, each page will be printed on the same size paper as the "
-"document page."
+msgid "When enabled, each page will be printed on the same size paper as the document page."
 msgstr ""
-"Pokud je povoleno, bude každá stránka vytištěna na papír o velikosti, jakou "
-"má v dokumentu."
+"Pokud je povoleno, bude každá stránka vytištěna na papír o velikosti, jakou má v dokumentu."
 
 #: libview/ev-print-operation.c:2718
 msgid "Draw border around pages"
@@ -784,13 +758,11 @@ msgstr "Prohlížeč dokumentů Evince"
 msgid "The selected printer “%s” could not be found"
 msgstr "Vybraná tiskárna „%s“ nebyla nalezena"
 
-#: previewer/previewer-window.ui:17 shell/evince-menus.ui:29
-#: shell/evince-window.ui:565
+#: previewer/previewer-window.ui:17 shell/evince-menus.ui:29 shell/evince-window.ui:565
 msgid "Previous Page"
 msgstr "Předchozí stránka"
 
-#: previewer/previewer-window.ui:24 shell/evince-menus.ui:33
-#: shell/evince-window.ui:569
+#: previewer/previewer-window.ui:24 shell/evince-menus.ui:33 shell/evince-window.ui:569
 msgid "Next Page"
 msgstr "Následující stránka"
 
@@ -818,8 +790,106 @@ msgstr "Vynulovat přiblížení a přizpůsobit stránku oknu"
 msgid "Enlarge the Document"
 msgstr "Zvětšit dokument"
 
-#: properties/ev-properties-main.c:149
-#: shell/ev-annotation-properties-dialog.c:108 shell/ev-properties-view.c:281
+#. Translate to the default units to use for presenting
+#. * lengths to the user. Translate to default:inch if you
+#. * want inches, otherwise translate to default:mm.
+#. * Do *not* translate it to "predefinito:mm", if it
+#. * it isn't default:mm or default:inch it will not work
+#.
+#: properties/ev-properties.c:39
+msgid "default:mm"
+msgstr "default:mm"
+
+#: properties/ev-properties.c:83
+#, c-format
+msgid "%.0f × %.0f mm"
+msgstr "%.0f × %.0f mm"
+
+#: properties/ev-properties.c:87
+#, c-format
+msgid "%.2f × %.2f inch"
+msgstr "%.2f × %.2f palců"
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: properties/ev-properties.c:111
+#, c-format
+msgid "%s, Portrait (%s)"
+msgstr "%s, na výšku (%s)"
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: properties/ev-properties.c:118
+#, c-format
+msgid "%s, Landscape (%s)"
+msgstr "%s, na šířku (%s)"
+
+#: properties/ev-properties.h:59
+msgid "Title"
+msgstr "Název"
+
+#: properties/ev-properties.h:60
+msgid "Location"
+msgstr "Umístění"
+
+#: properties/ev-properties.h:61
+msgid "Subject"
+msgstr "Předmět"
+
+#: properties/ev-properties.h:62
+msgid "Author"
+msgstr "Autor"
+
+#: properties/ev-properties.h:63
+msgid "Keywords"
+msgstr "Klíčová slova"
+
+#: properties/ev-properties.h:64
+msgid "Producer"
+msgstr "Producent"
+
+#: properties/ev-properties.h:65
+msgid "Creator"
+msgstr "Tvůrce"
+
+#: properties/ev-properties.h:66
+msgid "Created"
+msgstr "Vytvořeno"
+
+#: properties/ev-properties.h:67
+msgid "Modified"
+msgstr "Změněno"
+
+#: properties/ev-properties.h:68
+msgid "Number of Pages"
+msgstr "Počet stránek"
+
+#: properties/ev-properties.h:69
+msgid "Optimized"
+msgstr "Optimalizace"
+
+#: properties/ev-properties.h:70
+msgid "Format"
+msgstr "Formát"
+
+#: properties/ev-properties.h:71
+msgid "Security"
+msgstr "Zabezpečení"
+
+#: properties/ev-properties.h:72
+msgid "Contains Javascript"
+msgstr "Obsahuje Javascript"
+
+#: properties/ev-properties.h:73
+msgid "Paper Size"
+msgstr "Velikost papíru"
+
+#: properties/ev-properties.h:74
+msgid "Size"
+msgstr "Velikost"
+
+#: properties/ev-properties-main.c:149 shell/ev-annotation-properties-dialog.c:108
+#: shell/ev-properties-view.c:281
 msgid "Unknown"
 msgstr "Neznámo"
 
@@ -887,7 +957,7 @@ msgstr "podtržení"
 msgid "Squiggly"
 msgstr "vlnovka"
 
-#: shell/ev-annotation-properties-dialog.c:148
+#: shell/ev-annotation-properties-dialog.c:148 shell/evince-sidebar-annotations.ui:57
 msgid "Annotation Properties"
 msgstr "Vlastnosti poznámky"
 
@@ -964,37 +1034,31 @@ msgstr "Zpět"
 msgid "Forward"
 msgstr "Vpřed"
 
-#: shell/evince-menus.ui:57 shell/evince-window.ui:523
+#: shell/evince-menus.ui:57 shell/evince-sidebar-annotations.ui:67 shell/evince-window.ui:523
 #: shell/evince-window.ui:592 shell/evince-window.ui:614
 msgid "_Open Attachment"
 msgstr "_Otevřít přílohu"
 
-#: shell/evince-menus.ui:61 shell/evince-window.ui:528
+#: shell/evince-menus.ui:61 shell/evince-sidebar-annotations.ui:72 shell/evince-window.ui:528
 #: shell/evince-window.ui:596 shell/evince-window.ui:619
 msgid "_Save Attachment As…"
 msgstr "_Uložit přílohu jako…"
 
-#: shell/evince-menus.ui:70 shell/evince-sidebar-bookmarks.ui:96
-#: shell/evince-window.ui:628
+#: shell/evince-menus.ui:70 shell/evince-sidebar-bookmarks.ui:96 shell/evince-window.ui:628
 msgid "_Open Bookmark"
 msgstr "_Otevřít záložku"
 
-#: shell/evince-menus.ui:76 shell/evince-sidebar-bookmarks.ui:102
-#: shell/evince-window.ui:634
+#: shell/evince-menus.ui:76 shell/evince-sidebar-bookmarks.ui:102 shell/evince-window.ui:634
 msgid "_Rename Bookmark"
 msgstr "_Přejmenovat záložku"
 
-#: shell/evince-menus.ui:80 shell/evince-sidebar-bookmarks.ui:106
-#: shell/evince-window.ui:638
+#: shell/evince-menus.ui:80 shell/evince-sidebar-bookmarks.ui:106 shell/evince-window.ui:638
 msgid "_Delete Bookmark"
 msgstr "_Smazat záložku"
 
 #: shell/evince-password-view.ui:18
-msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
-msgstr ""
-"Tento dokument je uzamčen a lze jej číst jen po zadání správného hesla."
+msgid "This document is locked and can only be read by entering the correct password."
+msgstr "Tento dokument je uzamčen a lze jej číst jen po zadání správného hesla."
 
 #: shell/evince-password-view.ui:31
 msgid "_Unlock Document"
@@ -1004,6 +1068,26 @@ msgstr "_Odemknout dokument"
 msgid "Font"
 msgstr "Písmo"
 
+#: shell/evince-recent-view.ui:108
+msgid "No Recent Documents"
+msgstr "Žádné nedávné dokumenty"
+
+#: shell/evince-search-box.ui:63
+msgid "Find previous occurrence of the search string"
+msgstr "Najít předchozí výskyt hledaného řetězce"
+
+#: shell/evince-search-box.ui:71
+msgid "Find next occurrence of the search string"
+msgstr "Najít následující výskyt hledaného řetězce"
+
+#: shell/evince-sidebar-annotations.ui:14
+msgid "No Annotations"
+msgstr "Žádné poznámky"
+
+#: shell/evince-sidebar-annotations.ui:62 shell/evince-window.ui:609
+msgid "Remove Annotation"
+msgstr "Odstranit poznámku"
+
 #: shell/evince-sidebar-bookmarks.ui:62
 msgid "Add bookmark"
 msgstr "Přidat záložku"
@@ -1011,6 +1095,26 @@ msgstr "Přidat záložku"
 #: shell/evince-sidebar-bookmarks.ui:70
 msgid "Remove bookmark"
 msgstr "Odstranit záložku"
+
+#: shell/evince-sidebar-links.ui:84
+msgid "Search in the Outline…"
+msgstr "Hledat v obsahu…"
+
+#: shell/evince-sidebar-links.ui:88
+msgid "Collapse all Tree"
+msgstr "Sbalit celý strom"
+
+#: shell/evince-sidebar-links.ui:92
+msgid "Expand all Tree"
+msgstr "Rozbalit celý strom"
+
+#: shell/evince-sidebar-links.ui:96
+msgid "Expand all Under This Element"
+msgstr "Rozbalit vše pod tímto prvkem"
+
+#: shell/evince-sidebar-links.ui:102
+msgid "Print This Section…"
+msgstr "Vytisknout tento oddíl…"
 
 #: shell/evince-toolbar.ui:13
 msgid "Open…"
@@ -1068,8 +1172,7 @@ msgstr "No_vé okno"
 msgid "Open a C_opy"
 msgstr "Otevřít k_opii"
 
-#: shell/evince-toolbar.ui:105 shell/evince-window.ui:367
-#: shell/evince-window.ui:552
+#: shell/evince-toolbar.ui:105 shell/evince-window.ui:367 shell/evince-window.ui:552
 msgid "Open Containing _Folder"
 msgstr "Otevřít mateřskou _složku"
 
@@ -1146,8 +1249,7 @@ msgstr "Přílohy"
 msgid "Layers"
 msgstr "Vrstvy"
 
-#: shell/evince-window.ui:201 shell/ev-sidebar-layers.c:140
-#: shell/ev-sidebar-links.c:986
+#: shell/evince-window.ui:201 shell/ev-sidebar-layers.c:140 shell/ev-sidebar-links.c:986
 msgid "Loading…"
 msgstr "Probíhá načítání…"
 
@@ -1231,10 +1333,6 @@ msgstr "Z_výraznit vybraný text"
 msgid "Annotation Properties…"
 msgstr "Vlastnosti poznámky…"
 
-#: shell/evince-window.ui:609
-msgid "Remove Annotation"
-msgstr "Odstranit poznámku"
-
 #: shell/evince-zoom-action.ui:6
 msgid "Select or set the zoom level of the document"
 msgstr "Vybrat nebo nastavit úroveň přiblížení dokumentu"
@@ -1246,17 +1344,16 @@ msgstr "Heslo dokumentu %s"
 
 #: shell/ev-password-view.c:211
 #, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
+msgid "The document “%s” is locked and requires a password before it can be opened."
 msgstr "Dokument „%s“ je uzamčen a před otevřením vyžaduje zadání hesla."
 
 #: shell/ev-password-view.c:220
 msgid "Password required"
 msgstr "Je vyžadováno heslo"
 
-#: shell/ev-password-view.c:227 shell/ev-sidebar-attachments.c:210
-#: shell/ev-window.c:2768 shell/ev-window.c:3048 shell/ev-window.c:3927
-#: shell/ev-window.c:6634 shell/ev-window.c:6875
+#: shell/ev-password-view.c:227 shell/ev-sidebar-attachments.c:210 shell/ev-window.c:2768
+#: shell/ev-window.c:3048 shell/ev-window.c:3927 shell/ev-window.c:6634
+#: shell/ev-window.c:6875
 msgid "_Cancel"
 msgstr "_Zrušit"
 
@@ -1501,14 +1598,10 @@ msgstr "Odložit uzavření, dokud se nedokončí tisková úloha „%s“?"
 #: shell/ev-window.c:3906
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
-msgid_plural ""
-"There are %d print jobs active. Wait until print finishes before closing?"
-msgstr[0] ""
-"%d tisková úloha je aktivní. Odložit uzavření, dokud se nedokončí tisk?"
-msgstr[1] ""
-"%d tiskové úlohy jsou aktivní. Odložit uzavření, dokud se nedokončí tisk?"
-msgstr[2] ""
-"%d tiskových úloh je aktivních. Odložit uzavření, dokud se nedokončí tisk?"
+msgid_plural "There are %d print jobs active. Wait until print finishes before closing?"
+msgstr[0] "%d tisková úloha je aktivní. Odložit uzavření, dokud se nedokončí tisk?"
+msgstr[1] "%d tiskové úlohy jsou aktivní. Odložit uzavření, dokud se nedokončí tisk?"
+msgstr[2] "%d tiskových úloh je aktivních. Odložit uzavření, dokud se nedokončí tisk?"
 
 #: shell/ev-window.c:3921
 msgid "If you close the window, pending print jobs will not be printed."
@@ -1562,13 +1655,13 @@ msgstr "Z_apnout"
 
 #: shell/ev-window.c:5795
 msgid ""
-"Pressing F7 turns the caret navigation on or off. This feature places a "
-"moveable cursor in text pages, allowing you to move around and select text "
-"with your keyboard. Do you want to enable the caret navigation?"
+"Pressing F7 turns the caret navigation on or off. This feature places a moveable cursor in "
+"text pages, allowing you to move around and select text with your keyboard. Do you want to "
+"enable the caret navigation?"
 msgstr ""
-"Zmáčknutím F7 zapnete/vypnete kurzorovou navigaci. Tato funkce umístí do "
-"stránek textový kurzor, kterým se můžete pomocí klávesnice po dokumentu "
-"pohybovat a vybírat text. Chcete kurzorovou navigaci zapnout?"
+"Zmáčknutím F7 zapnete/vypnete kurzorovou navigaci. Tato funkce umístí do stránek textový "
+"kurzor, kterým se můžete pomocí klávesnice po dokumentu pohybovat a vybírat text. Chcete "
+"kurzorovou navigaci zapnout?"
 
 #: shell/ev-window.c:5800
 msgid "Don’t show this message again"
@@ -1576,11 +1669,8 @@ msgstr "Tuto zprávu znovu nezobrazovat"
 
 #: shell/ev-window.c:6264
 #, c-format
-msgid ""
-"Security alert: this document has been prevented from opening the file “%s”"
-msgstr ""
-"Bezpečnostní upozornění: tomuto dokumentu bylo zabráněno v otevření souboru "
-"„%s“."
+msgid "Security alert: this document has been prevented from opening the file “%s”"
+msgstr "Bezpečnostní upozornění: tomuto dokumentu bylo zabráněno v otevření souboru „%s“."
 
 #: shell/ev-window.c:6268
 #, c-format
@@ -1615,8 +1705,7 @@ msgstr "Uložit přílohu"
 msgid "Recent Documents"
 msgstr "Nedávné dokumenty"
 
-#: shell/ev-window-title.c:153 shell/ev-window-title.c:155
-#: shell/ev-window-title.c:160
+#: shell/ev-window-title.c:153 shell/ev-window-title.c:155 shell/ev-window-title.c:160
 msgid "Password Required"
 msgstr "Je vyžadováno heslo"
 
@@ -2042,85 +2131,6 @@ msgstr "[SOUBOR…]"
 #~ msgid "Document"
 #~ msgstr "Dokument"
 
-#~ msgid "Title:"
-#~ msgstr "Název:"
-
-#~ msgid "Location:"
-#~ msgstr "Umístění:"
-
-#~ msgid "Subject:"
-#~ msgstr "Předmět:"
-
-#~ msgid "Keywords:"
-#~ msgstr "Klíčová slova:"
-
-#~ msgid "Producer:"
-#~ msgstr "Producent:"
-
-#~ msgid "Creator:"
-#~ msgstr "Tvůrce:"
-
-#~ msgid "Created:"
-#~ msgstr "Vytvořeno:"
-
-#~ msgid "Modified:"
-#~ msgstr "Změněno:"
-
-#~ msgid "Number of Pages:"
-#~ msgstr "Počet stránek:"
-
-#~ msgid "Optimized:"
-#~ msgstr "Optimalizace:"
-
-#~ msgid "Format:"
-#~ msgstr "Formát:"
-
-#~ msgid "Security:"
-#~ msgstr "Zabezpečení:"
-
-#~ msgid "Contains Javascript:"
-#~ msgstr "Obsahuje Javascript:"
-
-#~ msgid "Paper Size:"
-#~ msgstr "Velikost papíru:"
-
-#~ msgid "Size:"
-#~ msgstr "Velikost:"
-
-#~ msgid "default:mm"
-#~ msgstr "default:mm"
-
-#, c-format
-#~ msgid "%.0f × %.0f mm"
-#~ msgstr "%.0f × %.0f mm"
-
-#, c-format
-#~ msgid "%.2f × %.2f inch"
-#~ msgstr "%.2f × %.2f palců"
-
-#, c-format
-#~ msgid "%s, Portrait (%s)"
-#~ msgstr "%s, na výšku (%s)"
-
-#, c-format
-#~ msgid "%s, Landscape (%s)"
-#~ msgstr "%s, na šířku (%s)"
-
-#~ msgid "Search in the outline…"
-#~ msgstr "Hledat v obsahu…"
-
-#~ msgid "Print this section…"
-#~ msgstr "Vytisknout tento oddíl…"
-
-#~ msgid "Collapse all tree"
-#~ msgstr "Sbalit celý strom"
-
-#~ msgid "Expand all tree"
-#~ msgstr "Rozbalit celý strom"
-
-#~ msgid "Expand all under this element"
-#~ msgstr "Rozbalit vše pod tímto prvkem"
-
 #~ msgid "_About Document Viewer"
 #~ msgstr "O _aplikaci Prohlížeč dokumentů"
 
@@ -2139,12 +2149,6 @@ msgstr "[SOUBOR…]"
 
 #~ msgid "C_ase Sensitive"
 #~ msgstr "_Rozlišovat velikost písmen"
-
-#~ msgid "Find previous occurrence of the search string"
-#~ msgstr "Najít předchozí výskyt hledaného řetězce"
-
-#~ msgid "Find next occurrence of the search string"
-#~ msgstr "Najít následující výskyt hledaného řetězce"
 
 #~ msgid "Document contains no annotations"
 #~ msgstr "Dokument neobsahuje žádné poznámky"
