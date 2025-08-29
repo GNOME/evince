@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
-"POT-Creation-Date: 2025-07-13 11:42+0000\n"
-"PO-Revision-Date: 2025-07-15 20:34+0300\n"
-"Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
+"POT-Creation-Date: 2025-08-27 16:33+0000\n"
+"PO-Revision-Date: 2025-08-29 17:28+0300\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <yoseforb@gmail.com>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
-"2 : 3)\n"
-"X-Generator: Gtranslator 48.0\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? 2 : "
+"3);\n"
+"X-Generator: Poedit 3.6\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:262
 msgid "File is corrupted"
@@ -50,14 +50,13 @@ msgstr "Not a comic book MIME type: %s"
 msgid ""
 "libarchive lacks support for this comic book’s compression, please contact "
 "your distributor"
-msgstr ""
-"‏libarchive חסר תמיכה בדחיסה של ספר קומיקס זה, נא ליצור קשר עם המפיץ שלך"
+msgstr "‏libarchive חסר תמיכה בדחיסה של ספר קומיקס זה, נא ליצור קשר עם המפיץ שלך"
 
 #: backend/comics/comics-document.c:363
 msgid "Can not get local path for archive"
 msgstr "לא נתן לקבל נתיב מקומי לארכיון"
 
-#: backend/comics/comicsdocument.evince-backend.desktop.in.in:4
+#: backend/comics/comicsdocument.evince-backend.desktop.in.in:3
 #: backend/comics/evince-comicsdocument.metainfo.xml.in.in:5
 msgid "Comic Books"
 msgstr "ספרי קומיקס"
@@ -76,7 +75,7 @@ msgid ""
 "be accessed."
 msgstr "המסמך מורכב ממספר קבצים. לא ניתן לגשת לאחד או יותר מהם."
 
-#: backend/djvu/djvudocument.evince-backend.desktop.in.in:4
+#: backend/djvu/djvudocument.evince-backend.desktop.in.in:3
 #: backend/djvu/evince-djvudocument.metainfo.xml.in.in:5
 msgid "DjVu Documents"
 msgstr "מסמכי DjVu"
@@ -89,7 +88,7 @@ msgstr "הוספת תמיכה לקריאת מסמכי DjVu"
 msgid "DVI document has incorrect format"
 msgstr "DVI document has incorrect format"
 
-#: backend/dvi/dvidocument.evince-backend.desktop.in.in:4
+#: backend/dvi/dvidocument.evince-backend.desktop.in.in:3
 #: backend/dvi/evince-dvidocument.metainfo.xml.in.in:5
 msgid "DVI Documents"
 msgstr "מסמכי DVI"
@@ -99,7 +98,7 @@ msgid "Adds support for reading DVI documents"
 msgstr "הוספת תמיכה לקריאת מסמכי DVI"
 
 #: backend/pdf/evince-pdfdocument.metainfo.xml.in.in:5
-#: backend/pdf/pdfdocument.evince-backend.desktop.in.in:5
+#: backend/pdf/pdfdocument.evince-backend.desktop.in.in:4
 msgid "PDF Documents"
 msgstr "מסמכי PDF"
 
@@ -157,9 +156,9 @@ msgid ""
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
-"מסמך זה מכיל גופנים שאינם מוטמעים ושאינם חלק מ־14 גופני התקן של PDF. אם "
-"גופני ההחלפה שנבחרו על ידי fontconfig אינם זהים לגופנים בהם נעשה שימוש "
-"ליצירת ה־PDF, העיבוד עשוי להיות שגוי."
+"מסמך זה מכיל גופנים שאינם מוטמעים ושאינם חלק מ־14 גופני התקן של PDF. אם גופני "
+"ההחלפה שנבחרו על ידי fontconfig אינם זהים לגופנים בהם נעשה שימוש ליצירת "
+"ה־PDF, העיבוד עשוי להיות שגוי."
 
 #: backend/pdf/ev-poppler.c:907
 msgid "All fonts are either standard or embedded."
@@ -260,7 +259,7 @@ msgstr ""
 "‏%s"
 
 #: backend/ps/evince-psdocument.metainfo.xml.in.in:5
-#: backend/ps/psdocument.evince-backend.desktop.in.in:5
+#: backend/ps/psdocument.evince-backend.desktop.in.in:4
 msgid "PostScript Documents"
 msgstr "מסמכי PostScript"
 
@@ -279,7 +278,7 @@ msgid "Failed to save document “%s”"
 msgstr "שמירת המסמך „%s“ נכשלה"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:5
-#: backend/tiff/tiffdocument.evince-backend.desktop.in.in:4
+#: backend/tiff/tiffdocument.evince-backend.desktop.in.in:3
 msgid "TIFF Documents"
 msgstr "מסמכי TIFF"
 
@@ -292,7 +291,7 @@ msgid "Invalid document"
 msgstr "מסמך לא תקין"
 
 #: backend/xps/evince-xpsdocument.metainfo.xml.in.in:5
-#: backend/xps/xpsdocument.evince-backend.desktop.in.in:5
+#: backend/xps/xpsdocument.evince-backend.desktop.in.in:4
 msgid "XPS Documents"
 msgstr "מסמכי XPS"
 
@@ -300,23 +299,22 @@ msgstr "מסמכי XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "הוספת תמיכה לקריאת מסמכי XPS"
 
-#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.desktop.in.in:2
 #: data/org.gnome.Evince.metainfo.xml.in.in:23
 #: previewer/ev-previewer-window.c:481 shell/ev-window.c:4093
 msgid "Evince"
 msgstr "‏Evince"
 
-#: data/org.gnome.Evince.desktop.in.in:4
+#: data/org.gnome.Evince.desktop.in.in:3
 msgid "View multi-page documents"
 msgstr "הצגת מסמכים מרובי עמודים"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Evince.desktop.in.in:6
-msgid ""
-"pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
+#: data/org.gnome.Evince.desktop.in.in:5
+msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 msgstr "‏pdf;ps;פוסטסקריפט;dvi;xps;djvu;tiff;מסמך;מצגת;מציג;evince;"
 
-#: data/org.gnome.Evince.desktop.in.in:19
+#: data/org.gnome.Evince.desktop.in.in:18
 msgid "New Window"
 msgstr "חלון חדש"
 
@@ -358,8 +356,7 @@ msgstr ""
 
 #: data/org.gnome.Evince.gschema.xml:37
 msgid ""
-"Show a dialog to confirm that the user wants to activate the caret "
-"navigation."
+"Show a dialog to confirm that the user wants to activate the caret navigation."
 msgstr "הצגת תיבת דו־שיח לאישור שהמשתמש רוצה להפעיל את הניווט בעזרת הסמן."
 
 #: data/org.gnome.Evince.gschema.xml:41
@@ -392,11 +389,11 @@ msgstr "Show two pages side by side."
 
 #: data/org.gnome.Evince.gschema.xml:78
 msgid ""
-"Show the first page (odd page) on the left (when displaying two pages side "
-"by side)"
+"Show the first page (odd page) on the left (when displaying two pages side by "
+"side)"
 msgstr ""
-"Show the first page (odd page) on the left (when displaying two pages side "
-"by side)"
+"Show the first page (odd page) on the left (when displaying two pages side by "
+"side)"
 
 #: data/org.gnome.Evince.metainfo.xml.in.in:24
 msgid "Document viewer for popular document formats"
@@ -426,11 +423,11 @@ msgstr "ממשק נקי ופשוט"
 msgid "Advanced highlighting and annotation"
 msgstr "פרשנות והדגשה מתקדמים"
 
-#: data/org.gnome.Evince-previewer.desktop.in:3
+#: data/org.gnome.Evince-previewer.desktop.in:2
 msgid "Print Preview"
 msgstr "תצוגה מקדימה"
 
-#: data/org.gnome.Evince-previewer.desktop.in:4
+#: data/org.gnome.Evince-previewer.desktop.in:3
 msgid "Preview before printing"
 msgstr "תצוגה מקדימה להדפסה"
 
@@ -493,8 +490,7 @@ msgid "of %d"
 msgstr "מתוך %d"
 
 #: libmisc/ev-page-action-widget.c:258 shell/ev-history.c:454
-#: shell/ev-sidebar-bookmarks.c:350 shell/ev-window.c:857
-#: shell/ev-window.c:4936
+#: shell/ev-sidebar-bookmarks.c:350 shell/ev-window.c:857 shell/ev-window.c:4936
 #, c-format
 msgid "Page %s"
 msgstr "עמוד %s"
@@ -583,16 +579,16 @@ msgstr "התאמה לאזור הניתן להדפסה"
 
 #: libview/ev-print-operation.c:2691
 msgid ""
-"Scale document pages to fit the selected printer page. Select from one of "
-"the following:\n"
+"Scale document pages to fit the selected printer page. Select from one of the "
+"following:\n"
 "\n"
 "• “None”: No page scaling is performed.\n"
 "\n"
 "• “Shrink to Printable Area”: Document pages larger than the printable area "
 "are reduced to fit the printable area of the printer page.\n"
 "\n"
-"• “Fit to Printable Area”: Document pages are enlarged or reduced as "
-"required to fit the printable area of the printer page.\n"
+"• “Fit to Printable Area”: Document pages are enlarged or reduced as required "
+"to fit the printable area of the printer page.\n"
 msgstr ""
 "התאמת עמודי המסמך לגודל העמוד במדפסת. יש לבחור מהבאים:\n"
 "\n"
@@ -601,8 +597,8 @@ msgstr ""
 "• „כיווץ לאזור הניתן להדפסה”: עמודי המסמך גדולים מהאזור הניתן להדפסה מוקטנים "
 "כדי שיתאימו לאזור עליו ניתן להדפיס בדפי המדפסת.\n"
 "\n"
-"• „התאמה לאזור הניתן להדפסה”: עמודי המסמך מוגדלים או מוקטנים כדי להתאים "
-"לאזור הניתן להדפסה בדף המדפסת.\n"
+"• „התאמה לאזור הניתן להדפסה”: עמודי המסמך מוגדלים או מוקטנים כדי להתאים לאזור "
+"הניתן להדפסה בדף המדפסת.\n"
 
 #: libview/ev-print-operation.c:2703
 msgid "Auto Rotate and Center"
@@ -798,6 +794,104 @@ msgstr "איפוס התקריב והתאמת הדף לחלון"
 msgid "Enlarge the Document"
 msgstr "הגדלת המסמך"
 
+#. Translate to the default units to use for presenting
+#. * lengths to the user. Translate to default:inch if you
+#. * want inches, otherwise translate to default:mm.
+#. * Do *not* translate it to "predefinito:mm", if it
+#. * it isn't default:mm or default:inch it will not work
+#.
+#: properties/ev-properties.c:39
+msgid "default:mm"
+msgstr "default:mm"
+
+#: properties/ev-properties.c:83
+#, c-format
+msgid "%.0f × %.0f mm"
+msgstr "%.0f x %.0f מילימטרים"
+
+#: properties/ev-properties.c:87
+#, c-format
+msgid "%.2f × %.2f inch"
+msgstr "%.2f x %.2f אינטשים"
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: properties/ev-properties.c:111
+#, c-format
+msgid "%s, Portrait (%s)"
+msgstr "‏%s, דיוקן (%s)"
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: properties/ev-properties.c:118
+#, c-format
+msgid "%s, Landscape (%s)"
+msgstr "‏%s, נוף (%s)"
+
+#: properties/ev-properties.h:59
+msgid "Title"
+msgstr "שם"
+
+#: properties/ev-properties.h:60
+msgid "Location"
+msgstr "מקום"
+
+#: properties/ev-properties.h:61
+msgid "Subject"
+msgstr "נושא"
+
+#: properties/ev-properties.h:62
+msgid "Author"
+msgstr "כותב/ת"
+
+#: properties/ev-properties.h:63
+msgid "Keywords"
+msgstr "מילות מפתח"
+
+#: properties/ev-properties.h:64
+msgid "Producer"
+msgstr "מפיק/ה"
+
+#: properties/ev-properties.h:65
+msgid "Creator"
+msgstr "יוצר/ת"
+
+#: properties/ev-properties.h:66
+msgid "Created"
+msgstr "יצירה"
+
+#: properties/ev-properties.h:67
+msgid "Modified"
+msgstr "עריכה"
+
+#: properties/ev-properties.h:68
+msgid "Number of Pages"
+msgstr "מספר עמודים"
+
+#: properties/ev-properties.h:69
+msgid "Optimized"
+msgstr "ממוטב"
+
+#: properties/ev-properties.h:70
+msgid "Format"
+msgstr "סוג"
+
+#: properties/ev-properties.h:71
+msgid "Security"
+msgstr "אבטחה"
+
+#: properties/ev-properties.h:72
+msgid "Contains Javascript"
+msgstr "מכילים Javascript"
+
+#: properties/ev-properties.h:73
+msgid "Paper Size"
+msgstr "גודל דף"
+
+#: properties/ev-properties.h:74
+msgid "Size"
+msgstr "גודל"
+
 #: properties/ev-properties-main.c:149
 #: shell/ev-annotation-properties-dialog.c:108 shell/ev-properties-view.c:281
 msgid "Unknown"
@@ -868,6 +962,7 @@ msgid "Squiggly"
 msgstr "משורבט"
 
 #: shell/ev-annotation-properties-dialog.c:148
+#: shell/evince-sidebar-annotations.ui:57
 msgid "Annotation Properties"
 msgstr "מאפייני הפרשנות"
 
@@ -944,13 +1039,15 @@ msgstr "חזרה"
 msgid "Forward"
 msgstr "קדימה"
 
-#: shell/evince-menus.ui:57 shell/evince-window.ui:523
-#: shell/evince-window.ui:592 shell/evince-window.ui:614
+#: shell/evince-menus.ui:57 shell/evince-sidebar-annotations.ui:67
+#: shell/evince-window.ui:523 shell/evince-window.ui:592
+#: shell/evince-window.ui:614
 msgid "_Open Attachment"
 msgstr "_פתיחת צרופה"
 
-#: shell/evince-menus.ui:61 shell/evince-window.ui:528
-#: shell/evince-window.ui:596 shell/evince-window.ui:619
+#: shell/evince-menus.ui:61 shell/evince-sidebar-annotations.ui:72
+#: shell/evince-window.ui:528 shell/evince-window.ui:596
+#: shell/evince-window.ui:619
 msgid "_Save Attachment As…"
 msgstr "_שמירת הקובץ המצורף בשם…"
 
@@ -971,8 +1068,7 @@ msgstr "_מחיקת סמינייה"
 
 #: shell/evince-password-view.ui:18
 msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
+"This document is locked and can only be read by entering the correct password."
 msgstr "מסמך זה נעול, ויש צורך בססמה כדי לקרוא אותו."
 
 #: shell/evince-password-view.ui:31
@@ -983,6 +1079,26 @@ msgstr "_שחרור המסמך"
 msgid "Font"
 msgstr "גופן"
 
+#: shell/evince-recent-view.ui:108
+msgid "No Recent Documents"
+msgstr "אין מסמכים אחרונים"
+
+#: shell/evince-search-box.ui:63
+msgid "Find previous occurrence of the search string"
+msgstr "חיפוש המופע הקודם של המחרוזת"
+
+#: shell/evince-search-box.ui:71
+msgid "Find next occurrence of the search string"
+msgstr "חיפוש המופע הבא של המחרוזת"
+
+#: shell/evince-sidebar-annotations.ui:14
+msgid "No Annotations"
+msgstr "אין פירושים"
+
+#: shell/evince-sidebar-annotations.ui:62 shell/evince-window.ui:609
+msgid "Remove Annotation"
+msgstr "מחיקת הערה"
+
 #: shell/evince-sidebar-bookmarks.ui:62
 msgid "Add bookmark"
 msgstr "הוס_פת סימניה"
@@ -990,6 +1106,26 @@ msgstr "הוס_פת סימניה"
 #: shell/evince-sidebar-bookmarks.ui:70
 msgid "Remove bookmark"
 msgstr "הסרת הסימנייה"
+
+#: shell/evince-sidebar-links.ui:84
+msgid "Search in the Outline…"
+msgstr "חיפוש במתאר…"
+
+#: shell/evince-sidebar-links.ui:88
+msgid "Collapse all Tree"
+msgstr "צמצום כל העץ"
+
+#: shell/evince-sidebar-links.ui:92
+msgid "Expand all Tree"
+msgstr "הרחבת כל העץ"
+
+#: shell/evince-sidebar-links.ui:96
+msgid "Expand all Under This Element"
+msgstr "הרחבה של הכול תחת הרכיב הזה"
+
+#: shell/evince-sidebar-links.ui:102
+msgid "Print This Section…"
+msgstr "הדפסת קטע זה…"
 
 #: shell/evince-toolbar.ui:13
 msgid "Open…"
@@ -1208,10 +1344,6 @@ msgstr "ה_דגשת הטקסט הנבחר"
 #: shell/evince-window.ui:604
 msgid "Annotation Properties…"
 msgstr "מאפייני הפרשנות…"
-
-#: shell/evince-window.ui:609
-msgid "Remove Annotation"
-msgstr "מחיקת הערה"
 
 #: shell/evince-zoom-action.ui:6
 msgid "Select or set the zoom level of the document"
@@ -2013,85 +2145,6 @@ msgstr "[FILE…]"
 #~ msgid "Document"
 #~ msgstr "מסמך"
 
-#~ msgid "Title:"
-#~ msgstr "שם:"
-
-#~ msgid "Location:"
-#~ msgstr "מיקום:"
-
-#~ msgid "Subject:"
-#~ msgstr "‏נושא:"
-
-#~ msgid "Keywords:"
-#~ msgstr "‏מילות מפתח:"
-
-#~ msgid "Producer:"
-#~ msgstr "יצרן:"
-
-#~ msgid "Creator:"
-#~ msgstr "יוצר:"
-
-#~ msgid "Created:"
-#~ msgstr "נוצר:"
-
-#~ msgid "Modified:"
-#~ msgstr "‏השתנה:"
-
-#~ msgid "Number of Pages:"
-#~ msgstr "מספר עמודים:"
-
-#~ msgid "Optimized:"
-#~ msgstr "‏הוטב:"
-
-#~ msgid "Format:"
-#~ msgstr "‏סוג:"
-
-#~ msgid "Security:"
-#~ msgstr "‏אבטחה:"
-
-#~ msgid "Contains Javascript:"
-#~ msgstr "מכילים Javascript:"
-
-#~ msgid "Paper Size:"
-#~ msgstr "‏גודל דף:"
-
-#~ msgid "Size:"
-#~ msgstr "גודל:"
-
-#~ msgid "default:mm"
-#~ msgstr "default:mm"
-
-#, c-format
-#~ msgid "%.0f × %.0f mm"
-#~ msgstr "%.0f x %.0f מילימטרים"
-
-#, c-format
-#~ msgid "%.2f × %.2f inch"
-#~ msgstr "%.2f x %.2f אינטשים"
-
-#, c-format
-#~ msgid "%s, Portrait (%s)"
-#~ msgstr "‏%s, דיוקן (%s)"
-
-#, c-format
-#~ msgid "%s, Landscape (%s)"
-#~ msgstr "‏%s, נוף (%s)"
-
-#~ msgid "Search in the outline…"
-#~ msgstr "חיפוש בתוכן העניינים…"
-
-#~ msgid "Print this section…"
-#~ msgstr "הדפסת קטע זה…"
-
-#~ msgid "Collapse all tree"
-#~ msgstr "צמצום כל העץ"
-
-#~ msgid "Expand all tree"
-#~ msgstr "הרחבת כל העץ"
-
-#~ msgid "Expand all under this element"
-#~ msgstr "הרחבה של הכול תחת הרכיב הזה"
-
 #~ msgid "_About Document Viewer"
 #~ msgstr "_על אודות מציג מסמכים"
 
@@ -2113,12 +2166,6 @@ msgstr "[FILE…]"
 
 #~ msgid "C_ase Sensitive"
 #~ msgstr "_תלוי רישיות"
-
-#~ msgid "Find previous occurrence of the search string"
-#~ msgstr "חיפוש המופע הקודם של המחרוזת"
-
-#~ msgid "Find next occurrence of the search string"
-#~ msgstr "חיפוש המופע הבא של המחרוזת"
 
 #~ msgid "Document contains no annotations"
 #~ msgstr "המסמך אינו מכיל הערות"
@@ -2228,8 +2275,8 @@ msgstr "[FILE…]"
 #~ "with Evince; if not, write to the Free Software Foundation, Inc., 51 "
 #~ "Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 #~ msgstr ""
-#~ "ל־Evince אמור היה להיות מצורף עותק של הרישיון הציבורי הכללי של GNU; אם "
-#~ "לא, יש לכתוב אל Free Software Foundation, Inc., 51 Franklin Street, Fifth "
+#~ "ל־Evince אמור היה להיות מצורף עותק של הרישיון הציבורי הכללי של GNU; אם לא, "
+#~ "יש לכתוב אל Free Software Foundation, Inc., 51 Franklin Street, Fifth "
 #~ "Floor, Boston, MA  02110-1301  USA\n"
 
 #~ msgid "Go to previous history item"
@@ -2560,8 +2607,7 @@ msgstr "[FILE…]"
 
 #~ msgid ""
 #~ "The metadata format used by Evince has changed, and hence it needs to be "
-#~ "migrated. If the migration is cancelled the metadata storage will not "
-#~ "work."
+#~ "migrated. If the migration is cancelled the metadata storage will not work."
 #~ msgstr ""
 #~ "מבנה נתוני העל בו Evince עשה שימוש שונה ולכן יש לייבא אותו. אם תהליך "
 #~ "הייבוא יבוטל אחסון נתוני העל לא יעבוד."
