@@ -3,7 +3,7 @@
 Evince is a document viewer capable of displaying multiple and single
 page document formats like PDF and Postscript.  For more general
 information about Evince please visit our website at
-https://wiki.gnome.org/Apps/Evince.
+https://gitlab.gnome.org/GNOME/evince/.
 
 This software is licensed under the [GPLv2][license].
 
