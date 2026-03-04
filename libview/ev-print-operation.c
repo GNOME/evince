@@ -2739,7 +2739,7 @@ ev_print_operation_print_custom_widget_apply (EvPrintOperationPrint *print,
 	gtk_print_settings_set_int (settings, EV_PRINT_SETTING_PAGE_SCALE, print->page_scale);
 	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_AUTOROTATE, print->autorotate);
 	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_PAGE_SIZE, print->use_source_size);
-	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_PAGE_SIZE, print->draw_borders);
+	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_DRAW_BORDERS, print->draw_borders);
 }
 
 static gboolean
