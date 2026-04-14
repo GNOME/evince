@@ -352,7 +352,7 @@ elif get_option('comics').auto()
 endif
 
 # *** DJVU ***
-ddjvuapi_req_version = '>= 3.5.22'
+ddjvuapi_req_version = '>= 3.5.29'
 ddjvuapi_dep = dependency('ddjvuapi', version: ddjvuapi_req_version, required: get_option('djvu'))
 enable_djvu = ddjvuapi_dep.found()
 if enable_djvu
