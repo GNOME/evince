@@ -6,14 +6,14 @@
 # Lucian Adrian Grijincu <lucian.grijincu@gmail.com>, 2009, 2010.
 # Simion Ruxandra <ruxy.simion@gmail.com>, 2010.
 # Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>, 2015, 2018.
-# Antonio Marin <gnmer.6qxyg@slmail.me>, 2025.
+# Antonio Marin <gnmer.6qxyg@slmail.me>, 2025-2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
-"POT-Creation-Date: 2025-08-09 17:42+0000\n"
-"PO-Revision-Date: 2025-08-10 10:11+0200\n"
+"POT-Creation-Date: 2026-03-04 12:32+0000\n"
+"PO-Revision-Date: 2026-05-07 19:16+0200\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -818,6 +818,104 @@ msgstr "Încadrează pagina în fereastră"
 msgid "Enlarge the Document"
 msgstr "Mărește documentul"
 
+#. Translate to the default units to use for presenting
+#. * lengths to the user. Translate to default:inch if you
+#. * want inches, otherwise translate to default:mm.
+#. * Do *not* translate it to "predefinito:mm", if it
+#. * it isn't default:mm or default:inch it will not work
+#.
+#: properties/ev-properties.c:39
+msgid "default:mm"
+msgstr "default:mm"
+
+#: properties/ev-properties.c:83
+#, c-format
+msgid "%.0f × %.0f mm"
+msgstr "%.0f × %.0f mm"
+
+#: properties/ev-properties.c:87
+#, c-format
+msgid "%.2f × %.2f inch"
+msgstr "%.2f × %.2f țol"
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: properties/ev-properties.c:111
+#, c-format
+msgid "%s, Portrait (%s)"
+msgstr "%s, Verticală (%s)"
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: properties/ev-properties.c:118
+#, c-format
+msgid "%s, Landscape (%s)"
+msgstr "%s, Orizontală (%s)"
+
+#: properties/ev-properties.h:59
+msgid "Title"
+msgstr "Titlul"
+
+#: properties/ev-properties.h:60
+msgid "Location"
+msgstr "Locul"
+
+#: properties/ev-properties.h:61
+msgid "Subject"
+msgstr "Subiectul"
+
+#: properties/ev-properties.h:62
+msgid "Author"
+msgstr "Autorul"
+
+#: properties/ev-properties.h:63
+msgid "Keywords"
+msgstr "Cuvinte cheie"
+
+#: properties/ev-properties.h:64
+msgid "Producer"
+msgstr "Producător"
+
+#: properties/ev-properties.h:65
+msgid "Creator"
+msgstr "Creator"
+
+#: properties/ev-properties.h:66
+msgid "Created"
+msgstr "Creat"
+
+#: properties/ev-properties.h:67
+msgid "Modified"
+msgstr "Modificat"
+
+#: properties/ev-properties.h:68
+msgid "Number of Pages"
+msgstr "Numărul de pagini"
+
+#: properties/ev-properties.h:69
+msgid "Optimized"
+msgstr "Optimizat"
+
+#: properties/ev-properties.h:70
+msgid "Format"
+msgstr "Formatul"
+
+#: properties/ev-properties.h:71
+msgid "Security"
+msgstr "Protecție"
+
+#: properties/ev-properties.h:72
+msgid "Contains Javascript"
+msgstr "Conține Javascript"
+
+#: properties/ev-properties.h:73
+msgid "Paper Size"
+msgstr "Mărimea hârtiei"
+
+#: properties/ev-properties.h:74
+msgid "Size"
+msgstr "Mărime"
+
 # LG: descriere a unei iconițe atașabile unei notițe
 #: properties/ev-properties-main.c:149
 #: shell/ev-annotation-properties-dialog.c:108 shell/ev-properties-view.c:281
@@ -898,6 +996,7 @@ msgid "Squiggly"
 msgstr "Subliniere ondulată"
 
 #: shell/ev-annotation-properties-dialog.c:148
+#: shell/evince-sidebar-annotations.ui:57
 msgid "Annotation Properties"
 msgstr "Proprietăți adnotare"
 
@@ -975,13 +1074,15 @@ msgstr "Înapoi"
 msgid "Forward"
 msgstr "Înainte"
 
-#: shell/evince-menus.ui:57 shell/evince-window.ui:523
-#: shell/evince-window.ui:592 shell/evince-window.ui:614
+#: shell/evince-menus.ui:57 shell/evince-sidebar-annotations.ui:67
+#: shell/evince-window.ui:523 shell/evince-window.ui:592
+#: shell/evince-window.ui:614
 msgid "_Open Attachment"
 msgstr "_Deschide fișierul atașat"
 
-#: shell/evince-menus.ui:61 shell/evince-window.ui:528
-#: shell/evince-window.ui:596 shell/evince-window.ui:619
+#: shell/evince-menus.ui:61 shell/evince-sidebar-annotations.ui:72
+#: shell/evince-window.ui:528 shell/evince-window.ui:596
+#: shell/evince-window.ui:619
 msgid "_Save Attachment As…"
 msgstr "_Salvează fișierul atașat ca…"
 
@@ -1016,6 +1117,28 @@ msgstr "_Deblochează documentul"
 msgid "Font"
 msgstr "Tip de caractere"
 
+#: shell/evince-recent-view.ui:108
+msgid "No Recent Documents"
+msgstr "Niciun document recent"
+
+#: shell/evince-search-box.ui:63
+msgid "Find previous occurrence of the search string"
+msgstr ""
+
+#: shell/evince-search-box.ui:71
+msgid "Find next occurrence of the search string"
+msgstr ""
+
+#: shell/evince-sidebar-annotations.ui:14
+#, fuzzy
+#| msgid "Annotations"
+msgid "No Annotations"
+msgstr "Adnotări"
+
+#: shell/evince-sidebar-annotations.ui:62 shell/evince-window.ui:609
+msgid "Remove Annotation"
+msgstr "Elimină adnotarea"
+
 #: shell/evince-sidebar-bookmarks.ui:62
 msgid "Add bookmark"
 msgstr "Adaugă semn de carte"
@@ -1023,6 +1146,30 @@ msgstr "Adaugă semn de carte"
 #: shell/evince-sidebar-bookmarks.ui:70
 msgid "Remove bookmark"
 msgstr "Elimină semnul de carte"
+
+#: shell/evince-sidebar-links.ui:84
+#, fuzzy
+#| msgid "Select Page or Search in the Outline"
+msgid "Search in the Outline…"
+msgstr "Alege pagina sau caută în cuprins"
+
+#: shell/evince-sidebar-links.ui:88
+msgid "Collapse all Tree"
+msgstr ""
+
+#: shell/evince-sidebar-links.ui:92
+msgid "Expand all Tree"
+msgstr ""
+
+#: shell/evince-sidebar-links.ui:96
+msgid "Expand all Under This Element"
+msgstr ""
+
+#: shell/evince-sidebar-links.ui:102
+#, fuzzy
+#| msgid "Print this Document"
+msgid "Print This Section…"
+msgstr "Tipărește acest document"
 
 #: shell/evince-toolbar.ui:13
 msgid "Open…"
@@ -1241,10 +1388,6 @@ msgstr "Evi_dențiază textul selecționat"
 #: shell/evince-window.ui:604
 msgid "Annotation Properties…"
 msgstr "Proprietăți adnotare…"
-
-#: shell/evince-window.ui:609
-msgid "Remove Annotation"
-msgstr "Elimină adnotarea"
 
 #: shell/evince-zoom-action.ui:6
 msgid "Select or set the zoom level of the document"
