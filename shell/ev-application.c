@@ -139,7 +139,7 @@ ev_spawn (const char     *uri,
 	  guint           timestamp)
 {
 	GString *cmd;
-	gchar *path, *cmdline;
+	gchar *path, *cmdline, *quoted;
 	GAppInfo *app;
 	GError  *error = NULL;
 
@@ -164,10 +164,13 @@ ev_spawn (const char     *uri,
 	/* Page label */
 	if (dest) {
                 switch (ev_link_dest_get_dest_type (dest)) {
-                case EV_LINK_DEST_TYPE_PAGE_LABEL:
+                case EV_LINK_DEST_TYPE_PAGE_LABEL: {
+                        quoted = g_shell_quote (ev_link_dest_get_page_label (dest));
                         g_string_append_printf (cmd, " --page-label=%s",
-                                                ev_link_dest_get_page_label (dest));
+                                                quoted);
+                        g_free (quoted);
                         break;
+                     }
                 case EV_LINK_DEST_TYPE_PAGE:
                 case EV_LINK_DEST_TYPE_XYZ:
                 case EV_LINK_DEST_TYPE_FIT:
@@ -177,10 +180,13 @@ ev_spawn (const char     *uri,
                         g_string_append_printf (cmd, " --page-index=%d",
                                                 ev_link_dest_get_page (dest) + 1);
                         break;
-                case EV_LINK_DEST_TYPE_NAMED:
+                case EV_LINK_DEST_TYPE_NAMED: {
+                        quoted = g_shell_quote (ev_link_dest_get_named_dest (dest));
                         g_string_append_printf (cmd, " --named-dest=%s",
-                                                ev_link_dest_get_named_dest (dest));
+                                                quoted);
+                        g_free (quoted);
                         break;
+                     }
                 default:
                         break;
                 }
@@ -188,7 +194,9 @@ ev_spawn (const char     *uri,
 
 	/* Find string */
 	if (search_string) {
-		g_string_append_printf (cmd, " --find=%s", search_string);
+		quoted = g_shell_quote (search_string);
+		g_string_append_printf (cmd, " --find=%s", quoted);
+		g_free (quoted);
 	}
 
 	/* Mode */
