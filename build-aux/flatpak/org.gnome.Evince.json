@@ -184,6 +184,21 @@
             ]
         },
         {
+            "name": "libhandy",
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Dexamples=false",
+                "-Dtests=false"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "branch": "main",
+                    "url": "https://gitlab.gnome.org/GNOME/libhandy.git"
+                }
+            ]
+        },
+        {
             "name": "gnome-desktop",
             "buildsystem": "meson",
             "config-opts": [
