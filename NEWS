@@ -1,4 +1,88 @@
 =================
+Evince 49.alpha.1
+=================
+
+build:
+  * Bump DjVuLibre version required (#2142, Germán Poo-Caamaño)
+
+data:
+  * Point homepage to GNOME GitLab (Jeremy Bícha)
+  * Rename from Document Viewer to Evince (Sophie Herold)
+  * Replace de-funct GNOME wiki URI with GitLab (Andre Klapper)
+  * Update authors (Sophie Herold)
+
+ev-jobs:
+  * EvJobFonts: don't save scan_completed (Pablo Correa Gómez)
+
+flatpak:
+  * Add artifacts on test failure for inspection (Germán Poo-Caamaño)
+
+help:
+  * Rename from Document Viewer to Evince (Sophie Herold)
+  * Rename remaining Document Viewer strings to Evince (AsciiWolf)
+
+libdocument:
+  * Improve pdf_document_fonts_scan API (Pablo Correa Gómez)
+  * Fix scrolling direction while selecting (Roberto Vidal)
+  * Fix scrolling while selecting (#360, Roberto Vidal)
+  * Remove EvDocumentFonts get_progress method (Pablo Correa Gómez)
+
+libview:
+  * Fix saving of custom print settings (efferre)
+  * Make EvJobFonts run as a thread, and remove updated signal (Pablo Correa Gómez)
+
+po:
+  * Fix xml element in Hindi translation (#655, Germán Poo-Caamaño)
+
+previewer:
+  * Set application ID to match with .desktop (Balló György)
+
+shell:
+  * Don't show the progress for loading fonts in the document (Pablo Correa Gómez)
+  * Fix occasional subtraction overflow (Mohammed Anas)
+  * Make sidebar entries GNOME HIG compatible (Sabri Ünal)
+  * Quote strings in arguments used when calling ev_spawn (#2153, Germán Poo-Caamaño)
+  * Remove redundant ellipses (Sabri Ünal)
+
+Developers:
+  * Anders Jonsson, Andre Klapper, AsciiWolf, Balló György, Germán Poo-Caamaño, Jeremy Bícha, Mohammed Anas, Pablo Correa Gómez, Roberto Vidal, Sabri Ünal, Sophie Herold, efferre
+
+Translations:
+  * Baurzhan Muftakhidinov (Add Kazakh)
+  * Asier Saratsua Garmendia (Basque)
+  * Vasil Pupkin (Belarusian)
+  * Juliano de Souza Camargo (Brazilian Portuguese)
+  * twlvnn kraftwerk (Bulgarian)
+  * Victor Dargallo (Catalan)
+  * luming zh (Chinese (China))
+  * Cheng-Chia Tseng (Chinese (Taiwan))
+  * Daniel Rusek (Czech)
+  * Alan Mortensen (Danish)
+  * Jiri Grönroos (Finnish)
+  * Fran Diéguez (Galician)
+  * Ekaterine Papava (Georgian)
+  * Christian Kirbach (German)
+  * Yaron Shahrabani (Hebrew)
+  * Yosef Or Boczko (Hebrew)
+  * Balázs Úr (Hungarian)
+  * Jun Oyamada (Japanese)
+  * Baurzhan Muftakhidinov (Kazakh)
+  * Changwoo Ryu (Korean)
+  * Aurimas Aurimas Černius (Lithuanian)
+  * Danial Behzadi (Persian)
+  * Piotr Drąg (Polish)
+  * Antonio Marin (Romanian)
+  * Artur S0 (Russian)
+  * Sergej A. (Russian)
+  * Марко Костић (Serbian)
+  * Мирослав Николић (Serbian)
+  * Martin (Slovenian)
+  * Anders Jonsson (Swedish)
+  * Emin Tufan Çetin (Turkish)
+  * Sabri Ünal (Turkish)
+  * Yuri Chornoivan (Ukrainian)
+
+=================
 Evince 49.alpha.0
 =================
 
