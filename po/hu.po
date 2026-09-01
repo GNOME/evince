@@ -1,16 +1,16 @@
 # Hungarian translation for evince.
-# Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Free Software Foundation, Inc.
+# Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Free Software Foundation, Inc.
 # This file is distributed under the same license as the evince package.
 #
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016.
-# Balázs Úr <ur.balazs at fsf dot hu>, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026.
 # Balázs Meskó <mesko.balazs at fsf dot hu>, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
-"POT-Creation-Date: 2025-08-31 04:56+0000\n"
-"PO-Revision-Date: 2025-09-01 13:52+0200\n"
+"POT-Creation-Date: 2026-05-20 21:37+0000\n"
+"PO-Revision-Date: 2026-09-01 09:51+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <openscope at fsf dot hu>\n"
 "Language: hu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:262
 msgid "File is corrupted"
@@ -434,6 +434,10 @@ msgstr "Egyszerű, letisztult felület"
 msgid "Advanced highlighting and annotation"
 msgstr "Fejlett kiemelés és jegyzetek hozzáadása"
 
+#: data/org.gnome.Evince.metainfo.xml.in.in:49
+msgid "The Evince Developers"
+msgstr "Az Evince fejlesztői"
+
 #: data/org.gnome.Evince-previewer.desktop.in:2
 msgid "Print Preview"
 msgstr "Nyomtatási kép"
@@ -846,82 +850,66 @@ msgid "%s, Landscape (%s)"
 msgstr "%s, fekvő (%s)"
 
 #: properties/ev-properties.h:59
-#| msgid "Title:"
 msgid "Title"
 msgstr "Cím"
 
 #: properties/ev-properties.h:60
-#| msgid "Location:"
 msgid "Location"
 msgstr "Hely"
 
 #: properties/ev-properties.h:61
-#| msgid "Subject:"
 msgid "Subject"
 msgstr "Tárgy"
 
 #: properties/ev-properties.h:62
-#| msgid "Author:"
 msgid "Author"
 msgstr "Szerző"
 
 #: properties/ev-properties.h:63
-#| msgid "Keywords:"
 msgid "Keywords"
 msgstr "Kulcsszavak"
 
 #: properties/ev-properties.h:64
-#| msgid "Producer:"
 msgid "Producer"
 msgstr "Készítő"
 
 #: properties/ev-properties.h:65
-#| msgid "Creator:"
 msgid "Creator"
 msgstr "Létrehozó"
 
 #: properties/ev-properties.h:66
-#| msgid "Created:"
 msgid "Created"
 msgstr "Létrehozva"
 
 #: properties/ev-properties.h:67
-#| msgid "Modified:"
 msgid "Modified"
 msgstr "Módosítva"
 
 #: properties/ev-properties.h:68
-#| msgid "Number of Pages:"
 msgid "Number of Pages"
 msgstr "Lapok száma"
 
 #: properties/ev-properties.h:69
-#| msgid "Optimized:"
 msgid "Optimized"
 msgstr "Optimalizált"
 
 #: properties/ev-properties.h:70
-#| msgid "Format:"
 msgid "Format"
 msgstr "Formátum"
 
 #: properties/ev-properties.h:71
-#| msgid "Security:"
 msgid "Security"
 msgstr "Biztonság"
 
 #: properties/ev-properties.h:72
-#| msgid "Contains Javascript:"
 msgid "Contains Javascript"
 msgstr "JavaScriptet tartalmaz"
 
 #: properties/ev-properties.h:73
-#| msgid "Paper Size:"
 msgid "Paper Size"
 msgstr "Papírméret"
 
 #: properties/ev-properties.h:74
-#| msgid "Size:"
 msgid "Size"
 msgstr "Méret"
 
@@ -931,8 +919,6 @@ msgid "Unknown"
 msgstr "Ismeretlen"
 
 #: properties/ev-properties-main.c:194
-#| msgctxt "shortcut window"
-#| msgid "Document properties"
 msgid "Document Properties"
 msgstr "Dokumentumtulajdonságok"
 
@@ -1118,7 +1104,6 @@ msgid "Font"
 msgstr "Betűkészlet"
 
 #: shell/evince-recent-view.ui:108
-#| msgid "Recent Documents"
 msgid "No Recent Documents"
 msgstr "Nincsenek legutóbbi dokumentumok"
 
@@ -1131,7 +1116,6 @@ msgid "Find next occurrence of the search string"
 msgstr "A keresőkifejezés következő előfordulása az oldalon"
 
 #: shell/evince-sidebar-annotations.ui:14
-#| msgid "Annotations"
 msgid "No Annotations"
 msgstr "Nincsenek jegyzetek"
 
@@ -1148,27 +1132,22 @@ msgid "Remove bookmark"
 msgstr "Könyvjelző eltávolítása"
 
 #: shell/evince-sidebar-links.ui:84
-#| msgid "Search in the outline…"
 msgid "Search in the Outline…"
 msgstr "Keresés az áttekintésben…"
 
 #: shell/evince-sidebar-links.ui:88
-#| msgid "Collapse all tree"
 msgid "Collapse all Tree"
 msgstr "Összes fa összecsukása"
 
 #: shell/evince-sidebar-links.ui:92
-#| msgid "Expand all tree"
 msgid "Expand all Tree"
 msgstr "Összes fa kinyitása"
 
 #: shell/evince-sidebar-links.ui:96
-#| msgid "Expand all under this element"
 msgid "Expand all Under This Element"
 msgstr "Összes kinyitása ezen elem alatt"
 
 #: shell/evince-sidebar-links.ui:102
-#| msgid "Print this section…"
 msgid "Print This Section…"
 msgstr "A szakasz nyomtatása…"
 
@@ -1278,7 +1257,6 @@ msgid "_Help"
 msgstr "_Súgó"
 
 #: shell/evince-toolbar.ui:167 shell/evince-window.ui:433
-#| msgid "Evince"
 msgid "_About Evince"
 msgstr "Az Evince _névjegye"
 
@@ -1376,7 +1354,6 @@ msgid "Copy _Image"
 msgstr "Ké_p másolása"
 
 #: shell/evince-window.ui:535
-#| msgid "Annotation Properties"
 msgid "Annotation _Properties"
 msgstr "Jegyzet _tulajdonságai"
 
@@ -1389,7 +1366,6 @@ msgid "_Highlight Selected Text"
 msgstr "_Kijelölt szöveg kiemelése"
 
 #: shell/evince-window.ui:604
-#| msgid "Annotation _Properties…"
 msgid "Annotation Properties…"
 msgstr "Jegyzet _tulajdonságai…"
 
@@ -1735,7 +1711,6 @@ msgstr ""
 
 #: shell/ev-window.c:6268
 #, c-format
-#| msgid "Unable to open document “%s”."
 msgid "Unable to open file “%s”"
 msgstr "Nem lehet megnyitni a(z) „%s” fájlt"
 
