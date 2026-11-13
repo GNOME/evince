@@ -16,9 +16,17 @@ test_sources = files(
   'test-ev-archive.c',
 )
 
-executable(
+test_ev_archive = executable(
   test_name,
   test_sources,
   include_directories: backend_incs,
   dependencies: backend_deps,
 )
+
+test(
+  test_name,
+  test_ev_archive,
+  args: ['zip', meson.project_source_root() / 'test' / 'data' / 'shapes.cbz'],
+  suite: 'comics',
+)
+
