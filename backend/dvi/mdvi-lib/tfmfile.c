@@ -172,8 +172,9 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	/* We read the entire TFM file into core */
 	if(fstat(fileno(in), &st) < 0)
 		return -1;
-	/* according to the spec, TFM files are smaller than 16K */
-	if(st.st_size == 0 || st.st_size >= 16384)
+	/* according to the spec, TFM files are smaller than 16K, and the
+	 * header with the table sizes takes 24 bytes */
+	if(st.st_size < 24 || st.st_size >= 16384)
 		goto bad_tfm;
 
 	/* allocate a word-aligned buffer to hold the file */
@@ -206,6 +207,17 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	ne = muget2(ptr); checksum += ne;
 	checksum += muget2(ptr); /* skip # of font parameters */
 
+	/*
+	 * All the tables must be inside the file. The sum of the table
+	 * sizes is lf, which cannot overflow since each one fits in 16 bits.
+	 * The first width, height and depth must exist and be zero.
+	 * A font without characters (bc = ec + 1) is useless.
+	 */
+	if(checksum != lf || 4 * lf > st.st_size ||
+	   lh < 2 || bc > ec || ec > 255 || ne > 256 ||
+	   nw < 1 || nh < 1 || nh > 16 || nd < 1 || nd > 16)
+		goto bad_tfm;
+
 	size = ec - bc + 1;
 	cb = (Int32 *)tfm; cb += 6 + lh;
 	charinfo    = cb;  cb += size;
@@ -213,41 +225,39 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	heights     = cb;  cb += nh;
 	depths      = cb;
 
-	if(widths[0] || heights[0] || depths[0] ||
-	   checksum != lf || bc - 1 > ec || ec > 255 || ne > 256)
+	if(widths[0] || heights[0] || depths[0])
 		goto bad_tfm;
-
-	/* from this point on, no error checking is done */
 
 	/* now we're at the header */
 	/* get the checksum */
 	info->checksum = muget4(ptr);
 	/* get the design size */
 	info->design = muget4(ptr);
-	/* get the coding scheme */
+	/* get the coding scheme, in header words 2 to 11 */
 	if(lh > 2) {
-		/* get the coding scheme */
-		i = n = msget1(ptr);
+		int	avail = Min(4 * (lh - 2), 40) - 1;
+
+		n = msget1(ptr);
 		if(n < 0 || n > 39) {
 			mdvi_warning(_("%s: font coding scheme truncated to 40 bytes\n"),
 				     filename);
 			n = 39;
 		}
+		n = Min(n, avail);
 		memcpy(info->coding, ptr, n);
 		info->coding[n] = 0;
-		ptr += i;
 	} else
 		strcpy(info->coding, "FontSpecific");
-	/* get the font family */
+	/* get the font family, from header word 12 */
 	if(lh > 12) {
+		ptr = tfm + 4 * (6 + 12);
 		n = msget1(ptr);
-		if(n > 0) {
-			i = Min(n, 63);
+		i = Min(Min(n, 63), 4 * (lh - 12) - 1);
+		if(i > 0) {
 			memcpy(info->family, ptr, i);
 			info->family[i] = 0;
 		} else
 			strcpy(info->family, "unspecified");
-		ptr += n;
 	}
 	/* now we don't read from `ptr' anymore */
 
@@ -270,6 +280,12 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 		int	ndx;
 
 		ndx = (int)*ptr; ptr++;
+		if(ndx >= nw ||
+		   (ndx && (((*ptr >> 4) & 0xf) >= nh || (*ptr & 0xf) >= nd))) {
+			mdvi_free(info->chars);
+			info->chars = NULL;
+			goto bad_tfm;
+		}
 		info->chars[i-bc].advance = widths[ndx];
 		/* TFM files lack this information */
 		info->chars[i-bc].left = 0;
@@ -310,6 +326,7 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 	TFMChar	*tch;
 	TFMChar	*end;
 
+	info->chars = NULL;
 	lh = fuget4(in);
 	bc = fuget4(in);
 	ec = fuget4(in);
@@ -325,6 +342,13 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 	nco = fuget4(in);
 	ncw = fuget4(in);
 	npc = fuget4(in);
+
+	/* the indices in the char-info table are 16 bits for widths and
+	 * 8 bits for heights and depths, and the first entries are zero */
+	if(lh < 2 || bc < 0 || ec > 65535 || bc > ec ||
+	   nw < 1 || nw > 65536 || nh < 1 || nh > 256 || nd < 1 || nd > 256 ||
+	   nco < 0 || ncw < 0 || npc < 0)
+		return -1;
 
 	/* get the checksum */
 	info->checksum = fuget4(in);
@@ -380,10 +404,11 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 		if(npc & 1) fuget2(in);
 
 		/* now repeat the character */
-		while(nr-- >= 0 && tch < end)
+		while(nr-- >= 0) {
+			if(tch == end)
+				goto bad_tfm;
 			memcpy(tch++, &ch, sizeof(TFMChar));
-		if(tch == end)
-			goto bad_tfm;
+		}
 	}
 
 	/* I wish we were done, but we aren't */
@@ -411,6 +436,10 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 	/* now fix the characters */
 	size = ec - bc + 1;
 	for(tch = info->chars; tch < end; tch++) {
+		if(tch->advance < 0 || tch->advance >= nw ||
+		   tch->height < 0 || tch->height >= nh ||
+		   tch->depth < 0 || tch->depth >= nd)
+			goto bad_tfm;
 		tch->present = (tch->advance != 0);
 		tch->advance = widths[tch->advance];
 		tch->height  = heights[tch->height];
@@ -425,6 +454,10 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 
 bad_tfm:
 	if(tfm) mdvi_free(tfm);
+	if(info->chars) {
+		mdvi_free(info->chars);
+		info->chars = NULL;
+	}
 	return -1;
 }
 
@@ -465,6 +498,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 		/* we handle level-1 files separately */
 		if(ofm1_load_file(in, info) < 0)
 			goto bad_tfm;
+		fclose(in);
 		return 0;
 	}
 
@@ -495,7 +529,10 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 		fuget4(in);
 	}
 
-	if(checksum != lf || bc > ec + 1 || ec > 65535)
+	/* see ofm1_load_file() for the limits; this also keeps the size
+	 * of the tables below from overflowing */
+	if(checksum != lf || lh < 2 || bc < 0 || ec > 65535 || bc > ec ||
+	   nw < 1 || nw > 65536 || nh < 1 || nh > 256 || nd < 1 || nd > 256)
 		goto bad_tfm;
 
 	/* now we're at the header */
@@ -535,39 +572,33 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 	fseek(in, 4L*(nwords + lh), SEEK_SET);
 	/* and read everything at once */
 	size = 2*(ec - bc + 1) + nw + nh + nd;
-	tfm = xnalloc(Int32, size * sizeof(Int32));
+	tfm = xnalloc(Int32, size);
 	if(fread(tfm, 4, size, in) != size) {
 		mdvi_free(tfm);
 		goto bad_tfm;
 	}
-	/* byte-swap all the tables at once */
-#ifdef WORD_LITTLE_ENDIAN
-	swap_array((Uint32 *)tfm, size);
-#endif
 	cb = tfm;
 	charinfo = cb; cb += 2*(ec - bc + 1);
 	widths   = cb; cb += nw;
 	heights  = cb; cb += nh;
 	depths   = cb;
+	/* byte-swap the three dimension tables at once; the char-info
+	 * table is read byte by byte, so it must keep the file order */
+#ifdef WORD_LITTLE_ENDIAN
+	swap_array((Uint32 *)widths, nw + nh + nd);
+#endif
 
 	if(widths[0] || heights[0] || depths[0]) {
 	   	mdvi_free(tfm);
 		goto bad_tfm;
 	}
 
-	/* from this point on, no error checking is done */
-
-	/* we don't need this anymore */
-	fclose(in);
-
-	/* now we don't read from `ptr' anymore */
-
 	info->loc = bc;
 	info->hic = ec;
 	info->type = DviFontTFM;
 
 	/* allocate characters */
-	info->chars = xnalloc(TFMChar, size);
+	info->chars = xnalloc(TFMChar, ec - bc + 1);
 
 	/* get the relevant data */
 	ptr = (Uchar *)charinfo;
@@ -575,6 +606,12 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 		int	ndx;
 
 		ndx = muget2(ptr);
+		if(ndx >= nw || ptr[0] >= nh || ptr[1] >= nd) {
+			mdvi_free(info->chars);
+			info->chars = NULL;
+			mdvi_free(tfm);
+			goto bad_tfm;
+		}
 		info->chars[i-bc].advance = widths[ndx];
 		/* TFM files lack this information */
 		info->chars[i-bc].left = 0;
@@ -586,6 +623,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 		info->chars[i-bc].depth = depths[ndx];
 	}
 
+	fclose(in);
 	mdvi_free(tfm);
 	return 0;
 
