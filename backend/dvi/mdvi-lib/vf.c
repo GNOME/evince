@@ -118,7 +118,10 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		vdpi = FROUND(params->mag * params->vdpi * scale / design);
 		n = fuget1(p) + fuget1(p);
 		name = mdvi_malloc(n + 1);
-		fread(name, 1, n, p);
+		if(fread(name, 1, n, p) != (size_t)n) {
+			mdvi_free(name);
+			goto badvf;
+		}
 		name[n] = 0;
 		DEBUG((DBG_FONTS, "(vf) %s: defined font `%s' at %.1fpt (%dx%d dpi)\n",
 			font->fontname, name,

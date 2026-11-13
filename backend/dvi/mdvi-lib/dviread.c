@@ -764,7 +764,8 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 	/* get the comment from the preamble */
 	n = fuget1(p);
 	dvi->fileid = mdvi_malloc(n + 1);
-	fread(dvi->fileid, 1, n, p);
+	if(fread(dvi->fileid, 1, n, p) != (size_t)n)
+		goto bad_dvi;
 	dvi->fileid[n] = 0;
 	DEBUG((DBG_DVI, "%s: %s\n", filename, dvi->fileid));
 

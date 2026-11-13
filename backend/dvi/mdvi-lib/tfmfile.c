@@ -303,7 +303,7 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 	int	i;
 	int	n;
 	int	size;
-	Int32	*tfm;
+	Int32	*tfm = NULL;
 	Int32	*widths;
 	Int32	*heights;
 	Int32	*depths;
@@ -336,7 +336,8 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 		i = n = fsget1(in);
 		if(n < 0 || n > 39)
 			n = 39;
-		fread(info->coding, 39, 1, in);
+		if(fread(info->coding, 39, 1, in) != 1)
+			goto bad_tfm;
 		info->coding[n] = 0;
 	} else
 		strcpy(info->coding, "FontSpecific");
@@ -345,12 +346,12 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 		n = fsget1(in);
 		if(n > 0) {
 			i = Min(n, 63);
-			fread(info->family, i, 1, in);
+			if(fread(info->family, i, 1, in) != 1)
+				goto bad_tfm;
 			info->family[i] = 0;
 		} else
 			strcpy(info->family, "unspecified");
 	}
-	tfm = NULL;
 
 	/* jump to the beginning of the char-info table */
 	fseek(in, 4L*nco, SEEK_SET);
@@ -513,7 +514,8 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 				     filename);
 			n = 39;
 		}
-		fread(info->coding, 39, 1, in);
+		if(fread(info->coding, 39, 1, in) != 1)
+			goto bad_tfm;
 		info->coding[n] = 0;
 	} else
 		strcpy(info->coding, "FontSpecific");
@@ -522,7 +524,8 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 		n = fsget1(in);
 		if(n > 0) {
 			i = Min(n, 63);
-			fread(info->family, i, 1, in);
+			if(fread(info->family, i, 1, in) != 1)
+				goto bad_tfm;
 			info->family[i] = 0;
 		} else
 			strcpy(info->family, "unspecified");
