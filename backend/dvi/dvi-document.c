@@ -408,6 +408,9 @@ parse_color (const gchar *ptr,
 	gchar *p = (gchar *)ptr;
 	gint   i;
 
+	for (i = 0; i < n_color; i++)
+		color[i] = 0.0;
+
 	for (i = 0; i < n_color; i++) {
 		while (isspace (*p)) p++;
 		color[i] = g_ascii_strtod (p, NULL);
@@ -432,7 +435,7 @@ dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *
 			gdouble rgb[3];
                         guchar red, green, blue;
 
-			parse_color (tmp + 4, rgb, 3);
+			parse_color (tmp + 3, rgb, 3);
 
                         red = 255 * rgb[0];
                         green = 255 * rgb[1];
@@ -443,7 +446,7 @@ dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *
                         gdouble hsb[3];
                         guchar red, green, blue;
 
-			parse_color (tmp + 4, hsb, 3);
+			parse_color (tmp + 3, hsb, 3);
 
                         if (hsb2rgb (hsb[0], hsb[1], hsb[2], &red, &green, &blue))
                                 mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
@@ -452,7 +455,7 @@ dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *
                         double r, g, b;
 			guchar red, green, blue;
 
-			parse_color (tmp + 5, cmyk, 4);
+			parse_color (tmp + 4, cmyk, 4);
 
                         r = 1.0 - cmyk[0] - cmyk[3];
                         if (r < 0.0)
