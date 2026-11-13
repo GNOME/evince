@@ -152,7 +152,7 @@ ev_view_accessible_ref_child (AtkObject *obj,
 
 	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (obj), NULL);
 	self = EV_VIEW_ACCESSIBLE (obj);
-	g_return_val_if_fail (i >= 0 || i < ev_view_accessible_get_n_pages (self), NULL);
+	g_return_val_if_fail (i >= 0 && i < ev_view_accessible_get_n_pages (self), NULL);
 
 	view = EV_VIEW (gtk_accessible_get_widget (GTK_ACCESSIBLE (obj)));
 	if (view == NULL)
