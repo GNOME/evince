@@ -1,0 +1,26 @@
+Test documents
+==============
+
+The PDF files below were added to Evince's test/ directory by the people
+listed, as fixtures for the dogtail UI tests of that time.  Those tests and
+the directory were removed in 2014 (commit 267172418, "Delete test
+directory.") and restored unchanged in 2018 (commit 5350bca75, "Bring back
+the test directory").  The files used here are byte-identical to the
+originals.
+
+3-page.pdf, 4-page.pdf
+	Bartek Kostrzewa <zoombat@runbox.com>, 2009.
+	Commit e4b9192dc, "[tests] Test for printer settings", GNOME bug
+	#583976.  Created with OpenOffice.org 3.0 Writer.
+
+test-encrypt.pdf, test-links.pdf
+	Nickolay V. Shmyrev <nshmyrev@yandex.ru>, 2006.
+	Commit 9f3b6e065, "Add automated UI tests for evince with dogtail",
+	GNOME bug #300948.  test-links.pdf was created with pdfeTeX.  The
+	password of test-encrypt.pdf is not known.
+
+test-page-labels.pdf
+	Nickolay V. Shmyrev <nshmyrev@yandex.ru>, 2008.
+	Commit cfe4ba671, test for the case-insensitive page label match
+	(patch by Michael Lee), GNOME bug #550136.  Created with LaTeX and
+	hyperref.
