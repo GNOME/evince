@@ -337,7 +337,7 @@ ev_page_accessible_ref_child (AtkObject *accessible,
 
        self = EV_PAGE_ACCESSIBLE (accessible);
 
-       g_return_val_if_fail (i >= 0 || i < self->priv->children->len, NULL);
+       g_return_val_if_fail (i >= 0 && i < ev_page_accessible_get_n_children (accessible), NULL);
 
        return g_object_ref (g_ptr_array_index (self->priv->children, i));
 }
