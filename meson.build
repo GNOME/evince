@@ -458,7 +458,6 @@ subdir('cut-n-paste')
 subdir('libdocument')
 subdir('backend')
 subdir('libview')
-subdir('test')
 subdir('libmisc')
 subdir('properties')
 
@@ -482,6 +481,8 @@ enable_previewer = get_option('previewer')
 if enable_previewer
   subdir('previewer')
 endif
+
+subdir('test')
 
 subdir('data')
 

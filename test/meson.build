@@ -65,3 +65,26 @@ test(
   args: ['--tap'],
   suite: 'libview',
 )
+
+if enable_thumbnailer
+  thumbnailer_env = test_env
+  thumbnailer_env.set('EV_TEST_THUMBNAILER', thumbnailer.full_path())
+
+  test_thumbnailer = executable(
+    'test-thumbnailer',
+    'test-thumbnailer.c',
+    include_directories: top_inc,
+    dependencies: libevtest_dep,
+    c_args: test_backend_cflags,
+  )
+
+  test(
+    'test-thumbnailer',
+    test_thumbnailer,
+    env: thumbnailer_env,
+    protocol: 'tap',
+    args: ['--tap'],
+    depends: thumbnailer,
+    suite: 'thumbnailer',
+  )
+endif
