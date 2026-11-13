@@ -113,6 +113,8 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		/* scale this font according to our parent's scale */
 		scale = TFMSCALE(scale, z, alpha, beta);
 		design = FROUND(params->tfm_conv * design);
+		if(design <= 0)
+			goto badvf;
 
 		/* compute the resolution */
 		hdpi = FROUND(params->mag * params->dpi * scale / design);
@@ -217,6 +219,10 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		mdvi_error(_("(vf) %s: no postamble\n"), font->fontname);
 		goto error;
 	}
+	if(loc < 0) {
+		mdvi_error(_("(vf) %s: no characters\n"), font->fontname);
+		goto error;
+	}
 
 	/* make macro memory just big enough */
 	if(msize > mlen) {
@@ -242,8 +248,10 @@ static int vf_load_font(DviParams *params, DviFont *font)
 badvf:
 	mdvi_error(_("%s: File corrupted, or not a VF file.\n"), font->fontname);
 error:
-	if(font->chars)
+	if(font->chars) {
 		mdvi_free(font->chars);
+		font->chars = NULL;
+	}
 	if(macros)
 		mdvi_free(macros);
 	return -1;
