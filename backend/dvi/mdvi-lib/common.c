@@ -17,6 +17,7 @@
  */
 
 #include <config.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -66,10 +67,12 @@ Ulong	mugetn(const Uchar *p, size_t n)
 
 char	*read_string(FILE *in, int s, char *buffer, size_t len)
 {
-	int	n;
+	Ulong	n;
 	char	*str;
 
 	n = fugetn(in, s ? s : 1);
+	if(n >= INT_MAX)
+		return NULL;
 	if((str = buffer) == NULL || n + 1 > len)
 		str = mdvi_malloc(n + 1);
 	if(fread(str, 1, n, in) != n) {

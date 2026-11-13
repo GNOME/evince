@@ -190,6 +190,8 @@ static int gf_read_bitmap(FILE *p, DviFontChar *ch)
 				char	*s;
 
 				s = read_string(p, op - GF_XXX1 + 1, NULL, 0);
+				if(s == NULL)
+					goto error;
 				DEBUG((DBG_SPECIAL, "(gf) Character %d: Special \"%s\"\n",
 					ch->code, s));
 				mdvi_free(s);
