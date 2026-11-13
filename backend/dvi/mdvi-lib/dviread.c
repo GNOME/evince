@@ -245,6 +245,10 @@ static int get_bytes(DviContext *dvi, size_t n)
 		}
 		dvi->buffer.length += newlen;
 		dvi->buffer.pos = 0;
+		if(dvi->buffer.length < n) {
+			dviwarn(dvi, _("unexpected EOF\n"));
+			return -1;
+		}
 	}
 	return 0;
 }
@@ -419,11 +423,20 @@ static DviFontRef *define_font(DviContext *dvi, int op)
 	checksum = duget4(dvi);
 	scale = duget4(dvi);
 	dsize = duget4(dvi);
+	if(dsize <= 0) {
+		dvierr(dvi, _("invalid font design size %d\n"), (int)dsize);
+		return NULL;
+	}
 	hdpi = FROUND(dvi->params.mag * dvi->params.dpi * scale / dsize);
 	vdpi = FROUND(dvi->params.mag * dvi->params.vdpi * scale / dsize);
 	n = duget1(dvi) + duget1(dvi);
+	if(n < 0)
+		return NULL;
 	name = mdvi_malloc(n + 1);
-	dread(dvi, name, n);
+	if(dread(dvi, name, n) == -1) {
+		mdvi_free(name);
+		return NULL;
+	}
 	name[n] = 0;
 	DEBUG((DBG_FONTS, "requesting font %d = `%s' at %.1fpt (%dx%d dpi)\n",
 		arg, name, (double)scale / (dvi->params.tfm_conv * 0x100000),
@@ -1515,8 +1528,11 @@ int	special(DviContext *dvi, int opcode)
 		dvierr(dvi, _("malformed special length\n"));
 		return -1;
 	}
-	s = mdvi_malloc(arg + 1);
-	dread(dvi, s, arg);
+	s = mdvi_malloc((size_t)arg + 1);
+	if(dread(dvi, s, arg) == -1) {
+		mdvi_free(s);
+		return -1;
+	}
 	s[arg] = 0;
 	mdvi_do_special(dvi, s);
 	SHOWCMD((dvi, "XXXX", opcode - DVI_XXX1 + 1,
