@@ -18,6 +18,7 @@
  */
 
 #include <config.h>
+#include <limits.h>
 #include <string.h>
 
 #include "mdvi.h"
@@ -170,6 +171,8 @@ static int vf_load_font(DviParams *params, DviFont *font)
 			cc = fuget1(p);
 			tfm = fuget3(p);
 		}
+		if(pl < 0 || pl > INT_MAX - 256 - mlen)
+			goto badvf;
 		if (cc < 0 || cc > 65536) {
 			/* TeX engines do not support char codes bigger than 65535 */
 			mdvi_error(_("(vf) %s: unexpected character %d\n"),
@@ -204,7 +207,7 @@ static int vf_load_font(DviParams *params, DviFont *font)
 			msize = mlen + pl + 256;
 			macros = xresize(macros, Uchar, msize);
 		}
-		if(pl && fread(macros + mlen, 1, pl, p) != pl)
+		if(pl && fread(macros + mlen, 1, pl, p) != (size_t)pl)
 			break;
 		macros[mlen+pl] = DVI_EOP;
 		mlen += pl + 1;
