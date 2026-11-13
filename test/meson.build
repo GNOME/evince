@@ -48,3 +48,20 @@ foreach name, cflags: libdocument_tests
     suite: 'libdocument',
   )
 endforeach
+
+test_ev_view = executable(
+  'test-ev-view',
+  'test-ev-view.c',
+  include_directories: top_inc,
+  dependencies: [libevtest_dep, libevview_dep],
+  c_args: test_backend_cflags,
+)
+
+test(
+  'test-ev-view',
+  test_ev_view,
+  env: test_env,
+  protocol: 'tap',
+  args: ['--tap'],
+  suite: 'libview',
+)
