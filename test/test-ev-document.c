@@ -16,56 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include <evince-document.h>
-
-static EvDocument *
-load_document (const gchar *filename,
-	       GError     **error)
-{
-	g_autofree gchar *path = NULL;
-	g_autofree gchar *uri = NULL;
-
-	path = g_test_build_filename (G_TEST_DIST, "data", filename, NULL);
-	uri = g_filename_to_uri (path, NULL, NULL);
-	g_assert_nonnull (uri);
-
-	return ev_document_factory_get_document (uri, error);
-}
-
-static EvDocument *
-load_document_or_fail (const gchar *filename)
-{
-	g_autoptr(GError) error = NULL;
-	EvDocument *document;
-
-	document = load_document (filename, &error);
-	g_assert_no_error (error);
-	g_assert_true (EV_IS_DOCUMENT (document));
-
-	return document;
-}
-
-static gchar *
-get_page_text (EvDocument *document,
-	       gint        index)
-{
-	EvPage *page;
-	gchar *text;
-
-	g_assert_true (EV_IS_DOCUMENT_TEXT (document));
-
-	page = ev_document_get_page (document, index);
-	text = ev_document_text_get_text (EV_DOCUMENT_TEXT (document), page);
-	g_object_unref (page);
-
-	return text;
-}
+#include "ev-test-utils.h"
 
 static void
 test_n_pages (void)
 {
-	EvDocument *three = load_document_or_fail ("3-page.pdf");
-	EvDocument *four = load_document_or_fail ("4-page.pdf");
+	EvDocument *three = ev_test_load_document_or_fail ("3-page.pdf");
+	EvDocument *four = ev_test_load_document_or_fail ("4-page.pdf");
 
 	g_assert_cmpint (ev_document_get_n_pages (three), ==, 3);
 	g_assert_cmpint (ev_document_get_n_pages (four), ==, 4);
@@ -77,11 +34,11 @@ test_n_pages (void)
 static void
 test_page_text (void)
 {
-	EvDocument *document = load_document_or_fail ("4-page.pdf");
+	EvDocument *document = ev_test_load_document_or_fail ("4-page.pdf");
 	gint i;
 
 	for (i = 0; i < ev_document_get_n_pages (document); i++) {
-		g_autofree gchar *text = get_page_text (document, i);
+		g_autofree gchar *text = ev_test_get_page_text (document, i);
 		g_autofree gchar *expected = g_strdup_printf ("%d", i + 1);
 
 		g_assert_nonnull (text);
@@ -95,7 +52,7 @@ static void
 test_page_labels (void)
 {
 	const gchar *expected[] = { "i", "ii", "I", "II", "III" };
-	EvDocument *document = load_document_or_fail ("test-page-labels.pdf");
+	EvDocument *document = ev_test_load_document_or_fail ("test-page-labels.pdf");
 	guint i;
 
 	g_assert_cmpint (ev_document_get_n_pages (document), ==, G_N_ELEMENTS (expected));
@@ -113,7 +70,7 @@ test_page_labels (void)
 static void
 test_links (void)
 {
-	EvDocument *document = load_document_or_fail ("test-links.pdf");
+	EvDocument *document = ev_test_load_document_or_fail ("test-links.pdf");
 	EvPage *page;
 	EvDocumentLinks *links;
 	EvMappingList *mapping_list;
@@ -150,7 +107,7 @@ test_encrypted (void)
 	g_autoptr(GError) error = NULL;
 	EvDocument *document;
 
-	document = load_document ("test-encrypt.pdf", &error);
+	document = ev_test_load_document ("test-encrypt.pdf", &error);
 	g_assert_error (error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED);
 	g_assert_true (EV_IS_DOCUMENT_SECURITY (document));
 
@@ -163,7 +120,7 @@ test_missing_file (void)
 	g_autoptr(GError) error = NULL;
 	EvDocument *document;
 
-	document = load_document ("does-not-exist.pdf", &error);
+	document = ev_test_load_document ("does-not-exist.pdf", &error);
 	g_assert_null (document);
 	g_assert_nonnull (error);
 }

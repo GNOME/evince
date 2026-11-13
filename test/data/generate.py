@@ -196,7 +196,6 @@ def make_djvu():
 DVI_TEX = r'''
 \nopagenumbers
 \hsize=200pt \vsize=300pt
-\hoffset=-1in \voffset=-1in
 \parindent=0pt \topskip=0pt \parskip=0pt
 \baselineskip=0pt \lineskip=0pt \lineskiplimit=0pt
 \def\square#1#2#3{\special{color push rgb #1}%
