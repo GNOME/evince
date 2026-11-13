@@ -348,6 +348,8 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 	if(loc != PK_PRE || hic != PK_ID)
 		goto badpk;
 	i = fuget1(p);
+	if(feof(p))
+		goto badpk;
 #ifndef NODEBUG
 	for(loc = 0; loc < i; loc++)
 		s[loc] = fuget1(p);
@@ -387,24 +389,22 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 			case PK_X3:
 			case PK_X4: {
 #ifndef NODEBUG
-				char	*t;
 				int	n;
 
+				/* keep at most the first 255 bytes, for debugging */
 				i = fugetn(p, flag_byte - PK_X1 + 1);
-				if(i < 256)
-					t = &s[0];
-				else
-					t = mdvi_malloc(i + 1);
-				for(n = 0; n < i; n++)
-					t[n] = fuget1(p);
-				t[n] = 0;
+				for(n = 0; n < i && !feof(p); n++) {
+					int	c = fuget1(p);
+
+					if(n < (int)sizeof(s) - 1)
+						s[n] = c;
+				}
+				s[Min(n, (int)sizeof(s) - 1)] = 0;
 				DEBUG((DBG_SPECIAL, "(pk) %s: Special \"%s\"\n",
-					font->fontname, t));
-				if(t != &s[0])
-					mdvi_free(t);
+					font->fontname, s));
 #else
 				i = fugetn(p, flag_byte - PK_X1 + 1);
-				while(i-- > 0)
+				while(i-- > 0 && !feof(p))
 					fuget1(p);
 #endif
 				break;
