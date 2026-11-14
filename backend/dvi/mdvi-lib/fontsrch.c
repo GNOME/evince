@@ -267,12 +267,15 @@ again:
 	name = search->wanted_name;
 	hdpi = search->hdpi;
 	vdpi = search->vdpi;
-	if(kid == MAX_CLASS-1) {
-		/* we were looking into this class from the beginning */
+	if(kid >= MAX_CLASS-1) {
+		/* we were already looking into this class (for the fallback
+		 * font if kid == MAX_CLASS); continue after the last one */
 		if(last == NULL) {
 			/* no more fonts to try */
 			return NULL;
 		}
+		if(kid == MAX_CLASS)
+			name = _mdvi_fallback_font;
 		ptr = last->next;
 	} else {
 		mdvi_warning("font `%s' not found, trying metric files instead\n",
