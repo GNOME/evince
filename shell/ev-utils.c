@@ -358,3 +358,21 @@ ev_str_replace (const char *str, const char *substr, const char *repl)
 
 	return g_string_free (gstr, FALSE);
 }
+
+/*
+ * g_app_info_create_from_commandline() expands desktop entry field codes
+ * (%f, %u, ...) before splitting the arguments, even inside quotes, so "%"
+ * must be escaped for the value to reach the new instance unchanged.
+ */
+gchar *
+ev_spawn_quote_argument (const gchar *arg)
+{
+	gchar *quoted;
+	gchar *escaped;
+
+	quoted = g_shell_quote (arg);
+	escaped = ev_str_replace (quoted, "%", "%%");
+	g_free (quoted);
+
+	return escaped;
+}

@@ -36,5 +36,6 @@ void                    ev_gui_menu_popup_at_tree_view_selection (GtkMenu     *m
 void           		file_chooser_dialog_add_writable_pixbuf_formats (GtkFileChooser *chooser);
 GdkPixbufFormat* 	get_gdk_pixbuf_format_by_extension (const gchar *uri);
 gchar*                  ev_str_replace (const char *str, const char *substr, const char *repl);
+gchar*                  ev_spawn_quote_argument (const gchar *arg);
 
 G_END_DECLS

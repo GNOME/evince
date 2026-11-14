@@ -38,6 +38,7 @@
 
 #include "ev-application.h"
 #include "ev-file-helpers.h"
+#include "ev-utils.h"
 #include "ev-stock-icons.h"
 
 #ifdef ENABLE_DBUS
@@ -180,7 +181,7 @@ ev_spawn (const char     *uri,
 	if (dest) {
                 switch (ev_link_dest_get_dest_type (dest)) {
                 case EV_LINK_DEST_TYPE_PAGE_LABEL: {
-                        quoted = g_shell_quote (ev_link_dest_get_page_label (dest));
+                        quoted = ev_spawn_quote_argument (ev_link_dest_get_page_label (dest));
                         g_string_append_printf (cmd, " --page-label=%s",
                                                 quoted);
                         g_free (quoted);
@@ -196,7 +197,7 @@ ev_spawn (const char     *uri,
                                                 ev_link_dest_get_page (dest) + 1);
                         break;
                 case EV_LINK_DEST_TYPE_NAMED: {
-                        quoted = g_shell_quote (ev_link_dest_get_named_dest (dest));
+                        quoted = ev_spawn_quote_argument (ev_link_dest_get_named_dest (dest));
                         g_string_append_printf (cmd, " --named-dest=%s",
                                                 quoted);
                         g_free (quoted);
@@ -209,7 +210,7 @@ ev_spawn (const char     *uri,
 
 	/* Find string */
 	if (search_string) {
-		quoted = g_shell_quote (search_string);
+		quoted = ev_spawn_quote_argument (search_string);
 		g_string_append_printf (cmd, " --find=%s", quoted);
 		g_free (quoted);
 	}
