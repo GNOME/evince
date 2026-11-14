@@ -49,6 +49,9 @@
 #define PK_NOOP   246
 #define PK_PRE    247
 
+/* more leading zeros in a packed number would overflow an int */
+#define PK_MAX_ZEROS 6
+
 #define PK_DYN_F(x)	(((x) >> 4) & 0xf)
 #define PK_PACKED(x)	(PK_DYN_F(x) != 14)
 
@@ -167,11 +170,15 @@ static int pk_packed_num(FILE *p, pkread *pkr, int *repeat)
 	int	dyn_f = pkr->dyn_f;
 
 	i = pk_get_nyb(p, pkr);
+	if(feof(p))
+		return -1;
 	if(i == 0) {
 		do {
 			j = pk_get_nyb(p, pkr);
 			i++;
-		} while(j == 0);
+		} while(j == 0 && i < PK_MAX_ZEROS);
+		if(j == 0)
+			return -1;
 		while(i-- > 0)
 			j = (j << 4) + pk_get_nyb(p, pkr);
 		return (j - 15 + ((13 - dyn_f) << 4) +
@@ -182,9 +189,15 @@ static int pk_packed_num(FILE *p, pkread *pkr, int *repeat)
 		return ((i - dyn_f - 1) << 4) +
 			pk_get_nyb(p, pkr) + dyn_f + 1;
 	else {
+		/* a repeat count must be followed by a run count */
+		if(*repeat)
+			return -1;
 		*repeat = 1;
-		if(i == 14)
+		if(i == 14) {
 			*repeat = pk_packed_num(p, pkr, repeat);
+			if(*repeat < 0)
+				return -1;
+		}
 		return pk_packed_num(p, pkr, repeat);
 	}
 }
@@ -255,6 +268,8 @@ static BITMAP *get_packed(FILE *p, int w, int h, int flags)
 		int	i = 0;
 
 		count = pk_packed_num(p, &pkr, &i);
+		if(count < 0 || i < 0)
+			goto bad;
 		if(i > 0) {
 			if(repeat_count)
 				fprintf(stderr, "second repeat count for this row (had %d and got %d)\n",
@@ -270,6 +285,8 @@ static BITMAP *get_packed(FILE *p, int w, int h, int flags)
 			if(paint)
 				bitmap_set_row(bm, row, w - inrow, inrow, paint);
 			/* now copy it as many times as required */
+			if(repeat_count >= h - row)
+				goto bad;
 			r = (Uchar *)bm->data + row * bm->stride;
 			while(repeat_count-- > 0) {
 				t = r + bm->stride;
@@ -292,6 +309,8 @@ static BITMAP *get_packed(FILE *p, int w, int h, int flags)
 			a = (BmUnit *)(r + bm->stride);
 			/* deal with entirely with/black rows */
 			while(count >= w) {
+				if(row >= h)
+					goto bad;
 				/* count number of atoms in a row */
 				i = ROUND(w, BITMAP_BITS);
 				while(i-- > 0)
@@ -301,17 +320,22 @@ static BITMAP *get_packed(FILE *p, int w, int h, int flags)
 			}
 			inrow = w;
 		}
-		if(count > 0)
+		if(count > 0) {
+			if(row >= h)
+				goto bad;
 			bitmap_set_row(bm, row, w - inrow, count, paint);
+		}
 		inrow -= count;
 		paint = !paint;
 	}
-	if(row != h || inrow != w) {
-		mdvi_error(_("Bad PK file: More bits than required\n"));
-		bitmap_destroy(bm);
-		return NULL;
-	}
+	if(row != h || inrow != w)
+		goto bad;
 	return bm;
+
+bad:
+	mdvi_error(_("Bad PK file: More bits than required\n"));
+	bitmap_destroy(bm);
+	return NULL;
 }
 
 static BITMAP *get_char(FILE *p, int w, int h, int flags)

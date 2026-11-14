@@ -28,3 +28,18 @@ test(
   args: ['--tap'],
   suite: ['backends', 'dvi'],
 )
+
+test_mdvi_pk = executable(
+  'test-mdvi-pk',
+  'test-mdvi-pk.c',
+  include_directories: top_inc,
+  dependencies: [glib_dep, libmdvi_dep, kpathsea_dep, m_dep],
+)
+
+test(
+  'test-mdvi-pk',
+  test_mdvi_pk,
+  protocol: 'tap',
+  args: ['--tap'],
+  suite: ['backends', 'dvi'],
+)
