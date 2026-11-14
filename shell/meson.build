@@ -88,6 +88,18 @@ evince = executable(
   install: true,
 )
 
+if gio_unix_dep.found()
+  test_ev_spawn = executable(
+    'test-ev-spawn',
+    sources: files('test-ev-spawn.c', 'ev-utils.c'),
+    include_directories: top_inc,
+    dependencies: [gio_unix_dep, gtk_dep, libevdocument_dep, m_dep],
+    c_args: '-DEVINCE_COMPILATION',
+  )
+
+  test('test-ev-spawn', test_ev_spawn)
+endif
+
 if enable_dbus
   evinced_sources = files('ev-daemon.c')
 
