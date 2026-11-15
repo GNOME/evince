@@ -395,12 +395,12 @@ job_finished_callback (EvJobAnnots          *job,
 			contents = ev_annotation_get_contents (annot);
 
 			if (modified)
-				tooltip = g_strdup_printf ("<span weight=\"bold\">%s</span>\n%s", label, modified);
+				tooltip = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>\n%s", label, modified);
 			else
-				tooltip = g_strdup_printf ("<span weight=\"bold\">%s</span>", label);
+				tooltip = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>", label);
 
 			if (contents && *contents != '\0')
-				markup = g_strdup_printf ("%s", contents);
+				markup = g_markup_escape_text (contents, -1);
 			else
 				markup = g_strdup_printf ("<i>%s</i>", _("No Comment"));
 
