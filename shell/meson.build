@@ -29,7 +29,6 @@ evince_sources = files(
   'ev-sidebar-page.c',
   'ev-sidebar-thumbnails.c',
   'ev-zoom-action.c',
-  'main.c',
 )
 
 evince_sources += gnome.compile_resources(
@@ -81,7 +80,7 @@ endif
 
 evince = executable(
   'evince',
-  sources: evince_sources,
+  sources: evince_sources + files('main.c'),
   include_directories: top_inc,
   dependencies: evince_deps,
   c_args: evince_cflags,
@@ -99,6 +98,19 @@ if gio_unix_dep.found()
 
   test('test-ev-spawn', test_ev_spawn)
 endif
+
+test_env = environment()
+test_env.set('EV_BACKENDS_DIR', meson.project_build_root() / 'backend')
+
+test_ev_sidebar_annotations = executable(
+  'test-ev-sidebar-annotations',
+  sources: evince_sources + files('test-ev-sidebar-annotations.c'),
+  include_directories: top_inc,
+  dependencies: evince_deps,
+  c_args: evince_cflags,
+)
+
+test('test-ev-sidebar-annotations', test_ev_sidebar_annotations, env: test_env)
 
 if enable_dbus
   evinced_sources = files('ev-daemon.c')
