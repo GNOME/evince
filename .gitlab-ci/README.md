@@ -8,7 +8,7 @@ PostScript.
 
 Building a Docker image for Evince CI
 -------------------------------------
-
+ 
 Steps for building a docker image:
 
 ```
@@ -16,6 +16,6 @@ docker login registry.gitlab.gnome.org
 ```
 
 ```
-$ docker build -t registry.gitlab.gnome.org/gnome/evince/master-amd64 -f ubuntu.Dockerfile .
-$ docker push registry.gitlab.gnome.org/gnome/evince/master-amd64
+$ docker build -t registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3 -f ubuntu.Dockerfile .
+$ docker push registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3
 ```
