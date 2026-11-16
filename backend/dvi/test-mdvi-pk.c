@@ -257,7 +257,7 @@ run_in_subprocess (gconstpointer data)
 	}
 
 	/* a glyph that never ends must not hang */
-	g_test_trap_subprocess (NULL, 10 * G_USEC_PER_SEC, G_TEST_SUBPROCESS_DEFAULT);
+	g_test_trap_subprocess (NULL, 10 * G_USEC_PER_SEC, 0);
 	g_test_trap_assert_passed ();
 }
 

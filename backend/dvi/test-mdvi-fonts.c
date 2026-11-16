@@ -501,7 +501,7 @@ run_in_subprocess (gconstpointer data)
 		return;
 	}
 
-	g_test_trap_subprocess (NULL, 0, G_TEST_SUBPROCESS_DEFAULT);
+	g_test_trap_subprocess (NULL, 0, 0);
 	g_test_trap_assert_passed ();
 }
 
