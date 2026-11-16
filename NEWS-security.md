@@ -1,6 +1,11 @@
 Security fixes
 ==============
 
+* Evince 48.5
+
+    * Fix use-after-free in the bundled SyncTeX parser (#2132).
+      CVE-2026-63729. (Germán Poo-Caamaño)
+
 * Evince 3.24.1
 
     * Remove support for tar and tar-like commands in commics backend

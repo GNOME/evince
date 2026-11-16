@@ -1,4 +1,36 @@
 =============
+Evince   48.5
+=============
+
+backends:
+  * Fix heap overflow decoding packed glyphs of PK fonts (#2169, Germán Poo-Caamaño)
+  * Fix stack overflow on a truncated PK preamble (Germán Poo-Caamaño)
+  * Validate the tables of TFM and OFM font files (Germán Poo-Caamaño)
+  * Fix buffer overflow reading the TFM font family (Germán Poo-Caamaño)
+  * Fix out-of-bounds write reading GF font specials (Germán Poo-Caamaño)
+  * Reject invalid VF packet lengths and VF fonts without characters (Germán Poo-Caamaño)
+  * Detect short reads in the DVI reader and the font loaders (Germán Poo-Caamaño)
+  * Fix out-of-bounds read parsing DVI color specials (Germán Poo-Caamaño)
+  * Fix an endless font search when fonts cannot be generated (#546, Germán Poo-Caamaño)
+  * Add tests for loading malformed DVI fonts (Germán Poo-Caamaño)
+
+cut-n-paste:
+  * Fix use-after-free in the synctex parser, CVE-2026-63729 (#2132, Germán Poo-Caamaño)
+
+libview:
+  * Fix bounds checks of the accessible children of the view and its pages (Germán Poo-Caamaño)
+
+shell:
+  * Escape field codes in the arguments passed to ev_spawn (#2153, Germán Poo-Caamaño)
+  * Escape annotation text shown in the annotations sidebar (Germán Poo-Caamaño)
+  * Add tests for the ev_spawn arguments and the annotations sidebar (Germán Poo-Caamaño)
+
+Developers:
+  * Germán Poo-Caamaño
+
+Special thanks to Fatih Çelik and David Chen for reporting security issues.
+
+=============
 Evince   48.4
 =============
 
