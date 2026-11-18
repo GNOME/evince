@@ -27,7 +27,7 @@ editorconfig:
     image: alpine:edge
     script:
         - apk add editorconfig-checker
-        - ec --disable-indentation --exclude '^.git/|cut-n-paste'
+        - ec --disable-indentation --exclude '^.git/|cut-n-paste|^test/data/.*\.(cb[rtz]|djvu|dvi|pdf|ps|tiff|xps)$'
     allow_failure: true
 
 meson:
