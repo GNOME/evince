@@ -9,6 +9,7 @@ include:
 stages:
     - lint
     - build
+    - test
     - deploy
     - image
 
@@ -60,6 +61,28 @@ meson-internal-synctex:
         when: on_failure
         paths:
         - "${MESON_BUILD_DIR}/meson-logs/meson-log.txt"
+        expire_in: 2 days
+
+test:
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3
+    stage: test
+    needs: []
+
+    script:
+        - >
+            meson setup
+            -Dlibhandy:examples=false -Dlibhandy:tests=false -Dlibhandy:vapi=false
+            -Dlibhandy:glade_catalog=disabled -Dlibhandy:introspection=disabled
+            "${MESON_BUILD_DIR}"
+        - ninja -C "${MESON_BUILD_DIR}" all
+        - meson test -C "${MESON_BUILD_DIR}" --print-errorlogs
+
+    artifacts:
+        when: always
+        reports:
+            junit: "${MESON_BUILD_DIR}/meson-logs/testlog.junit.xml"
+        paths:
+        - "${MESON_BUILD_DIR}/meson-logs/testlog.txt"
         expire_in: 2 days
 
 flatpak:
