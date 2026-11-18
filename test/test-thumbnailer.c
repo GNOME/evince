@@ -72,6 +72,12 @@ test_thumbnail (gconstpointer data)
 		return;
 	}
 
+	/* The thumbnailer saves the thumbnail with gdk-pixbuf */
+	if (!ev_test_can_decode_images ()) {
+		g_test_skip ("Images cannot be decoded");
+		return;
+	}
+
 	input = g_test_build_filename (G_TEST_DIST, "data", test->filename, NULL);
 	dir = g_dir_make_tmp ("test-thumbnailer-XXXXXX", &error);
 	g_assert_no_error (error);

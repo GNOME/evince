@@ -95,13 +95,28 @@ skip_if_not_built (const BackendTest *test)
 	return TRUE;
 }
 
+static gboolean
+skip_if_unavailable (const BackendTest *test)
+{
+	if (skip_if_not_built (test))
+		return TRUE;
+
+	/* The comics backend decodes its pages with gdk-pixbuf */
+	if (g_str_equal (test->backend, "comics") && !ev_test_can_decode_images ()) {
+		g_test_skip ("Images cannot be decoded");
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 static void
 test_n_pages (gconstpointer data)
 {
 	const BackendTest *test = data;
 	EvDocument *document;
 
-	if (skip_if_not_built (test))
+	if (skip_if_unavailable (test))
 		return;
 
 	document = ev_test_load_document_or_fail (test->filename);
@@ -118,7 +133,7 @@ test_page_size (gconstpointer data)
 	EvDocument *document;
 	gint i;
 
-	if (skip_if_not_built (test))
+	if (skip_if_unavailable (test))
 		return;
 
 	document = ev_test_load_document_or_fail (test->filename);
@@ -141,7 +156,7 @@ test_page_labels (gconstpointer data)
 	EvDocument *document;
 	gint i;
 
-	if (skip_if_not_built (test))
+	if (skip_if_unavailable (test))
 		return;
 
 	document = ev_test_load_document_or_fail (test->filename);
@@ -165,7 +180,7 @@ test_page_text (gconstpointer data)
 	EvDocument *document;
 	gint i;
 
-	if (skip_if_not_built (test))
+	if (skip_if_unavailable (test))
 		return;
 
 	document = ev_test_load_document_or_fail (test->filename);
@@ -266,7 +281,7 @@ test_render (gconstpointer data)
 {
 	const BackendTest *test = data;
 
-	if (skip_if_not_built (test) || known_render_bug (test))
+	if (skip_if_unavailable (test) || known_render_bug (test))
 		return;
 
 	check_render (test, 0, 0, 1.0,
@@ -278,7 +293,7 @@ test_render_half (gconstpointer data)
 {
 	const BackendTest *test = data;
 
-	if (skip_if_not_built (test) || known_render_bug (test))
+	if (skip_if_unavailable (test) || known_render_bug (test))
 		return;
 
 	check_render (test, 0, 0, 0.5,
@@ -290,7 +305,7 @@ test_render_double (gconstpointer data)
 {
 	const BackendTest *test = data;
 
-	if (skip_if_not_built (test))
+	if (skip_if_unavailable (test))
 		return;
 
 	check_render (test, 0, 0, 2.0,
@@ -303,7 +318,7 @@ test_render_rotated (gconstpointer data)
 	const BackendTest *test = data;
 	gint rotation;
 
-	if (skip_if_not_built (test) || known_render_bug (test))
+	if (skip_if_unavailable (test) || known_render_bug (test))
 		return;
 
 	for (rotation = 90; rotation < 360; rotation += 90) {
@@ -318,7 +333,7 @@ test_render_page_two (gconstpointer data)
 {
 	const BackendTest *test = data;
 
-	if (skip_if_not_built (test) || known_render_bug (test))
+	if (skip_if_unavailable (test) || known_render_bug (test))
 		return;
 
 	check_render (test, 1, 0, 1.0,

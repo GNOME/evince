@@ -36,5 +36,6 @@ void             ev_test_assert_pixel           (cairo_surface_t *surface,
 						 gint             x,
 						 gint             y,
 						 guint32          rgb);
+gboolean         ev_test_can_decode_images      (void);
 
 G_END_DECLS
