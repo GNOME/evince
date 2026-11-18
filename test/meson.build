@@ -2,6 +2,9 @@ test_env = environment()
 test_env.set('G_TEST_SRCDIR', meson.current_source_dir())
 test_env.set('G_TEST_BUILDDIR', meson.current_build_dir())
 test_env.set('EV_BACKENDS_DIR', meson.project_build_root() / 'backend')
+# kpathsea, used by the DVI backend, exits when it cannot find the
+# program it is set up for (evince) in PATH
+test_env.prepend('PATH', meson.project_build_root() / 'shell')
 test_env.set('G_DEBUG', 'gc-friendly')
 
 test_backend_cflags = []
