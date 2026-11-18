@@ -8,7 +8,7 @@ PostScript.
 
 Building a Docker image for Evince CI
 -------------------------------------
- 
+
 Steps for building a docker image:
 
 ```
